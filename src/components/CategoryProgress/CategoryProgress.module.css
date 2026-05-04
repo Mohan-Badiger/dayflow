@@ -1,0 +1,58 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  height: 100%;
+}
+
+.cardTitle {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.categoryRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.hours {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.barTrack {
+  height: 6px;
+  width: 100%;
+  background-color: var(--chart-track);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
