@@ -23,9 +23,9 @@ export default function AnalyticsPage() {
   ];
 
   const insights = [
-    { icon: TrendingUp, text: "You study 40% more on days you wake before 6:30.", color: "text-[var(--color-primary)]" },
-    { icon: Activity, text: "Your mood is highest on days with exercise.", color: "text-[var(--color-success)]" },
-    { icon: Lightbulb, text: "You missed your study goal 3 days this week — plan for those gaps.", color: "text-[var(--color-warning)]" },
+    { icon: TrendingUp, text: "You study 40% more on days you wake before 6:30.", color: "text-primary" },
+    { icon: Activity, text: "Your mood is highest on days with exercise.", color: "text-success" },
+    { icon: Lightbulb, text: "You missed your study goal 3 days this week — plan for those gaps.", color: "text-warning" },
   ];
 
   return (
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
         <div className="md:col-span-2 space-y-6">
           <Card className="p-6">
             <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-[var(--color-primary)]" /> Day Score Trend
+              <Activity className="w-5 h-5 text-primary" /> Day Score Trend
             </h2>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
 
           <Card className="p-6">
             <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-[var(--color-work)]" /> Study Distribution
+              <BarChart3 className="w-5 h-5 text-work" /> Study Distribution
             </h2>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -93,7 +93,7 @@ export default function AnalyticsPage() {
                   initial={{ opacity: 0, x: 20 }} 
                   animate={{ opacity: 1, x: 0 }} 
                   transition={{ delay: i * 0.15 }}
-                  className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-start gap-3 border-l-4 border-l-transparent hover:border-l-[var(--color-primary)] transition-colors"
+                  className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-start gap-3 border-l-4 border-l-transparent hover:border-l-primary transition-colors"
                 >
                   <insight.icon className={`w-5 h-5 shrink-0 mt-0.5 ${insight.color}`} />
                   <p className="text-sm font-medium leading-relaxed">{insight.text}</p>
@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-[var(--color-primary)] text-white border-none">
+          <Card className="p-6 bg-primary text-white border-none">
             <h2 className="text-lg font-bold mb-2 opacity-90">Best Day This Week</h2>
             <p className="text-3xl font-black mb-1">Saturday</p>
             <p className="text-sm opacity-80">Score: 95/100</p>
