@@ -17,11 +17,11 @@ export default function ReviewPage() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", damping: 12, stiffness: 200 }}
-          className="w-32 h-32 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center shadow-2xl shadow-[var(--color-primary)]/50"
+          className="w-32 h-32 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/50"
         >
           <span className="text-5xl font-black">{score}</span>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export default function ReviewPage() {
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
@@ -73,44 +73,44 @@ export default function ReviewPage() {
             <label className="flex items-center gap-2 text-lg font-bold mb-2">
               <Trophy className="w-5 h-5 text-yellow-500" /> Today's Wins
             </label>
-            <textarea 
-              className="w-full p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] min-h-[100px] resize-y focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow"
+            <textarea
+              className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-primary outline-none transition-shadow"
               placeholder="What went well today? Big or small."
             />
           </div>
 
           <div>
             <label className="block text-lg font-bold mb-2">Blockers & Challenges</label>
-            <textarea 
-              className="w-full p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] min-h-[100px] resize-y focus:ring-2 focus:ring-[var(--color-warning)] outline-none transition-shadow"
+            <textarea
+              className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-warning outline-none transition-shadow"
               placeholder="What held you back?"
             />
           </div>
 
           <div>
             <label className="block text-lg font-bold mb-2">Reflection</label>
-            <textarea 
-              className="w-full p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] min-h-[100px] resize-y focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow"
+            <textarea
+              className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-primary outline-none transition-shadow"
               placeholder="What would you do differently?"
             />
           </div>
 
           <div>
             <label className="block text-lg font-bold mb-2">Gratitude</label>
-            <input 
+            <input
               type="text"
-              className="w-full p-4 rounded-xl border border-[var(--border)] bg-[var(--background)] focus:ring-2 focus:ring-[var(--color-success)] outline-none transition-shadow"
+              className="w-full p-4 rounded-xl border border-border bg-background focus:ring-2 focus:ring-success outline-none transition-shadow"
               placeholder="One thing you're grateful for today..."
             />
           </div>
 
-          <div className="pt-4 border-t border-[var(--border)]">
+          <div className="pt-4 border-t border-border">
             <label className="flex items-center gap-2 text-lg font-bold mb-2">
-              <Target className="w-5 h-5 text-[var(--color-primary)]" /> Tomorrow's Top Priority
+              <Target className="w-5 h-5 text-primary" /> Tomorrow's Top Priority
             </label>
-            <input 
+            <input
               type="text"
-              className="w-full p-4 rounded-xl border-2 border-[var(--color-primary)] bg-[var(--background)] focus:ring-4 focus:ring-[var(--color-primary)]/20 outline-none transition-shadow text-lg font-medium"
+              className="w-full p-4 rounded-xl border-2 border-primary bg-background focus:ring-4 focus:ring-primary/20 outline-none transition-shadow text-lg font-medium"
               placeholder="The ONE thing you must accomplish tomorrow"
             />
           </div>
