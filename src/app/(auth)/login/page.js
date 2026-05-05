@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-(--background) flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -14,7 +14,7 @@ export default function LoginPage() {
       >
         <Card className="p-8 text-center space-y-8">
           <div className="space-y-2">
-            <h1 className="text-3xl font-black text-[var(--color-primary)] tracking-tight">DayFlow</h1>
+            <h1 className="text-3xl font-black text-primary tracking-tight">DayFlow</h1>
             <p className="text-slate-500 font-medium">Log in to your daily tracker</p>
           </div>
 

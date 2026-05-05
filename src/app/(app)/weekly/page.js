@@ -27,14 +27,14 @@ export default function WeeklyPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
-          <Card className="p-6 bg-gradient-to-r from-[var(--color-primary)] to-[#9f98eb] text-white border-none">
+          <Card className="p-6 bg-linear-to-r from-primary to-[#9f98eb] text-white border-none">
             <h2 className="text-lg font-medium mb-1 opacity-90">Weekly Focus Theme</h2>
             <p className="text-2xl font-bold">Next.js App Router Mastery</p>
           </Card>
 
           <Card className="p-6">
             <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <Target className="w-5 h-5 text-[var(--color-primary)]" /> Goal Progress
+              <Target className="w-5 h-5 text-primary" /> Goal Progress
             </h2>
             
             <div className="mb-8">
@@ -46,7 +46,7 @@ export default function WeeklyPage() {
                 <motion.div 
                   initial={{ width: 0 }} 
                   animate={{ width: `${progressPercent}%` }} 
-                  className="bg-[var(--color-primary)] h-3 rounded-full" 
+                  className="bg-primary h-3 rounded-full" 
                   transition={{ duration: 1, ease: "easeOut" }}
                 />
               </div>
@@ -63,7 +63,7 @@ export default function WeeklyPage() {
                     <motion.div 
                       initial={{ width: 0 }} 
                       animate={{ width: `${(goal.current / goal.target) * 100}%` }} 
-                      className="bg-[var(--color-work)] h-2 rounded-full" 
+                      className="bg-work h-2 rounded-full" 
                       transition={{ duration: 1, delay: i * 0.1 }}
                     />
                   </div>
@@ -76,19 +76,19 @@ export default function WeeklyPage() {
         <div className="space-y-6">
           <Card className="p-6">
             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <Flag className="w-5 h-5 text-[var(--color-warning)]" /> Top 3 Priorities
+              <Flag className="w-5 h-5 text-warning" /> Top 3 Priorities
             </h2>
             <ul className="space-y-3">
               <li className="flex items-start gap-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-warning)]/20 text-[var(--color-warning)] flex items-center justify-center font-bold text-xs">1</span>
+                <span className="shrink-0 w-6 h-6 rounded-full bg-warning/20 text-warning flex items-center justify-center font-bold text-xs">1</span>
                 <span className="text-sm font-medium">Finish Next.js Caching module on Udemy</span>
               </li>
               <li className="flex items-start gap-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-warning)]/20 text-[var(--color-warning)] flex items-center justify-center font-bold text-xs">2</span>
+                <span className="shrink-0 w-6 h-6 rounded-full bg-warning/20 text-warning flex items-center justify-center font-bold text-xs">2</span>
                 <span className="text-sm font-medium">Solve 15 Medium LC Array questions</span>
               </li>
               <li className="flex items-start gap-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-warning)]/20 text-[var(--color-warning)] flex items-center justify-center font-bold text-xs">3</span>
+                <span className="shrink-0 w-6 h-6 rounded-full bg-warning/20 text-warning flex items-center justify-center font-bold text-xs">3</span>
                 <span className="text-sm font-medium">Workout 4 times this week</span>
               </li>
             </ul>
