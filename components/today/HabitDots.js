@@ -30,7 +30,7 @@ export function HabitDots({ habits = [] }) {
                   onClick={() => toggleHabit(habit.id)}
                   className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
                     isDone 
-                      ? "bg-[var(--color-success)] border-[var(--color-success)] text-white" 
+                      ? "bg-success border-success text-white" 
                       : "border-slate-300 dark:border-slate-600 text-transparent hover:border-slate-400"
                   }`}
                 >

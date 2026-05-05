@@ -18,7 +18,7 @@ export function Timeline({ events = [] }) {
           <p className="text-sm mt-1 mb-4">Start your day by logging a session or habit.</p>
           <button 
             onClick={() => setActiveModal("session")}
-            className="flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] hover:underline"
+            className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
           >
             <PlusCircle className="w-4 h-4" /> Add your first entry
           </button>
@@ -28,7 +28,7 @@ export function Timeline({ events = [] }) {
   }
 
   return (
-    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">
+    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">
       {events.map((event, index) => (
         <motion.div 
           key={event.id || index}
@@ -37,7 +37,7 @@ export function Timeline({ events = [] }) {
           transition={{ delay: index * 0.1 }}
           className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-slate-900 bg-[var(--color-primary)] text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-slate-900 bg-primary text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
             <span className="text-[10px] font-bold">{event.time}</span>
           </div>
           <Card className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4">
