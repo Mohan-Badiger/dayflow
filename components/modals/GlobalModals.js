@@ -10,14 +10,14 @@ function SessionForm({ onClose }) {
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium mb-1">Category</label>
-        <select className="w-full p-2 rounded border border-[var(--border)] bg-[var(--background)]">
+        <select className="w-full p-2 rounded border border-(--border) bg-(--background)">
           <option>React / Next.js</option>
           <option>DSA</option>
         </select>
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">Topic</label>
-        <input type="text" className="w-full p-2 rounded border border-[var(--border)] bg-[var(--background)]" placeholder="e.g. useCallback deep dive" />
+        <input type="text" className="w-full p-2 rounded border border-(--border) bg-(--background)" placeholder="e.g. useCallback deep dive" />
       </div>
       <div className="flex justify-end gap-2 mt-6">
         <Button variant="outline" onClick={onClose}>Cancel</Button>
@@ -32,7 +32,7 @@ function MealForm({ onClose }) {
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium mb-1">Meal Type</label>
-        <select className="w-full p-2 rounded border border-[var(--border)] bg-[var(--background)]">
+        <select className="w-full p-2 rounded border border-(--border) bg-(--background)">
           <option>Breakfast</option>
           <option>Lunch</option>
           <option>Dinner</option>
@@ -52,7 +52,7 @@ function ExerciseForm({ onClose }) {
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium mb-1">Exercise Type</label>
-        <select className="w-full p-2 rounded border border-[var(--border)] bg-[var(--background)]">
+        <select className="w-full p-2 rounded border border-(--border) bg-(--background)">
           <option>Gym</option>
           <option>Run</option>
         </select>
