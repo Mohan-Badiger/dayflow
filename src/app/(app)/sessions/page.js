@@ -34,7 +34,7 @@ export default function SessionsPage() {
         </Button>
       </div>
 
-      <Card className="p-8 text-center bg-gradient-to-br from-[var(--color-work)] to-[#246bb3] text-white border-none shadow-lg">
+      <Card className="p-8 text-center bg-linear-to-br from-work to-[#246bb3] text-white border-none shadow-lg">
         <p className="text-blue-100 font-medium mb-2 uppercase tracking-wide text-sm">Today's Focus</p>
         <div className="flex items-baseline justify-center gap-2">
           <motion.h2 
@@ -61,7 +61,7 @@ export default function SessionsPage() {
 
       <div className="flex flex-wrap gap-3">
         {categories.map(cat => (
-          <div key={cat.name} className="flex items-center gap-2 bg-[var(--card)] border border-[var(--border)] px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+          <div key={cat.name} className="flex items-center gap-2 bg-(--card) border border-(--border) px-4 py-2 rounded-full text-sm font-medium shadow-sm">
             <span className={`w-3 h-3 rounded-full ${cat.color}`} />
             {cat.name}
             <span className="text-slate-500 ml-1">{cat.hours}h</span>
@@ -73,7 +73,7 @@ export default function SessionsPage() {
         <h3 className="text-lg font-bold">Today's Logs</h3>
         {sessions.map(session => (
           <motion.div key={session.id} whileHover={{ scale: 1.01 }}>
-            <Card className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 border-l-[var(--color-work)]">
+            <Card className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 border-l-work">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-300">

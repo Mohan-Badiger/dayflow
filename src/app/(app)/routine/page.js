@@ -7,14 +7,13 @@ import { motion } from "framer-motion";
 
 function ChecklistItem({ label, checked, onChange }) {
   return (
-    <div className="flex items-center justify-between p-3 border border-[var(--border)] rounded-lg bg-[var(--background)] hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+    <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-background hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
       <span className="text-sm font-medium">{label}</span>
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => onChange(!checked)}
-        className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${
-          checked ? "bg-[var(--color-success)] text-white" : "border-2 border-slate-300 dark:border-slate-600 text-transparent"
-        }`}
+        className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${checked ? "bg-success text-white" : "border-2 border-slate-300 dark:border-slate-600 text-transparent"
+          }`}
       >
         <motion.div initial={false} animate={{ scale: checked ? 1 : 0 }}>
           <Check className="w-4 h-4" />
@@ -55,21 +54,21 @@ export default function RoutinePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6 space-y-6 border-t-4 border-t-[var(--color-success)]">
+        <Card className="p-6 space-y-6 border-t-4 border-t-success">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Morning</h2>
-            <div className="text-sm font-semibold text-[var(--color-success)] bg-[var(--color-success)]/10 px-3 py-1 rounded-full">
+            <div className="text-sm font-semibold text-success bg-success/10 px-3 py-1 rounded-full">
               {Object.values(morning).filter(Boolean).length}/6 Done
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-500">Wake Time</label>
-            <input 
-              type="time" 
+            <input
+              type="time"
               value={wakeTime}
               onChange={(e) => setWakeTime(e.target.value)}
-              className="w-full p-2 rounded-lg border border-[var(--border)] bg-[var(--background)] font-medium"
+              className="w-full p-2 rounded-lg border border-border bg-background font-medium"
             />
           </div>
 
@@ -84,31 +83,31 @@ export default function RoutinePage() {
           </div>
         </Card>
 
-        <Card className="p-6 space-y-6 border-t-4 border-t-[var(--color-primary)]">
+        <Card className="p-6 space-y-6 border-t-4 border-t-primary">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Night</h2>
-            <div className="text-sm font-semibold text-[var(--color-primary)] bg-[var(--color-primary)]/10 px-3 py-1 rounded-full">
+            <div className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
               {Object.values(night).filter(Boolean).length}/3 Done
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-slate-500">Screen Off By</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 value={screenOff}
                 onChange={(e) => setScreenOff(e.target.value)}
-                className="w-full p-2 rounded-lg border border-[var(--border)] bg-[var(--background)] font-medium"
+                className="w-full p-2 rounded-lg border border-border bg-background font-medium"
               />
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-slate-500">Sleep Time</label>
-              <input 
-                type="time" 
+              <input
+                type="time"
                 value={sleepTime}
                 onChange={(e) => setSleepTime(e.target.value)}
-                className="w-full p-2 rounded-lg border border-[var(--border)] bg-[var(--background)] font-medium"
+                className="w-full p-2 rounded-lg border border-border bg-background font-medium"
               />
             </div>
           </div>
