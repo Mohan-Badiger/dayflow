@@ -35,7 +35,7 @@ export default function TodayPage() {
           value="85" 
           subtitle="/100" 
           icon={Activity} 
-          colorClass="bg-[var(--color-primary)] text-[var(--color-primary)]" 
+          colorClass="bg-primary text-primary" 
           delay={0.1} 
         />
         <StatCard 
@@ -43,7 +43,7 @@ export default function TodayPage() {
           value="2.5" 
           subtitle="/ 4h goal" 
           icon={Clock} 
-          colorClass="bg-[var(--color-work)] text-[var(--color-work)]" 
+          colorClass="bg-work text-work" 
           delay={0.2} 
         />
         <StatCard 
@@ -51,7 +51,7 @@ export default function TodayPage() {
           value="3" 
           subtitle="/ 8 glasses" 
           icon={Droplet} 
-          colorClass="bg-[var(--color-work)] text-[var(--color-work)]" 
+          colorClass="bg-work text-work" 
           delay={0.3} 
         />
         <StatCard 
@@ -59,7 +59,7 @@ export default function TodayPage() {
           value="1" 
           subtitle="/ 3 done" 
           icon={CheckSquare} 
-          colorClass="bg-[var(--color-success)] text-[var(--color-success)]" 
+          colorClass="bg-success text-success" 
           delay={0.4} 
         />
       </div>

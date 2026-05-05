@@ -38,19 +38,19 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Wake Target</label>
-              <input type="time" defaultValue="06:30" className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="time" defaultValue="06:30" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Sleep Target</label>
-              <input type="time" defaultValue="23:00" className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="time" defaultValue="23:00" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Study Goal (hrs)</label>
-              <input type="number" defaultValue={4} className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="number" defaultValue={4} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Water Goal (glasses)</label>
-              <input type="number" defaultValue={8} className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="number" defaultValue={8} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
           </div>
           <Button className="mt-4">Save Targets</Button>
@@ -63,16 +63,16 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Target Role</label>
-              <input type="text" defaultValue="React / Next.js Developer" className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="text" defaultValue="React / Next.js Developer" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Target Date</label>
-                <input type="date" className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+                <input type="date" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Weekly Study Target (hrs)</label>
-                <input type="number" defaultValue={28} className="w-full p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+                <input type="number" defaultValue={28} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
               </div>
             </div>
           </div>
@@ -89,14 +89,14 @@ export default function SettingsPage() {
                 <p className="font-medium">Morning Reminder</p>
                 <p className="text-sm text-slate-500">Get notified to start your day</p>
               </div>
-              <input type="time" defaultValue="07:00" className="p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="time" defaultValue="07:00" className="p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Evening Review</p>
                 <p className="text-sm text-slate-500">Get notified to log your day</p>
               </div>
-              <input type="time" defaultValue="20:00" className="p-2 border border-[var(--border)] bg-[var(--background)] rounded-md" />
+              <input type="time" defaultValue="20:00" className="p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
           </div>
         </Card>
