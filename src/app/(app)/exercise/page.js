@@ -31,13 +31,13 @@ export default function ExercisePage() {
           <h1 className="text-3xl font-bold">Exercise</h1>
           <p className="text-slate-500">Keep moving forward.</p>
         </div>
-        <Button onClick={() => setActiveModal("exercise")} className="gap-2 bg-[var(--color-success)] hover:bg-[#18805e]">
+        <Button onClick={() => setActiveModal("exercise")} className="gap-2 bg-success hover:bg-[#18805e]">
           <Plus className="w-4 h-4" /> Log Exercise
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-8 border-t-4 border-t-[var(--color-success)] flex flex-col justify-center min-h-[250px]">
+        <Card className="p-8 border-t-4 border-t-success flex flex-col justify-center min-h-[250px]">
           <div className="text-center space-y-6">
             <h2 className="text-xl font-bold text-slate-600 dark:text-slate-300 uppercase tracking-widest">Today</h2>
             <div className="flex justify-center">
@@ -45,8 +45,8 @@ export default function ExercisePage() {
                 onClick={() => setDoneToday(!doneToday)}
                 className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-4 transition-all duration-300 ${
                   doneToday 
-                    ? "bg-[var(--color-success)] border-[var(--color-success)] text-white shadow-lg shadow-[var(--color-success)]/30 scale-105" 
-                    : "bg-transparent border-slate-200 dark:border-slate-700 text-slate-400 hover:border-[var(--color-success)] hover:text-[var(--color-success)]"
+                    ? "bg-success border-success text-white shadow-lg shadow-success/30 scale-105" 
+                    : "bg-transparent border-slate-200 dark:border-slate-700 text-slate-400 hover:border-success hover:text-success"
                 }`}
               >
                 <Dumbbell className="w-10 h-10 mb-2" />
@@ -80,8 +80,8 @@ export default function ExercisePage() {
                 <div key={i} className="flex flex-col items-center gap-2">
                   <span className="text-xs font-medium text-slate-400">{day.day}</span>
                   <div className={`w-10 h-10 rounded flex items-center justify-center ${
-                    day.done === true ? "bg-[var(--color-success)] text-white" :
-                    day.done === false ? "bg-[var(--color-warning)] text-white" :
+                    day.done === true ? "bg-success text-white" :
+                    day.done === false ? "bg-warning text-white" :
                     "bg-slate-100 dark:bg-slate-800 text-transparent"
                   }`}>
                     {day.done === true && <Flame className="w-5 h-5" />}
@@ -93,7 +93,7 @@ export default function ExercisePage() {
 
           <div className="grid grid-cols-2 gap-4">
             <Card className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--color-success)]/10 text-[var(--color-success)] flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center">
                 <TrendingUp className="w-6 h-6" />
               </div>
               <div>
@@ -102,7 +102,7 @@ export default function ExercisePage() {
               </div>
             </Card>
             <Card className="p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                 <Dumbbell className="w-6 h-6" />
               </div>
               <div>
