@@ -8,11 +8,15 @@ export const metadata = {
   description: "Track and analyze your daily life patterns.",
 };
 
+import { SessionProviderWrapper } from "@/components/providers/SessionProviderWrapper";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-(--background) text-(--foreground)`}>
-        {children}
+      <body className={`${inter.className} antialiased bg-background text-foreground`}>
+        <SessionProviderWrapper>
+          {children}
+        </SessionProviderWrapper>
       </body>
     </html>
   );
