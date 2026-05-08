@@ -2,54 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LayoutDashboard, CalendarDays, CheckSquare, BarChart2, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Clock, PlusCircle, CheckSquare, ListTodo } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
 
-const mobileItems = [
+const tabs = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
-  { name: "Routine", href: "/routine", icon: CheckSquare },
-  { name: "Add", href: "#", icon: PlusCircle, isAction: true },
-  { name: "Sessions", href: "/sessions", icon: Clock },
-  { name: "Habits", href: "/habits", icon: ListTodo },
+  { name: "Timetable", href: "/timetable", icon: CalendarDays },
+  { name: "Habits", href: "/habits", icon: CheckSquare },
+  { name: "Analytics", href: "/analytics", icon: BarChart2 },
+  { name: "More", href: "/settings", icon: MoreHorizontal },
 ];
 
 export function MobileNav() {
   const pathname = usePathname();
-  const setActiveModal = useAppStore((state) => state.setActiveModal);
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-card border-t border-border flex items-center justify-around z-50 px-2 pb-safe">
-      {mobileItems.map((item) => {
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] bg-(--color-surface) border-t border-(--color-border) pb-[env(safe-area-inset-bottom)] z-50 flex justify-around items-center px-2">
+      {tabs.map((item) => {
         const isActive = pathname === item.href;
         const Icon = item.icon;
-
-        if (item.isAction) {
-          return (
-            <button
-              key="add-action"
-              onClick={() => setActiveModal("session")}
-              className="flex flex-col items-center justify-center w-12 h-12 -mt-6 rounded-full bg-primary text-white shadow-lg shadow-primary/30 active:scale-95 transition-transform"
-            >
-              <Icon className="w-6 h-6" />
-            </button>
-          );
-        }
-
         return (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
-              "flex flex-col items-center justify-center w-12 gap-1 text-[10px] font-medium transition-colors hover:text-primary",
-              isActive ? "text-primary" : "text-muted-foreground"
+              "flex flex-col items-center justify-center w-full h-full gap-1 transition-colors",
+              isActive ? "text-(--color-brand)" : "text-(--color-text-3) hover:text-(--color-text-2)"
             )}
           >
-            <Icon className="w-5 h-5" />
-            {item.name}
+            <Icon className="w-6 h-6" />
+            <span className="text-[10px] font-medium">{item.name}</span>
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 }
