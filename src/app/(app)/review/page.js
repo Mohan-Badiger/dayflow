@@ -4,7 +4,7 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, CheckCircle, Activity } from "lucide-react";
+import { Trophy, CheckCircle, Activity, Target } from "lucide-react";
 
 export default function ReviewPage() {
   const [submitted, setSubmitted] = useState(false);
