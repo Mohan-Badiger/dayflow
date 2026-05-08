@@ -1,130 +1,203 @@
 "use client";
-import { PageWrapper } from "@/components/layout/PageWrapper";
-import { StatCard } from "@/components/today/StatCard";
-import { Timeline } from "@/components/today/Timeline";
-import { QuickLogPanel } from "@/components/today/QuickLogPanel";
-import { HabitDots } from "@/components/today/HabitDots";
-import { Activity, Clock, Droplet, CheckSquare } from "lucide-react";
+import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+
+const pageAnim = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 280, damping: 28, staggerChildren: 0.06 }
+  },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } }
+};
+
+const itemAnim = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 }
+};
 
 export default function TodayPage() {
   const { data: session } = useSession();
-  const todayDate = format(new Date(), "EEEE, MMMM do");
-
-  // Extract first name or fallback
+  const todayDate = format(new Date(), "EEEE, d MMMM yyyy");
   const firstName = session?.user?.name ? session.user.name.split(' ')[0] : "User";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  // Start with 0 habits for a new account
-  const mockHabits = [];
-
-  // Container variants for staggered entrance
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
+  // Mock data for display
+  const score = 85;
+  const circumference = 2 * Math.PI * 36; // r=36
+  
   return (
-    <PageWrapper className="space-y-8 pb-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-4xl font-black tracking-tight">Good morning, {firstName}</h1>
-          <p className="text-slate-500 mt-1 font-medium">{todayDate}</p>
+    <motion.div variants={pageAnim} initial="initial" animate="animate" className="container-app py-8 pb-24 md:pb-8 space-y-8">
+      {/* Header */}
+      <motion.div variants={itemAnim} className="flex flex-col md:flex-row md:items-end justify-between gap-4 relative">
+        <div>
+          <h1 className="text-(--color-text-1)">{greeting}, {firstName}</h1>
+          <p className="text-(--color-text-2) font-medium mt-1">{todayDate}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <motion.div 
+            initial={{ scale: 1.5, color: "#f59e0b" }}
+            animate={{ scale: 1, color: "var(--color-warning)" }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            className="pill bg-(--color-warning-bg) text-(--color-warning)"
+          >
+            🔥 14 day streak
+          </motion.div>
+        </div>
+        
+        {/* Mobile Quick Add FAB */}
+        <button className="md:hidden fixed bottom-[80px] right-4 w-14 h-14 bg-(--color-brand) text-white rounded-full shadow-(--shadow-lg) flex items-center justify-center z-40 active:scale-95 transition-transform">
+          <Plus size={24} />
+        </button>
+      </motion.div>
+
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Day Score Ring */}
+        <motion.div variants={itemAnim} className="card p-4 flex items-center gap-4">
+          <div className="relative w-16 h-16 shrink-0">
+            <svg className="w-16 h-16 transform -rotate-90">
+              <circle cx="32" cy="32" r="28" stroke="var(--color-surface-3)" strokeWidth="6" fill="none" />
+              <motion.circle 
+                cx="32" cy="32" r="28" 
+                stroke="var(--color-brand)" 
+                strokeWidth="6" fill="none" 
+                strokeLinecap="round"
+                initial={{ strokeDashoffset: circumference }}
+                animate={{ strokeDashoffset: circumference - (score/100)*circumference }}
+                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+                style={{ strokeDasharray: circumference }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center font-bold text-lg text-(--color-text-1)">
+              {score}
+            </div>
+          </div>
+          <div>
+            <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-1">Day Score</p>
+            <p className="text-[12px] text-(--color-brand) font-medium">Great day</p>
+          </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex items-center gap-2 bg-linear-to-r from-orange-100 to-amber-100 dark:from-orange-950/40 dark:to-amber-950/40 text-orange-600 dark:text-orange-400 px-5 py-2.5 rounded-full font-bold text-sm shadow-sm border border-orange-200/50 dark:border-orange-900/50"
-        >
-          🔥 0 day streak
+        {/* Study Today */}
+        <motion.div variants={itemAnim} className="card p-4">
+          <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-2">Study Today</p>
+          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">2h 15m</p>
+          <p className="text-[12px] text-(--color-text-3) mt-1">/ 4h target</p>
+          <div style={{ height: "6px", background: "var(--color-surface-3)", borderRadius: "3px", overflow: "hidden", marginTop: "8px" }}>
+            <div style={{ height: "100%", width: "56%", background: "var(--color-study)", borderRadius: "3px", transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }}></div>
+          </div>
+        </motion.div>
+
+        {/* Water */}
+        <motion.div variants={itemAnim} className="card p-4">
+          <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-2">Water</p>
+          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">3 / 8</p>
+          <p className="text-[12px] text-(--color-text-3) mt-1">glasses</p>
+          <div className="flex gap-1 mt-2">
+            {[1,2,3,4,5,6,7,8].map(i => (
+              <div key={i} className={`h-2 flex-1 rounded-sm ${i <= 3 ? 'bg-(--color-water)' : 'bg-(--color-surface-3)'}`} />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Habits */}
+        <motion.div variants={itemAnim} className="card p-4">
+          <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-2">Habits</p>
+          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">4 / 5</p>
+          <p className="text-[12px] text-(--color-text-3) mt-1">completed</p>
+          <div className="flex gap-1.5 mt-2">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className={`w-3 h-3 rounded-full ${i <= 4 ? 'bg-(--color-success)' : 'bg-(--color-surface-3)'}`} />
+            ))}
+          </div>
         </motion.div>
       </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-      >
-        <StatCard
-          title="Day Score"
-          value="0"
-          subtitle="/100"
-          icon={Activity}
-          colorClass="bg-primary/10 text-primary border-primary/20"
-        />
-        <StatCard
-          title="Study Hours"
-          value="0"
-          subtitle="/ 4h goal"
-          icon={Clock}
-          colorClass="bg-work/10 text-work border-work/20"
-        />
-        <StatCard
-          title="Water"
-          value="0"
-          subtitle="/ 8 glasses"
-          icon={Droplet}
-          colorClass="bg-work/10 text-work border-work/20"
-        />
-        <StatCard
-          title="Habits"
-          value="0"
-          subtitle="/ 0 done"
-          icon={CheckSquare}
-          colorClass="bg-success/10 text-success border-success/20"
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <QuickLogPanel />
-      </motion.div>
-
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="lg:col-span-2 space-y-4"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold tracking-tight">Timeline</h2>
-          </div>
-          <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/60 shadow-sm min-h-[200px] flex items-center justify-center">
-            <p className="text-slate-400 font-medium text-sm text-center">No events logged today.<br />Start tracking to see your timeline!</p>
-          </div>
-        </motion.div>
+        
+        {/* Left Col */}
+        <div className="lg:col-span-2 space-y-6">
+          <motion.div variants={itemAnim} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h2>Timetable Preview</h2>
+              <Link href="/timetable" className="text-[14px] font-medium text-(--color-brand) hover:underline">View full →</Link>
+            </div>
+            <div className="card p-5 overflow-x-auto no-scrollbar flex gap-2">
+              {/* Mini timeline preview */}
+              <div className="shrink-0 w-32 p-3 rounded-lg bg-(--color-study-bg) border border-(--color-study) text-(--color-study)">
+                <p className="text-xs font-bold mb-1">09:00 - 11:00</p>
+                <p className="text-sm font-medium leading-tight">React Study</p>
+              </div>
+              <div className="shrink-0 w-24 p-3 rounded-lg bg-(--color-meal-bg) border border-(--color-meal) text-(--color-meal)">
+                <p className="text-xs font-bold mb-1">11:00 - 12:00</p>
+                <p className="text-sm font-medium leading-tight">Lunch</p>
+              </div>
+              <div className="shrink-0 w-32 p-3 rounded-lg bg-(--color-surface-3) border border-dashed border-(--color-border-2) flex flex-col items-center justify-center text-(--color-text-3) cursor-pointer hover:bg-(--color-surface-2)">
+                <Plus size={16} />
+                <span className="text-xs mt-1 font-medium">Add Block</span>
+              </div>
+            </div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="space-y-4"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold tracking-tight">Daily Habits</h2>
-          </div>
-          <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-2xl p-6 border border-slate-200/60 dark:border-slate-800/60 shadow-sm min-h-[200px]">
-            <HabitDots habits={mockHabits} />
-          </div>
-        </motion.div>
+          <motion.div variants={itemAnim} className="space-y-3">
+            <h2>Daily Goals</h2>
+            <div className="card divide-y divide-(--color-border)">
+              {['Morning exercise', 'Read 20 pages', 'No screens after 10PM'].map((goal, i) => (
+                <div key={i} className="p-4 flex items-center gap-4 cursor-pointer hover:bg-(--color-surface-2) transition-colors">
+                  <div className="w-6 h-6 rounded-full border-2 border-(--color-border-2) flex items-center justify-center">
+                    {i === 0 && <motion.svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.35 }}>
+                      <polyline points="20 6 9 17 4 12" />
+                    </motion.svg>}
+                  </div>
+                  <span className={`text-[15px] font-medium ${i===0 ? 'text-(--color-text-3) line-through' : 'text-(--color-text-1)'}`}>{goal}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Col */}
+        <div className="space-y-6">
+          <motion.div variants={itemAnim} className="space-y-3">
+            <h2>Quick Log</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-(--color-study-bg) text-(--color-study) flex items-center justify-center"><Plus size={20}/></div>
+                <span className="text-[13px] font-medium text-(--color-text-2)">Study</span>
+              </button>
+              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-(--color-meal-bg) text-(--color-meal) flex items-center justify-center"><Plus size={20}/></div>
+                <span className="text-[13px] font-medium text-(--color-text-2)">Meal</span>
+              </button>
+              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-(--color-exercise-bg) text-(--color-exercise) flex items-center justify-center"><Plus size={20}/></div>
+                <span className="text-[13px] font-medium text-(--color-text-2)">Exercise</span>
+              </button>
+              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-(--color-water-bg) text-(--color-water) flex items-center justify-center"><Plus size={20}/></div>
+                <span className="text-[13px] font-medium text-(--color-text-2)">Water</span>
+              </button>
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemAnim} className="space-y-3">
+            <h2>Habits</h2>
+            <div className="card p-4 flex flex-wrap gap-2">
+              <motion.button whileTap={{ scale: 0.95 }} className="pill bg-(--color-success) text-white">✓ Make bed</motion.button>
+              <motion.button whileTap={{ scale: 0.95 }} className="pill bg-(--color-success) text-white">✓ Meditate</motion.button>
+              <motion.button whileTap={{ scale: 0.95 }} className="pill bg-(--color-surface-3) text-(--color-text-2) border border-(--color-border)">Journal</motion.button>
+            </div>
+          </motion.div>
+        </div>
+
       </div>
-    </PageWrapper>
+    </motion.div>
   );
 }
