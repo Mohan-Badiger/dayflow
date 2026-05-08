@@ -1,157 +1,140 @@
 "use client";
-import { PageWrapper } from "@/components/layout/PageWrapper";
-import { Card } from "@/components/ui/Card";
-import { Lightbulb, TrendingUp, Activity, BarChart3 } from "lucide-react";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from "framer-motion";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { Activity, CalendarDays, Clock } from "lucide-react";
+
+const pageAnim = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1, y: 0,
+    transition: { type: "spring", stiffness: 280, damping: 28, staggerChildren: 0.06 }
+  },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } }
+};
+
+const itemAnim = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 }
+};
 
 export default function AnalyticsPage() {
-  const scoreData = [
-    { name: 'Mon', score: 65 },
-    { name: 'Tue', score: 75 },
-    { name: 'Wed', score: 85 },
-    { name: 'Thu', score: 70 },
-    { name: 'Fri', score: 90 },
-    { name: 'Sat', score: 95 },
-    { name: 'Sun', score: 85 },
+  const timetableCompletionData = [
+    { name: 'Mon', completion: 85, planned: 9, done: 8 },
+    { name: 'Tue', completion: 45, planned: 8, done: 4 },
+    { name: 'Wed', completion: 100, planned: 6, done: 6 },
+    { name: 'Thu', completion: 60, planned: 10, done: 6 },
+    { name: 'Fri', completion: 90, planned: 8, done: 7 },
+    { name: 'Sat', completion: 30, planned: 4, done: 1 },
+    { name: 'Sun', completion: 0, planned: 0, done: 0 },
   ];
 
-  const studyData = [
-    { name: 'React', hours: 14 },
-    { name: 'DSA', hours: 8 },
-    { name: 'System Design', hours: 4 },
+  const getBarColor = (val) => {
+    if (val >= 80) return "var(--color-success)";
+    if (val >= 50) return "var(--color-warning)";
+    return "var(--color-danger)";
+  };
+
+  const scoreBreakdownData = [
+    { name: 'Routine', value: 35, fill: "var(--color-routine)" },
+    { name: 'Timetable', value: 25, fill: "var(--color-study)" },
+    { name: 'Health', value: 30, fill: "var(--color-exercise)" },
   ];
 
-  const insights = [
-    { icon: TrendingUp, text: "You study 40% more on days you wake before 6:30.", color: "text-primary" },
-    { icon: Activity, text: "Your mood is highest on days with exercise.", color: "text-success" },
-    { icon: Lightbulb, text: "You missed your study goal 3 days this week — plan for those gaps.", color: "text-warning" },
+  const timeData = [
+    { name: 'Mon', planned: 300, actual: 280 },
+    { name: 'Tue', planned: 240, actual: 120 },
+    { name: 'Wed', planned: 180, actual: 180 },
+    { name: 'Thu', planned: 360, actual: 200 },
+    { name: 'Fri', planned: 240, actual: 210 },
+    { name: 'Sat', planned: 120, actual: 30 },
+    { name: 'Sun', planned: 0, actual: 0 },
   ];
 
   return (
-    <PageWrapper className="space-y-8 pb-12">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-4xl font-black tracking-tight">Analytics</h1>
-        <p className="text-slate-500 font-medium mt-1">Find the patterns in your life.</p>
+    <motion.div variants={pageAnim} initial="initial" animate="animate" exit="exit" className="container-app py-8 space-y-8">
+      <motion.div variants={itemAnim}>
+        <h1>Analytics</h1>
+        <p className="text-(--color-text-2) font-medium mt-1">Track your consistency and schedule adherence.</p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="flex gap-2 bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-md p-1.5 rounded-xl w-fit border border-slate-200/50 dark:border-slate-700/50"
-      >
-        {['7d', '30d', '90d'].map((range, i) => (
-          <button
-            key={range}
-            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${i === 0 ? "bg-white dark:bg-slate-700 shadow-sm text-primary" : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"}`}
-          >
-            {range}
-          </button>
-        ))}
-      </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Timetable Completion */}
+        <motion.div variants={itemAnim} className="card p-5 lg:col-span-2 flex flex-col">
+          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+            <CalendarDays size={20} className="text-(--color-brand)"/> Timetable Completion
+          </h2>
+          <div className="flex-1 min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={timetableCompletionData} margin={{ top: 10, right: 10, bottom: 5, left: -20 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--color-text-3)", fontWeight: 500 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--color-text-3)", fontWeight: 500 }} />
+                <Tooltip 
+                  cursor={{ fill: "var(--color-surface-2)" }} 
+                  contentStyle={{ borderRadius: 'var(--radius-md)', border: 'none', boxShadow: 'var(--shadow-md)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-1)' }}
+                  formatter={(val, name, props) => {
+                    if (name === "completion") return [`${props.payload.done}/${props.payload.planned} blocks done (${val}%)`, "Completed"];
+                    return [val, name];
+                  }}
+                />
+                <Bar dataKey="completion" radius={[4, 4, 0, 0]} barSize={36}>
+                  {timetableCompletionData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={getBarColor(entry.completion)} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card className="p-6 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 shadow-lg shadow-slate-200/20 dark:shadow-none transition-all hover:shadow-xl hover:shadow-slate-200/40">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <Activity className="w-6 h-6 text-primary" /> Day Score Trend
-              </h2>
-              <div className="min-h-[300px] w-full min-w-0" style={{ height: 300 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={scoreData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.2)" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 500 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 500 }} />
-                    <Tooltip cursor={{ stroke: "rgba(148, 163, 184, 0.2)", strokeWidth: 2 }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--card)', color: 'var(--foreground)', fontWeight: 'bold' }} />
-                    <Line type="monotone" dataKey="score" stroke="var(--color-primary)" strokeWidth={4} dot={{ r: 5, strokeWidth: 3, fill: "var(--background)", stroke: "var(--color-primary)" }} activeDot={{ r: 8, strokeWidth: 0, fill: "var(--color-primary)" }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <Card className="p-6 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 shadow-lg shadow-slate-200/20 dark:shadow-none transition-all hover:shadow-xl hover:shadow-slate-200/40">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <BarChart3 className="w-6 h-6 text-work" /> Study Distribution
-              </h2>
-              <div className="min-h-[300px] w-full min-w-0" style={{ height: 300 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={studyData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.2)" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 500 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 500 }} />
-                    <Tooltip cursor={{ fill: "rgba(148, 163, 184, 0.05)" }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--card)', color: 'var(--foreground)', fontWeight: 'bold' }} />
-                    <Bar dataKey="hours" fill="var(--color-work)" radius={[6, 6, 0, 0]} barSize={48} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
-
-        <div className="space-y-6">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Card className="p-6 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 shadow-lg shadow-slate-200/20 dark:shadow-none">
-              <h2 className="text-xl font-bold mb-5 tracking-tight">AI Insights</h2>
-              <div className="space-y-4">
-                {insights.map((insight, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + (i * 0.1) }}
-                    className="p-4 bg-slate-50/80 dark:bg-slate-800/80 rounded-xl flex items-start gap-3 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-md transition-all group"
-                  >
-                    <div className={`p-2 rounded-lg bg-white dark:bg-slate-900 shadow-sm group-hover:scale-110 transition-transform`}>
-                      <insight.icon className={`w-5 h-5 ${insight.color}`} />
-                    </div>
-                    <p className="text-sm font-medium leading-relaxed pt-1 text-slate-700 dark:text-slate-300">{insight.text}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <Card className="p-8 bg-linear-to-br from-primary to-indigo-600 text-white border-none shadow-xl shadow-primary/30 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-              <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                <Lightbulb className="w-24 h-24 rotate-12" />
-              </div>
-              <div className="relative z-10">
-                <h2 className="text-lg font-bold mb-2 text-white/90">Best Day This Week</h2>
-                <p className="text-4xl font-black mb-2 tracking-tight">Saturday</p>
-                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full">
-                  <span className="text-sm font-bold">Score: 95/100</span>
+        {/* Score Breakdown */}
+        <motion.div variants={itemAnim} className="card p-5 flex flex-col">
+          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+            <Activity size={20} className="text-(--color-routine)"/> Day Score Breakdown
+          </h2>
+          <div className="flex-1 min-h-[300px] flex flex-col items-center justify-center">
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie data={scoreBreakdownData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
+                  {scoreBreakdownData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ borderRadius: 'var(--radius-md)', border: 'none', boxShadow: 'var(--shadow-md)', backgroundColor: 'var(--color-surface)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex flex-wrap justify-center gap-3 mt-4">
+              {scoreBreakdownData.map(d => (
+                <div key={d.name} className="flex items-center gap-1.5 text-sm font-medium">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: d.fill }} />
+                  {d.name} ({d.value})
                 </div>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Planned vs Actual Time */}
+        <motion.div variants={itemAnim} className="card p-5 lg:col-span-3 flex flex-col">
+          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+            <Clock size={20} className="text-(--color-brand)"/> Planned vs Actual Time (Minutes)
+          </h2>
+          <div className="flex-1 min-h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={timeData} margin={{ top: 10, right: 10, bottom: 5, left: -10 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--color-text-3)", fontWeight: 500 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--color-text-3)", fontWeight: 500 }} />
+                <Tooltip cursor={{ fill: "var(--color-surface-2)" }} contentStyle={{ borderRadius: 'var(--radius-md)', border: 'none', boxShadow: 'var(--shadow-md)', backgroundColor: 'var(--color-surface)' }} />
+                <Bar dataKey="planned" fill="var(--color-surface-3)" radius={[4, 4, 0, 0]} name="Planned" />
+                <Bar dataKey="actual" fill="var(--color-study)" radius={[4, 4, 0, 0]} name="Completed" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+
       </div>
-    </PageWrapper>
+    </motion.div>
   );
 }
