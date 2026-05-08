@@ -58,14 +58,24 @@ const dayLogSchema = new mongoose.Schema(
       notes: { type: String },
     },
 
-    mood: {
-      morningMood: { type: Number }, // 1-5
-      eveningMood: { type: Number }, // 1-5
-      energyLevel: { type: Number }, // 1-10
-      focusLevel: { type: Number }, // 1-10
-      stressLevel: { type: Number }, // 1-10
+    timetable: [{
+      title: { type: String },               // "React study", "Lunch", "Evening walk"
+      category: {
+        type: String,
+        enum: ['study','exercise','meal','routine','break','personal'],
+        default: 'study'
+      },
+      startTime: { type: String },           // "09:00" (24hr format)
+      endTime: { type: String },           // "11:00"
+      durationMinutes: { type: Number },     // auto-calculated on save
       notes: { type: String },
-    },
+      status: {
+        type: String,
+        enum: ['planned','in-progress','done','skipped'],
+        default: 'planned'
+      },
+      color: { type: String },               // optional override hex
+    }],
 
     eveningReview: {
       wins: { type: String },
@@ -78,9 +88,8 @@ const dayLogSchema = new mongoose.Schema(
     dayScore: { type: Number, default: 0 }, // 0-100
     scoreBreakdown: {
       routineScore: { type: Number, default: 0 },
-      studyScore: { type: Number, default: 0 },
-      dietScore: { type: Number, default: 0 },
-      moodScore: { type: Number, default: 0 },
+      timetableScore: { type: Number, default: 0 },
+      healthScore: { type: Number, default: 0 },
     },
   },
   { timestamps: true }
