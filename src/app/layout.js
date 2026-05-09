@@ -71,7 +71,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <SessionProviderWrapper>
           <QueryProvider>
             {children}
