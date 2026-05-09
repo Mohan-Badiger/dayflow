@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
     const session = await auth();
     if (!session?.user) return new NextResponse("Unauthorized", { status: 401 });
 
-    const { date } = params;
+    const { date } = await params;
     await connectDB();
 
     let dayLog = await DayLog.findOne({ userId: session.user.id, date });
@@ -31,7 +31,7 @@ export async function PATCH(req, { params }) {
     const session = await auth();
     if (!session?.user) return new NextResponse("Unauthorized", { status: 401 });
 
-    const { date } = params;
+    const { date } = await params;
     const { action, payload } = await req.json();
     await connectDB();
 

@@ -1,147 +1,202 @@
 "use client";
-import { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { format, addDays, subDays } from "date-fns";
-import { ChevronLeft, ChevronRight, Plus, CheckCircle2, Trash2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { format, addDays, subDays, isToday } from "date-fns";
+import {
+  ChevronLeft, ChevronRight, Plus, CheckCircle2, Trash2,
+  Clock, CalendarDays, Zap, BookOpen, Dumbbell, Coffee,
+  User, Pause, Sparkles, GripVertical
+} from "lucide-react";
 import { useTimetable, useUpdateBlock, useAddBlock, useDeleteBlock } from "@/hooks/useTimetable";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
-const pageAnim = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 280, damping: 28, staggerChildren: 0.06 }
-  },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } }
+const CAT_CONFIG = {
+  study:    { color: "#6366f1", bg: "#6366f120", icon: BookOpen,  label: "Study" },
+  exercise: { color: "#10b981", bg: "#10b98120", icon: Dumbbell,  label: "Exercise" },
+  meal:     { color: "#f59e0b", bg: "#f59e0b20", icon: Coffee,    label: "Meal" },
+  routine:  { color: "#8b5cf6", bg: "#8b5cf620", icon: Clock,     label: "Routine" },
+  break:    { color: "#94a3b8", bg: "#94a3b820", icon: Pause,     label: "Break" },
+  personal: { color: "#ec4899", bg: "#ec489920", icon: User,      label: "Personal" },
 };
+
+const STATUS_STYLES = {
+  planned:       { bg: "bg-surface-3", text: "text-text-2", label: "Planned" },
+  "in-progress": { bg: "bg-warning/20", text: "text-warning", label: "In Progress" },
+  done:          { bg: "bg-success/20", text: "text-success", label: "Done" },
+  skipped:       { bg: "bg-danger/20", text: "text-danger", label: "Skipped" },
+};
+
+function ScoreRing({ value, max, size = 64 }) {
+  const pct = max > 0 ? value / max : 0;
+  const r = (size - 6) / 2;
+  const circ = 2 * Math.PI * r;
+  const color = pct >= 0.8 ? "var(--color-success)" : pct >= 0.5 ? "var(--color-warning)" : "var(--color-text-3)";
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--color-surface-3)" strokeWidth={5} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={5}
+          strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)} strokeLinecap="round"
+          className="transition-all duration-700" />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-sm font-black text-text-1">{Math.round(pct * 100)}%</span>
+      </div>
+    </div>
+  );
+}
 
 export default function TimetablePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const dateStr = format(currentDate, "yyyy-MM-dd");
-  const { data: timetableData } = useTimetable(dateStr);
+  const { data: timetableData, isLoading } = useTimetable(dateStr);
   const blocks = timetableData?.data || [];
   const updateBlock = useUpdateBlock(dateStr);
   const addBlock = useAddBlock(dateStr);
   const deleteBlock = useDeleteBlock(dateStr);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ title: "", category: "study", startTime: "09:00", endTime: "10:00" });
-
   const timelineRef = useRef(null);
 
-  const goNextDay = () => setCurrentDate(prev => addDays(prev, 1));
-  const goPrevDay = () => setCurrentDate(prev => subDays(prev, 1));
+  const goNext = () => setCurrentDate(p => addDays(p, 1));
+  const goPrev = () => setCurrentDate(p => subDays(p, 1));
   const goToday = () => setCurrentDate(new Date());
 
-  const swipeHandlers = {
-    drag: "x",
-    dragConstraints: { left: 0, right: 0 },
-    dragElastic: 0.1,
-    onDragEnd: (_, info) => {
-      if (info.offset.x < -80) goNextDay();
-      if (info.offset.x > 80) goPrevDay();
-    },
-  };
-
-  const getCategoryColors = (cat) => {
-    const map = {
-      study: "bg-indigo-100 border-indigo-300 text-indigo-800",
-      exercise: "bg-emerald-100 border-emerald-300 text-emerald-800",
-      meal: "bg-amber-100 border-amber-300 text-amber-800",
-      routine: "bg-violet-100 border-violet-300 text-violet-800",
-      break: "bg-slate-100 border-slate-300 text-slate-700",
-      personal: "bg-pink-100 border-pink-300 text-pink-800",
-    };
-    return map[cat] || map.study;
-  };
+  // Auto-scroll to current hour on load
+  useEffect(() => {
+    if (timelineRef.current && isToday(currentDate)) {
+      const hour = new Date().getHours();
+      timelineRef.current.scrollTop = Math.max(0, hour * 60 - 120);
+    }
+  }, [currentDate, blocks.length]);
 
   const toggleStatus = (block) => {
-    const nextStatus = {
-      'planned': 'in-progress',
-      'in-progress': 'done',
-      'done': 'skipped',
-      'skipped': 'planned'
-    }[block.status] || 'planned';
-    updateBlock.mutate({ blockId: block._id, data: { status: nextStatus } });
+    const next = { planned: "in-progress", "in-progress": "done", done: "skipped", skipped: "planned" }[block.status] || "planned";
+    updateBlock.mutate({ blockId: block._id, data: { status: next } });
   };
 
-  const handleAddBlock = () => {
-    addBlock.mutate(formData, {
-      onSuccess: () => setIsModalOpen(false)
-    });
+  const handleAdd = () => {
+    if (!formData.title) return;
+    addBlock.mutate(formData, { onSuccess: () => { setIsModalOpen(false); setFormData({ title: "", category: "study", startTime: "09:00", endTime: "10:00" }); } });
   };
+
+  // Stats
+  const doneCount = blocks.filter(b => b.status === "done").length;
+  const totalMin = blocks.reduce((s, b) => s + (b.durationMinutes || 0), 0);
+  const catStats = blocks.reduce((a, b) => { a[b.category] = (a[b.category] || 0) + 1; return a; }, {});
+
+  // Current time marker
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
   return (
-    <motion.div variants={pageAnim} initial="initial" animate="animate" exit="exit" className="container-app py-6 space-y-6">
-      
-      {/* Date Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <button onClick={goPrevDay} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-(--color-surface-3) transition-colors"><ChevronLeft size={24} /></button>
-          <div className="text-center w-[200px]">
-            <h1 className="text-2xl whitespace-nowrap">{format(currentDate, "EEEE, d MMM")}</h1>
-          </div>
-          <button onClick={goNextDay} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-(--color-surface-3) transition-colors"><ChevronRight size={24} /></button>
-          <button onClick={goToday} className="pill bg-(--color-surface-3) hover:bg-(--color-border) cursor-pointer text-(--color-text-2) ml-2">Today</button>
-        </div>
+    <PageWrapper className="space-y-5 pb-8">
+      {/* Date Navigation */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <button className="btn-ghost">Apply template</button>
-          <button className="btn-primary">Plan this day</button>
+          <button onClick={goPrev} className="w-10 h-10 rounded-xl bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
+            <ChevronLeft className="w-5 h-5 text-text-2" />
+          </button>
+          <div className="text-center min-w-[180px]">
+            <h1 className="text-xl font-bold text-text-1">{format(currentDate, "EEEE")}</h1>
+            <p className="text-sm text-text-3 font-medium">{format(currentDate, "d MMMM yyyy")}</p>
+          </div>
+          <button onClick={goNext} className="w-10 h-10 rounded-xl bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
+            <ChevronRight className="w-5 h-5 text-text-2" />
+          </button>
+          {!isToday(currentDate) && (
+            <button onClick={goToday} className="pill bg-brand/10 text-brand border border-brand/30 hover:bg-brand/20 transition-colors cursor-pointer">Today</button>
+          )}
+        </div>
+        <Button onClick={() => setIsModalOpen(true)} className="gap-2 h-10">
+          <Plus className="w-4 h-4" /> Add Block
+        </Button>
+      </div>
+
+      {/* Stats Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="card p-3 flex items-center gap-3">
+          <ScoreRing value={doneCount} max={blocks.length} />
+          <div><p className="text-xs text-text-3">Completion</p><p className="font-bold text-text-1">{doneCount}/{blocks.length}</p></div>
+        </div>
+        <div className="card p-3 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><Clock className="w-5 h-5 text-brand" /></div>
+          <div><p className="text-xs text-text-3">Total Time</p><p className="font-bold text-text-1">{Math.floor(totalMin/60)}h {totalMin%60}m</p></div>
+        </div>
+        <div className="card p-3 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center"><Zap className="w-5 h-5 text-success" /></div>
+          <div><p className="text-xs text-text-3">Blocks</p><p className="font-bold text-text-1">{blocks.length} planned</p></div>
+        </div>
+        <div className="card p-3 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center"><CalendarDays className="w-5 h-5 text-warning" /></div>
+          <div><p className="text-xs text-text-3">Categories</p><p className="font-bold text-text-1">{Object.keys(catStats).length} active</p></div>
         </div>
       </div>
 
-      {/* Swipeable Container */}
-      <motion.div {...swipeHandlers} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Visual Timeline (Left Desktop / Top Mobile) */}
-        <div className="lg:col-span-8 bg-white border border-(--color-border) rounded-2xl shadow-sm overflow-hidden flex flex-col h-[600px]">
-          <div className="p-4 border-b border-(--color-border) bg-(--color-surface-2) flex justify-between items-center">
-            <h2 className="text-[16px] font-semibold">24-Hour Timeline</h2>
-            <div className="text-xs font-medium text-(--color-text-3) flex gap-3">
-              <span>{blocks.filter(b=>b.status==='planned').length} planned</span>
-              <span>•</span>
-              <span className="text-(--color-success)">{blocks.filter(b=>b.status==='done').length} done</span>
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Timeline */}
+        <div className="lg:col-span-8 card overflow-hidden flex flex-col" style={{ height: "calc(100vh - 320px)", minHeight: 500 }}>
+          <div className="p-4 border-b border-border flex items-center justify-between">
+            <h2 className="font-bold text-text-1">Timeline</h2>
+            <div className="flex gap-3 text-xs font-medium text-text-3">
+              <span>{blocks.filter(b => b.status === "planned").length} planned</span>
+              <span className="text-success">{doneCount} done</span>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto relative no-scrollbar" ref={timelineRef}>
-            {/* Ruler */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 border-r border-(--color-border) bg-(--color-surface-2) z-10 flex flex-col">
-              {Array.from({length: 25}).map((_, i) => (
-                <div key={i} className="h-[48px] flex items-start justify-center text-xs text-(--color-text-3) font-medium pt-1 border-b border-transparent">
-                  {i.toString().padStart(2, '0')}:00
+          <div className="flex-1 overflow-y-auto relative" ref={timelineRef}>
+            {/* Hour markers */}
+            <div className="absolute left-0 top-0 bottom-0 w-14 border-r border-border bg-surface-2 z-10">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div key={i} className="h-[60px] flex items-start justify-center text-[10px] text-text-3 font-mono font-medium pt-1">
+                  {String(i).padStart(2, "0")}:00
                 </div>
               ))}
             </div>
-            {/* Grid lines */}
-            <div className="ml-16 relative h-[1200px] w-full">
-              {Array.from({length: 25}).map((_, i) => (
-                <div key={i} className="absolute w-full h-px bg-(--color-border) opacity-50" style={{ top: i * 48 }} />
+
+            {/* Grid */}
+            <div className="ml-14 relative" style={{ height: 24 * 60 }}>
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div key={i} className="absolute w-full h-px bg-border/40" style={{ top: i * 60 }} />
               ))}
-              
+
+              {/* Now line */}
+              {isToday(currentDate) && (
+                <div className="absolute left-0 right-0 z-20 flex items-center" style={{ top: nowMinutes }}>
+                  <div className="w-2.5 h-2.5 rounded-full bg-danger -ml-1" />
+                  <div className="flex-1 h-px bg-danger" />
+                </div>
+              )}
+
               {/* Blocks */}
               {blocks.map(block => {
-                const [h, m] = block.startTime.split(':').map(Number);
-                const top = (h + m/60) * 48;
-                const height = (block.durationMinutes / 60) * 48;
-                const colors = getCategoryColors(block.category);
-                
+                const [h, m] = (block.startTime || "0:0").split(":").map(Number);
+                const top = h * 60 + m;
+                const height = Math.max(block.durationMinutes || 30, 24);
+                const cat = CAT_CONFIG[block.category] || CAT_CONFIG.study;
+                const isDone = block.status === "done";
+                const isSkipped = block.status === "skipped";
+
                 return (
-                  <motion.div 
-                    layoutId={block._id}
-                    whileHover={{ scale: 1.01, zIndex: 20 }}
+                  <motion.div
                     key={block._id}
-                    className={`absolute left-2 right-4 rounded-md border p-2 overflow-hidden shadow-sm cursor-pointer select-none transition-opacity ${colors} ${block.status==='skipped' ? 'opacity-40' : 'opacity-100'}`}
-                    style={{ top, height }}
-                    onClick={() => { /* Edit Modal */ }}
+                    layoutId={block._id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: isSkipped ? 0.4 : 1, scale: 1 }}
+                    className="absolute left-1 right-3 rounded-xl p-2.5 cursor-pointer border overflow-hidden group"
+                    style={{ top, height: Math.max(height, 28), backgroundColor: cat.bg, borderColor: cat.color + "40" }}
+                    onClick={() => toggleStatus(block)}
                   >
-                    <div className="flex justify-between items-start">
-                      <p className="font-bold text-sm leading-none">{block.title}</p>
-                      {block.status === 'done' && <CheckCircle2 size={16} />}
+                    <div className="flex items-start justify-between">
+                      <div className="min-w-0">
+                        <p className={`font-bold text-xs leading-tight truncate ${isDone ? "line-through opacity-60" : ""}`} style={{ color: cat.color }}>{block.title}</p>
+                        {height > 36 && <p className="text-[10px] mt-0.5 font-mono" style={{ color: cat.color + "99" }}>{block.startTime}–{block.endTime}</p>}
+                      </div>
+                      {isDone && <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: cat.color }} />}
                     </div>
-                    {height > 30 && <p className="text-xs opacity-80 mt-1">{block.startTime} - {block.endTime}</p>}
-                    {block.status === 'skipped' && <div className="absolute inset-0 bg-black/5" style={{ backgroundImage: "linear-gradient(45deg, transparent 45%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.1) 55%, transparent 55%)", backgroundSize: "10px 10px" }} />}
                   </motion.div>
                 );
               })}
@@ -149,98 +204,96 @@ export default function TimetablePage() {
           </div>
         </div>
 
-        {/* Block List (Right Desktop / Bottom Mobile) */}
-        <div className="lg:col-span-4 space-y-4">
-          <h2 className="text-[16px] font-semibold text-(--color-text-1) px-1">Schedule</h2>
-          
-          <div className="space-y-3">
-            {blocks.map(block => (
-              <motion.div layoutId={`${block._id}-list`} key={block._id} className="card p-3 flex gap-4 items-center group">
-                <div className="flex flex-col items-center justify-center text-(--color-text-3) text-xs font-mono font-medium">
-                  <span>{block.startTime}</span>
-                  <div className="w-px h-4 bg-(--color-border-2) my-1" />
-                  <span>{block.endTime}</span>
-                </div>
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className={`w-2 h-2 rounded-full ${getCategoryColors(block.category).split(' ')[0]}`} />
-                    <p className="font-semibold text-[14px] text-(--color-text-1)">{block.title}</p>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <span onClick={() => toggleStatus(block)} className="cursor-pointer text-xs font-medium px-2 py-0.5 rounded-full bg-surface-3 text-text-2 hover:bg-border transition-colors">
-                      {block.status}
-                    </span>
-                    <button onClick={() => deleteBlock.mutate(block._id)} className="text-danger hover:text-danger-bg transition-colors">
-                      <Trash2 size={16} />
+        {/* Schedule List */}
+        <div className="lg:col-span-4 space-y-3">
+          <h2 className="font-bold text-text-1 px-1">Schedule</h2>
+
+          {blocks.length === 0 && !isLoading ? (
+            <div className="card p-10 text-center">
+              <CalendarDays className="w-10 h-10 text-text-3 mx-auto mb-3 opacity-30" />
+              <p className="text-text-3 text-sm">No blocks planned yet.</p>
+              <Button onClick={() => setIsModalOpen(true)} variant="outline" className="mt-3 gap-2 text-xs">
+                <Plus className="w-3 h-3" /> Add First Block
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {blocks.map((block, i) => {
+                const cat = CAT_CONFIG[block.category] || CAT_CONFIG.study;
+                const CatIcon = cat.icon;
+                const st = STATUS_STYLES[block.status] || STATUS_STYLES.planned;
+                return (
+                  <motion.div key={block._id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+                    className="card p-3 flex gap-3 items-center group">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: cat.bg }}>
+                      <CatIcon className="w-4 h-4" style={{ color: cat.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-text-1 truncate">{block.title}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[10px] font-mono text-text-3">{block.startTime}–{block.endTime}</span>
+                        <button onClick={() => toggleStatus(block)}
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${st.bg} ${st.text} transition-colors`}>
+                          {st.label}
+                        </button>
+                      </div>
+                    </div>
+                    <button onClick={() => deleteBlock.mutate(block._id)}
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-text-3 hover:text-danger rounded-lg hover:bg-danger/10 transition-all">
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
 
-            <button onClick={() => setIsModalOpen(true)} className="w-full border-2 border-dashed border-border hover:border-brand rounded-xl p-4 flex flex-col items-center justify-center text-text-3 hover:text-brand transition-colors gap-2 cursor-pointer bg-surface">
-              <Plus size={24} />
-              <span className="font-medium text-sm">Add Block</span>
-            </button>
-          </div>
+          <button onClick={() => setIsModalOpen(true)}
+            className="w-full border-2 border-dashed border-border hover:border-brand rounded-xl p-4 flex items-center justify-center gap-2 text-text-3 hover:text-brand transition-colors cursor-pointer">
+            <Plus className="w-4 h-4" /><span className="text-sm font-medium">Add Block</span>
+          </button>
         </div>
-      </motion.div>
+      </div>
 
+      {/* Add Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Timetable Block">
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input 
-              value={formData.title} 
-              onChange={e => setFormData({...formData, title: e.target.value})} 
-              type="text" 
-              className="w-full p-2 rounded border border-border bg-surface" 
-              placeholder="e.g. Deep Work Session" 
-            />
+            <label className="block text-sm font-bold mb-2 text-text-2">Title</label>
+            <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
+              className="input-field" placeholder="e.g. Deep Work — React Hooks" />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Category</label>
-            <select 
-              value={formData.category} 
-              onChange={e => setFormData({...formData, category: e.target.value})} 
-              className="w-full p-2 rounded border border-border bg-surface"
-            >
-              <option value="study">Study</option>
-              <option value="exercise">Exercise</option>
-              <option value="meal">Meal</option>
-              <option value="routine">Routine</option>
-              <option value="break">Break</option>
-              <option value="personal">Personal</option>
-            </select>
+            <label className="block text-sm font-bold mb-2 text-text-2">Category</label>
+            <div className="grid grid-cols-3 gap-2">
+              {Object.entries(CAT_CONFIG).map(([key, cfg]) => {
+                const Icon = cfg.icon;
+                return (
+                  <button key={key} onClick={() => setFormData({ ...formData, category: key })}
+                    className={`p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
+                    <Icon className="w-4 h-4" style={{ color: cfg.color }} />{cfg.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Start Time</label>
-              <input 
-                type="time" 
-                value={formData.startTime} 
-                onChange={e => setFormData({...formData, startTime: e.target.value})} 
-                className="w-full p-2 rounded border border-border bg-surface" 
-              />
+              <label className="block text-sm font-bold mb-2 text-text-2">Start</label>
+              <input type="time" value={formData.startTime} onChange={e => setFormData({ ...formData, startTime: e.target.value })}
+                className="input-field scheme-dark" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">End Time</label>
-              <input 
-                type="time" 
-                value={formData.endTime} 
-                onChange={e => setFormData({...formData, endTime: e.target.value})} 
-                className="w-full p-2 rounded border border-border bg-surface" 
-              />
+              <label className="block text-sm font-bold mb-2 text-text-2">End</label>
+              <input type="time" value={formData.endTime} onChange={e => setFormData({ ...formData, endTime: e.target.value })}
+                className="input-field scheme-dark" />
             </div>
           </div>
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleAddBlock} disabled={!formData.title}>Save Block</Button>
-          </div>
+          <Button className="w-full h-11 text-sm" onClick={handleAdd} disabled={!formData.title}>
+            <Plus className="w-4 h-4 mr-2" /> Add to Timeline
+          </Button>
         </div>
       </Modal>
-
-    </motion.div>
+    </PageWrapper>
   );
 }

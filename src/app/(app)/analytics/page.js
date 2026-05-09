@@ -2,15 +2,7 @@
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { Activity, CalendarDays, Clock } from "lucide-react";
-
-const pageAnim = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1, y: 0,
-    transition: { type: "spring", stiffness: 280, damping: 28, staggerChildren: 0.06 }
-  },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } }
-};
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 const itemAnim = {
   initial: { opacity: 0, y: 10 },
@@ -51,10 +43,10 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <motion.div variants={pageAnim} initial="initial" animate="animate" exit="exit" className="container-app py-8 space-y-8">
+    <PageWrapper className="container-app py-8 space-y-8">
       <motion.div variants={itemAnim}>
-        <h1>Analytics</h1>
-        <p className="text-(--color-text-2) font-medium mt-1">Track your consistency and schedule adherence.</p>
+        <h1 className="text-3xl font-bold">Analytics</h1>
+        <p className="text-text-2 font-medium mt-1">Track your consistency and schedule adherence.</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -62,7 +54,7 @@ export default function AnalyticsPage() {
         {/* Timetable Completion */}
         <motion.div variants={itemAnim} className="card p-5 lg:col-span-2 flex flex-col">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-            <CalendarDays size={20} className="text-(--color-brand)"/> Timetable Completion
+            <CalendarDays size={20} className="text-brand"/> Timetable Completion
           </h2>
           <div className="flex-1 min-h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -91,7 +83,7 @@ export default function AnalyticsPage() {
         {/* Score Breakdown */}
         <motion.div variants={itemAnim} className="card p-5 flex flex-col">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-            <Activity size={20} className="text-(--color-routine)"/> Day Score Breakdown
+            <Activity size={20} className="text-routine"/> Day Score Breakdown
           </h2>
           <div className="flex-1 min-h-[300px] flex flex-col items-center justify-center">
             <ResponsiveContainer width="100%" height={200}>
@@ -118,7 +110,7 @@ export default function AnalyticsPage() {
         {/* Planned vs Actual Time */}
         <motion.div variants={itemAnim} className="card p-5 lg:col-span-3 flex flex-col">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-            <Clock size={20} className="text-(--color-brand)"/> Planned vs Actual Time (Minutes)
+            <Clock size={20} className="text-brand"/> Planned vs Actual Time (Minutes)
           </h2>
           <div className="flex-1 min-h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -135,6 +127,6 @@ export default function AnalyticsPage() {
         </motion.div>
 
       </div>
-    </motion.div>
+    </PageWrapper>
   );
 }

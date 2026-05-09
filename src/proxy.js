@@ -1,18 +1,43 @@
-import NextAuth from "next-auth";
-import authConfig from "@/lib/auth.config";
+import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
-
-const publicRoutes = ["/", "/login"];
+const publicRoutes = ["/", "/auth", "/login"];
 const apiAuthPrefix = "/api/auth";
+
+const rateLimit = new Map();
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const limit = 100; // requests
+  const window = 60_000; // per minute
+  const entry = rateLimit.get(ip) || { count: 0, start: now };
+  if (now - entry.start > window) {
+    rateLimit.set(ip, { count: 1, start: now });
+    return false;
+  }
+  if (entry.count >= limit) return true;
+  entry.count++;
+  rateLimit.set(ip, entry);
+  return false;
+}
 
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+  // Rate Limiting
+  const ip = req.headers.get("x-forwarded-for") || req.ip || "127.0.0.1";
+  if (nextUrl.pathname.startsWith("/api/")) {
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 });
+    }
+  }
+
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  const isAuthRoute = nextUrl.pathname === "/login";
+  const isPublicRoute = publicRoutes.some(p => 
+    nextUrl.pathname === p || nextUrl.pathname.startsWith(p + "/")
+  );
+  const isAuthRoute = nextUrl.pathname === "/login" || nextUrl.pathname === "/auth";
 
   if (isApiAuthRoute) {
     return null;
@@ -32,7 +57,7 @@ export default auth((req) => {
     }
 
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-    return Response.redirect(new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl));
+    return Response.redirect(new URL(`/auth?callbackUrl=${encodedCallbackUrl}`, nextUrl));
   }
 
   return null;

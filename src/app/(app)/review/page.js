@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useApi } from "@/hooks/useApi";
+import { useAppStore } from "@/store/useAppStore";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -8,7 +10,36 @@ import { Trophy, CheckCircle, Activity, Target } from "lucide-react";
 
 export default function ReviewPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [score] = useState(85); // Mock score
+  const [score, setScore] = useState(0);
+  const [breakdown, setBreakdown] = useState({});
+  const { patch, get } = useApi();
+  const { activeDate, dayLog } = useAppStore();
+
+  const [formData, setFormData] = useState({
+    wins: "",
+    blockers: "",
+    reflection: "",
+    gratitude: "",
+    tomorrowPriority: ""
+  });
+
+  useEffect(() => {
+    if (dayLog?.eveningReview) {
+      setFormData(prev => ({
+        ...prev,
+        ...dayLog.eveningReview
+      }));
+    }
+  }, [dayLog]);
+
+  const handleSubmit = async () => {
+    const res = await patch(`/api/day/${activeDate}/review`, formData);
+    if (res?.dayScore !== undefined) {
+      setScore(res.dayScore);
+      setBreakdown(dayLog?.scoreBreakdown || {});
+      setSubmitted(true);
+    }
+  };
 
   if (submitted) {
     return (
@@ -41,18 +72,18 @@ export default function ReviewPage() {
         >
           <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
             <p className="text-sm text-slate-500 mb-1">Routine</p>
-            <p className="text-xl font-bold">20<span className="text-sm font-normal text-slate-400">/25</span></p>
+            <p className="text-xl font-bold">{breakdown.routineScore || 0}<span className="text-sm font-normal text-slate-400">/25</span></p>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
             <p className="text-sm text-slate-500 mb-1">Study</p>
-            <p className="text-xl font-bold">25<span className="text-sm font-normal text-slate-400">/25</span></p>
+            <p className="text-xl font-bold">{breakdown.timetableScore || 0}<span className="text-sm font-normal text-slate-400">/25</span></p>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
-            <p className="text-sm text-slate-500 mb-1">Diet</p>
-            <p className="text-xl font-bold">15<span className="text-sm font-normal text-slate-400">/25</span></p>
+            <p className="text-sm text-slate-500 mb-1">Health</p>
+            <p className="text-xl font-bold">{breakdown.healthScore || 0}<span className="text-sm font-normal text-slate-400">/25</span></p>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
-            <p className="text-sm text-slate-500 mb-1">Mood</p>
+            <p className="text-sm text-slate-500 mb-1">Review</p>
             <p className="text-xl font-bold">25<span className="text-sm font-normal text-slate-400">/25</span></p>
           </div>
         </motion.div>
@@ -74,6 +105,8 @@ export default function ReviewPage() {
               <Trophy className="w-5 h-5 text-yellow-500" /> Today's Wins
             </label>
             <textarea
+              value={formData.wins}
+              onChange={e => setFormData({...formData, wins: e.target.value})}
               className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-primary outline-none transition-shadow"
               placeholder="What went well today? Big or small."
             />
@@ -82,6 +115,8 @@ export default function ReviewPage() {
           <div>
             <label className="block text-lg font-bold mb-2">Blockers & Challenges</label>
             <textarea
+              value={formData.blockers}
+              onChange={e => setFormData({...formData, blockers: e.target.value})}
               className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-warning outline-none transition-shadow"
               placeholder="What held you back?"
             />
@@ -90,6 +125,8 @@ export default function ReviewPage() {
           <div>
             <label className="block text-lg font-bold mb-2">Reflection</label>
             <textarea
+              value={formData.reflection}
+              onChange={e => setFormData({...formData, reflection: e.target.value})}
               className="w-full p-4 rounded-xl border border-border bg-background min-h-[100px] resize-y focus:ring-2 focus:ring-primary outline-none transition-shadow"
               placeholder="What would you do differently?"
             />
@@ -99,6 +136,8 @@ export default function ReviewPage() {
             <label className="block text-lg font-bold mb-2">Gratitude</label>
             <input
               type="text"
+              value={formData.gratitude}
+              onChange={e => setFormData({...formData, gratitude: e.target.value})}
               className="w-full p-4 rounded-xl border border-border bg-background focus:ring-2 focus:ring-success outline-none transition-shadow"
               placeholder="One thing you're grateful for today..."
             />
@@ -110,13 +149,15 @@ export default function ReviewPage() {
             </label>
             <input
               type="text"
+              value={formData.tomorrowPriority}
+              onChange={e => setFormData({...formData, tomorrowPriority: e.target.value})}
               className="w-full p-4 rounded-xl border-2 border-primary bg-background focus:ring-4 focus:ring-primary/20 outline-none transition-shadow text-lg font-medium"
               placeholder="The ONE thing you must accomplish tomorrow"
             />
           </div>
         </div>
 
-        <Button size="lg" className="w-full text-lg h-14" onClick={() => setSubmitted(true)}>
+        <Button size="lg" className="w-full text-lg h-14" onClick={handleSubmit}>
           <CheckCircle className="w-5 h-5 mr-2" /> Complete Review & Calculate Score
         </Button>
       </Card>

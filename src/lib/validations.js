@@ -1,0 +1,166 @@
+import { z } from "zod"
+
+const timeStr = z
+  .string()
+  .regex(/^\d{2}:\d{2}$/, "Must be HH:MM format")
+  .optional()
+  .or(z.literal(""))
+
+const dateStr = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Must be YYYY-MM-DD")
+
+export const schemas = {
+
+  // ─ User ─────────────────────────────────────────────
+  updateSettings: z.object({
+    wakeTarget:          timeStr,
+    sleepTarget:         timeStr,
+    dailyStudyGoalHours: z.number().min(0).max(24).optional(),
+    waterGoalGlasses:    z.number().min(1).max(20).optional(),
+    timezone:            z.string().max(50).optional(),
+    weekStartsOn:        z.enum(["monday","sunday"]).optional(),
+  }),
+
+  updateJobGoal: z.object({
+    role:                  z.string().max(200).optional(),
+    targetDate:            z.string().optional().nullable(),
+    weeklyStudyHourTarget: z.number().min(0).optional(),
+    totalTargetHours:      z.number().min(0).optional(),
+  }),
+
+  // ─ DayLog ───────────────────────────────────────────
+  updateRoutine: z.object({
+    wakeTime:  timeStr,
+    sleepTime: timeStr,
+    morningChecklist: z.object({
+      exercise:         z.boolean().optional(),
+      meditation:       z.boolean().optional(),
+      coldShower:       z.boolean().optional(),
+      breakfast:        z.boolean().optional(),
+      reviewedPlan:     z.boolean().optional(),
+      noPhoneFirstHour: z.boolean().optional(),
+    }).optional(),
+    nightChecklist: z.object({
+      reviewedDay:       z.boolean().optional(),
+      plannedTomorrow:   z.boolean().optional(),
+      readingOrLearning: z.boolean().optional(),
+      screenOffBy:       timeStr,
+    }).optional(),
+  }),
+
+  addWorkSession: z.object({
+    category: z.enum(["React","Next.js","DSA","Interview Prep",
+                       "Aptitude","English","System Design","Other"]),
+    topic:           z.string().max(200).optional(),
+    platform:        z.string().max(100).optional(),
+    startTime:       timeStr,
+    endTime:         timeStr,
+    durationMinutes: z.number().min(0).optional(),
+    notes:           z.string().max(1000).optional(),
+    quality:         z.number().min(1).max(5).optional(),
+  }),
+
+  updateDiet: z.object({
+    waterGlasses: z.number().min(0).max(20).optional(),
+    junkFood:     z.boolean().optional(),
+    notes:        z.string().max(500).optional(),
+  }),
+
+  addMeal: z.object({
+    type:        z.enum(["Breakfast","Lunch","Dinner","Snack"]),
+    description: z.string().max(300).optional(),
+    time:        timeStr,
+    isHealthy:   z.boolean().optional(),
+  }),
+
+  updateExercise: z.object({
+    done:            z.boolean().optional(),
+    type:            z.string().max(100).optional(),
+    durationMinutes: z.number().min(0).optional(),
+    notes:           z.string().max(500).optional(),
+  }),
+
+  updateReview: z.object({
+    wins:             z.string().max(1000).optional(),
+    blockers:         z.string().max(1000).optional(),
+    tomorrowPriority: z.string().max(500).optional(),
+    reflection:       z.string().max(2000).optional(),
+    gratitude:        z.string().max(500).optional(),
+  }),
+
+  // ─ Timetable ────────────────────────────────────────
+  addBlock: z.object({
+    title:    z.string().min(1).max(200),
+    category: z.enum(["study","exercise","meal",
+                       "routine","break","personal"]),
+    startTime: z.string().regex(/^\d{2}:\d{2}$/),
+    endTime:   z.string().regex(/^\d{2}:\d{2}$/),
+    notes:     z.string().max(500).optional(),
+    status:    z.enum(["planned","in-progress","done","skipped"])
+                .optional(),
+  }),
+
+  updateBlock: z.object({
+    title:     z.string().min(1).max(200).optional(),
+    category:  z.enum(["study","exercise","meal",
+                        "routine","break","personal"]).optional(),
+    startTime: z.string().regex(/^\d{2}:\d{2}$/).optional(),
+    endTime:   z.string().regex(/^\d{2}:\d{2}$/).optional(),
+    notes:     z.string().max(500).optional(),
+    status:    z.enum(["planned","in-progress","done","skipped"])
+                .optional(),
+  }),
+
+  // ─ Habit ────────────────────────────────────────────
+  createHabit: z.object({
+    name:       z.string().min(1).max(100),
+    category:   z.enum(["routine","health","study","diet","custom"])
+                 .optional(),
+    targetDays: z.array(
+      z.enum(["Mon","Tue","Wed","Thu","Fri","Sat","Sun"])
+    ).optional(),
+    color: z.string().max(20).optional(),
+    icon:  z.string().max(50).optional(),
+    order: z.number().optional(),
+  }),
+
+  toggleHabit: z.object({
+    habitId:   z.string().min(1),
+    date:      dateStr,
+    completed: z.boolean(),
+    notes:     z.string().max(300).optional(),
+  }),
+
+  // ─ Template ─────────────────────────────────────────
+  createTemplate: z.object({
+    name:        z.string().min(1).max(100),
+    description: z.string().max(300).optional(),
+    isDefault:   z.boolean().optional(),
+    blocks: z.array(z.object({
+      title:     z.string().min(1).max(200),
+      category:  z.enum(["study","exercise","meal",
+                          "routine","break","personal"]),
+      startTime: z.string().regex(/^\d{2}:\d{2}$/),
+      endTime:   z.string().regex(/^\d{2}:\d{2}$/),
+      notes:     z.string().max(300).optional(),
+    })).optional(),
+  }),
+
+  applyTemplate: z.object({
+    date: dateStr,
+  }),
+
+  // ─ Weekly ────────────────────────────────────────────
+  createWeekly: z.object({
+    weekStartDate: dateStr,
+    theme:         z.string().max(200).optional(),
+    priorities:    z.array(z.string().max(200)).max(3).optional(),
+    goals: z.array(z.object({
+      category:       z.string().max(100),
+      targetHours:    z.number().min(0),
+      targetSessions: z.number().min(0),
+      notes:          z.string().max(200).optional(),
+    })).optional(),
+  }),
+}

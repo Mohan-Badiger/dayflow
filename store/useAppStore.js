@@ -24,7 +24,9 @@ export const useAppStore = create((set, get) => ({
       const res = await fetch(`/api/day/${date}`);
       if (res.ok) {
         const data = await res.json();
-        set({ dayLog: data });
+        if (data.success) {
+          set({ dayLog: data.data });
+        }
       }
     } catch (e) {
       console.error("Failed to fetch day log", e);
@@ -54,14 +56,37 @@ export const useAppStore = create((set, get) => ({
 
     // Background Sync
     try {
-      const res = await fetch(`/api/day/${activeDate}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, payload })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        set({ dayLog: data }); // Set truth from DB
+      let endpoint = "";
+      let method = "POST";
+      let bodyData = payload;
+
+      if (action === "ADD_SESSION") {
+        endpoint = `/api/day/${activeDate}/sessions`;
+        method = "POST";
+      } else if (action === "ADD_MEAL") {
+        endpoint = `/api/day/${activeDate}/diet/meals`;
+        method = "POST";
+      } else if (action === "ADD_EXERCISE") {
+        endpoint = `/api/day/${activeDate}/exercise`;
+        method = "PATCH";
+      } else if (action === "UPDATE_WATER") {
+        endpoint = `/api/day/${activeDate}/diet`;
+        method = "PATCH";
+        bodyData = { waterGlasses: payload };
+      }
+
+      if (endpoint) {
+        const res = await fetch(endpoint, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyData)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          // We can optionally refetch or update state with data.data
+          // Since the API returns { success, data }
+          get().fetchDayLog(activeDate);
+        }
       }
     } catch (e) {
       console.error("Failed to update day log", e);

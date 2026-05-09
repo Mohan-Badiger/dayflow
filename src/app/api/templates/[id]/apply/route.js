@@ -1,49 +1,51 @@
-import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import DayTemplate from "@/models/DayTemplate";
-import DayLog from "@/models/DayLog";
-import { auth } from "@/lib/auth";
+import { auth }        from "@/lib/auth"
+import connectDB       from "@/lib/db"
+import User            from "@/models/User"
+import DayTemplate     from "@/models/DayTemplate"
+import { getOrCreateDayLog, recalcAndSave, calcDuration }
+  from "@/lib/daylogHelpers"
+import { schemas }     from "@/lib/validations"
+import { ok, err, unauthorized, notFound, serverError }
+  from "@/lib/apiResponse"
 
 export async function POST(req, { params }) {
   try {
-    const session = await auth();
-    if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const session = await auth()
+    if (!session?.user?.id) return unauthorized()
+    const { id } = await params
 
-    const { id } = await params;
-    const { date } = await req.json();
+    const body   = await req.json()
+    const parsed = schemas.applyTemplate.safeParse(body)
+    if (!parsed.success)
+      return err("Validation failed", 400, parsed.error.flatten())
 
-    await connectDB();
-    const template = await DayTemplate.findOne({ _id: id, userId: session.user.id });
-    if (!template) return NextResponse.json({ success: false, error: "Template not found" }, { status: 404 });
+    const { date } = parsed.data
 
-    let dayLog = await DayLog.findOne({ userId: session.user.id, date });
-    if (!dayLog) {
-      dayLog = new DayLog({ userId: session.user.id, date, timetable: [] });
-    }
+    await connectDB()
+    const template = await DayTemplate.findOne({
+      _id: id, userId: session.user.id
+    })
+    if (!template) return notFound("Template")
 
-    const newBlocks = template.blocks.map(b => {
-      const [startH, startM] = b.startTime.split(':').map(Number);
-      const [endH, endM] = b.endTime.split(':').map(Number);
-      const durationMinutes = Math.max(0, (endH * 60 + endM) - (startH * 60 + startM));
+    const log = await getOrCreateDayLog(session.user.id, date)
 
-      return {
-        title: b.title,
-        category: b.category,
-        startTime: b.startTime,
-        endTime: b.endTime,
-        durationMinutes,
-        notes: b.notes,
-        status: 'planned'
-      };
-    });
+    const newBlocks = template.blocks.map(b => ({
+      title:           b.title,
+      category:        b.category,
+      startTime:       b.startTime,
+      endTime:         b.endTime,
+      durationMinutes: calcDuration(b.startTime, b.endTime),
+      notes:           b.notes || "",
+      status:          "planned",
+    }))
 
-    dayLog.timetable.push(...newBlocks);
-    dayLog.timetable.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    log.timetable = newBlocks
+    log.markModified("timetable")
 
-    await dayLog.save();
+    await DayTemplate.findByIdAndUpdate(id, { $inc: { usageCount: 1 } })
 
-    return NextResponse.json({ success: true, data: dayLog });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    const user = await User.findById(session.user.id).select("settings").lean()
+    const updated = await recalcAndSave(log, user?.settings)
+    return ok(updated.timetable, `Template applied to ${date}`)
+  } catch (e) { return serverError(e) }
 }

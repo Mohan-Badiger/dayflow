@@ -4,25 +4,54 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { User, Bell, Target, Download, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useApi } from "@/hooks/useApi";
+import { useToast } from "@/hooks/useToast";
 import { useAppStore } from "@/store/useAppStore";
 
 export default function SettingsPage() {
   const storeState = useAppStore();
+  const { patch, get } = useApi();
+  const { add: toast } = useToast();
+
+  const [settings, setSettings] = useState({
+    theme: "system",
+    wakeTarget: "06:30",
+    sleepTarget: "23:00",
+    studyGoalHours: 4,
+    waterGoal: 8,
+  });
+
+  const [jobGoal, setJobGoal] = useState({
+    role: "React / Next.js Developer",
+    targetDate: "",
+    weeklyHours: 28,
+  });
+
+  useEffect(() => {
+    // Fetch current user settings
+    const loadUser = async () => {
+      const data = await get("/api/user");
+      if (data) {
+        if (data.settings) setSettings(data.settings);
+        if (data.jobGoal) setJobGoal(data.jobGoal);
+      }
+    };
+    loadUser();
+  }, []);
+
+  const handleSaveSettings = async () => {
+    await patch("/api/user/settings", { settings });
+    toast("Settings saved!", "success");
+  };
+
+  const handleSaveJobGoal = async () => {
+    await patch("/api/user/settings", { jobGoal });
+    toast("Career goal saved!", "success");
+  };
 
   const handleExportData = () => {
-    // Export zustand store and any local storage data
-    const dataToExport = {
-      appState: storeState,
-      exportedAt: new Date().toISOString()
-    };
-    
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "dayflow_export.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    window.open("/api/export", "_blank");
   };
 
   const handleLogout = async () => {
@@ -64,22 +93,22 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Wake Target</label>
-              <input type="time" defaultValue="06:30" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+              <input type="time" value={settings.wakeTarget} onChange={e => setSettings({...settings, wakeTarget: e.target.value})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Sleep Target</label>
-              <input type="time" defaultValue="23:00" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+              <input type="time" value={settings.sleepTarget} onChange={e => setSettings({...settings, sleepTarget: e.target.value})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Study Goal (hrs)</label>
-              <input type="number" defaultValue={4} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+              <input type="number" value={settings.studyGoalHours} onChange={e => setSettings({...settings, studyGoalHours: Number(e.target.value)})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Water Goal (glasses)</label>
-              <input type="number" defaultValue={8} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+              <input type="number" value={settings.waterGoal} onChange={e => setSettings({...settings, waterGoal: Number(e.target.value)})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
           </div>
-          <Button className="mt-4">Save Targets</Button>
+          <Button className="mt-4" onClick={handleSaveSettings}>Save Targets</Button>
         </Card>
 
         <Card className="p-6">
@@ -89,20 +118,20 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Target Role</label>
-              <input type="text" defaultValue="React / Next.js Developer" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+              <input type="text" value={jobGoal.role} onChange={e => setJobGoal({...jobGoal, role: e.target.value})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Target Date</label>
-                <input type="date" className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+                <input type="date" value={jobGoal.targetDate} onChange={e => setJobGoal({...jobGoal, targetDate: e.target.value})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Weekly Study Target (hrs)</label>
-                <input type="number" defaultValue={28} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
+                <input type="number" value={jobGoal.weeklyHours} onChange={e => setJobGoal({...jobGoal, weeklyHours: Number(e.target.value)})} className="w-full p-2 border border-(--border) bg-(--background) rounded-md" />
               </div>
             </div>
           </div>
-          <Button className="mt-4">Save Career Goal</Button>
+          <Button className="mt-4" onClick={handleSaveJobGoal}>Save Career Goal</Button>
         </Card>
 
         <Card className="p-6">

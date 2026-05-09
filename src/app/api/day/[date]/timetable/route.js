@@ -1,54 +1,56 @@
-import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import DayLog from "@/models/DayLog";
-import { auth } from "@/lib/auth";
+import { auth }        from "@/lib/auth"
+import connectDB       from "@/lib/db"
+import User            from "@/models/User"
+import { 
+  getOrCreateDayLog, 
+  recalcAndSave, 
+  calcDuration,
+  ok, 
+  err, 
+  unauthorized, 
+  serverError 
+} from "@/lib/daylogHelpers"
+import { schemas }     from "@/lib/validations"
 
 export async function GET(req, { params }) {
   try {
-    const session = await auth();
-    if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-    const { date } = await params;
-    await connectDB();
-
-    const dayLog = await DayLog.findOne({ userId: session.user.id, date });
-    const timetable = dayLog?.timetable || [];
-
-    return NextResponse.json({ success: true, data: timetable });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    const session = await auth()
+    if (!session?.user?.id) return unauthorized()
+    const { date } = await params
+    await connectDB()
+    const log = await getOrCreateDayLog(session.user.id, date)
+    const sorted = [...log.timetable].sort((a, b) =>
+      a.startTime.localeCompare(b.startTime)
+    )
+    return ok(sorted)
+  } catch (e) { return serverError(e) }
 }
 
 export async function POST(req, { params }) {
   try {
-    const session = await auth();
-    if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    const session = await auth()
+    if (!session?.user?.id) return unauthorized()
+    const { date } = await params
 
-    const { date } = await params;
-    const body = await req.json();
+    const body   = await req.json()
+    const parsed = schemas.addBlock.safeParse(body)
+    if (!parsed.success)
+      return err("Validation failed", 400, parsed.error.flatten())
 
-    await connectDB();
-    let dayLog = await DayLog.findOne({ userId: session.user.id, date });
-    if (!dayLog) {
-      dayLog = new DayLog({ userId: session.user.id, date, timetable: [] });
-    }
+    const d = parsed.data
+    d.durationMinutes = calcDuration(d.startTime, d.endTime)
 
-    // Auto-calculate duration
-    const [startH, startM] = body.startTime.split(':').map(Number);
-    const [endH, endM] = body.endTime.split(':').map(Number);
-    const durationMinutes = (endH * 60 + endM) - (startH * 60 + startM);
+    await connectDB()
+    const log = await getOrCreateDayLog(session.user.id, date)
+    log.timetable.push(d)
+    log.markModified("timetable")
 
-    const newBlock = { ...body, durationMinutes: Math.max(0, durationMinutes) };
-    dayLog.timetable.push(newBlock);
-    
-    // Sort by start time
-    dayLog.timetable.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const user = await User.findById(session.user.id).select("settings").lean()
+    const updated = await recalcAndSave(log, user?.settings)
 
-    await dayLog.save();
-
-    return NextResponse.json({ success: true, data: dayLog.timetable });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    return ok(
+      updated.timetable[updated.timetable.length - 1],
+      "Block added", 201
+    )
+  } catch (e) { return serverError(e) }
 }
