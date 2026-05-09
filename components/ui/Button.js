@@ -8,7 +8,7 @@ export function Button({ className, variant = "default", size = "default", asChi
   const baseStyles = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50";
   
   const variants = {
-    default: "bg-primary text-white hover:bg-[#6c65bd] shadow-sm",
+    default: "bg-brand text-white hover:bg-[#6c65bd] shadow-sm",
     outline: "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 text-slate-900",
     ghost: "hover:bg-slate-100 hover:text-slate-900",
     success: "bg-success text-white hover:bg-[#18805e] shadow-sm",
