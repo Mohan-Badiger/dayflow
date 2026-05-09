@@ -2,8 +2,10 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { format, addDays, subDays } from "date-fns";
-import { ChevronLeft, ChevronRight, Plus, CheckCircle2 } from "lucide-react";
-import { useTimetable, useUpdateBlock } from "@/hooks/useTimetable";
+import { ChevronLeft, ChevronRight, Plus, CheckCircle2, Trash2 } from "lucide-react";
+import { useTimetable, useUpdateBlock, useAddBlock, useDeleteBlock } from "@/hooks/useTimetable";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 
 const pageAnim = {
   initial: { opacity: 0, y: 12 },
@@ -21,7 +23,12 @@ export default function TimetablePage() {
   const { data: timetableData } = useTimetable(dateStr);
   const blocks = timetableData?.data || [];
   const updateBlock = useUpdateBlock(dateStr);
+  const addBlock = useAddBlock(dateStr);
+  const deleteBlock = useDeleteBlock(dateStr);
   
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ title: "", category: "study", startTime: "09:00", endTime: "10:00" });
+
   const timelineRef = useRef(null);
 
   const goNextDay = () => setCurrentDate(prev => addDays(prev, 1));
@@ -58,6 +65,12 @@ export default function TimetablePage() {
       'skipped': 'planned'
     }[block.status] || 'planned';
     updateBlock.mutate({ blockId: block._id, data: { status: nextStatus } });
+  };
+
+  const handleAddBlock = () => {
+    addBlock.mutate(formData, {
+      onSuccess: () => setIsModalOpen(false)
+    });
   };
 
   return (
@@ -154,22 +167,80 @@ export default function TimetablePage() {
                     <div className={`w-2 h-2 rounded-full ${getCategoryColors(block.category).split(' ')[0]}`} />
                     <p className="font-semibold text-[14px] text-(--color-text-1)">{block.title}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <span onClick={() => toggleStatus(block)} className="cursor-pointer text-xs font-medium px-2 py-0.5 rounded-full bg-(--color-surface-3) text-(--color-text-2) hover:bg-(--color-border) transition-colors">
+                  <div className="flex gap-2 items-center">
+                    <span onClick={() => toggleStatus(block)} className="cursor-pointer text-xs font-medium px-2 py-0.5 rounded-full bg-surface-3 text-text-2 hover:bg-border transition-colors">
                       {block.status}
                     </span>
+                    <button onClick={() => deleteBlock.mutate(block._id)} className="text-danger hover:text-danger-bg transition-colors">
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
               </motion.div>
             ))}
 
-            <button className="w-full border-2 border-dashed border-(--color-border) hover:border-(--color-brand) rounded-xl p-4 flex flex-col items-center justify-center text-(--color-text-3) hover:text-(--color-brand) transition-colors gap-2 cursor-pointer bg-(--color-surface)">
+            <button onClick={() => setIsModalOpen(true)} className="w-full border-2 border-dashed border-border hover:border-brand rounded-xl p-4 flex flex-col items-center justify-center text-text-3 hover:text-brand transition-colors gap-2 cursor-pointer bg-surface">
               <Plus size={24} />
               <span className="font-medium text-sm">Add Block</span>
             </button>
           </div>
         </div>
       </motion.div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Timetable Block">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <input 
+              value={formData.title} 
+              onChange={e => setFormData({...formData, title: e.target.value})} 
+              type="text" 
+              className="w-full p-2 rounded border border-border bg-surface" 
+              placeholder="e.g. Deep Work Session" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Category</label>
+            <select 
+              value={formData.category} 
+              onChange={e => setFormData({...formData, category: e.target.value})} 
+              className="w-full p-2 rounded border border-border bg-surface"
+            >
+              <option value="study">Study</option>
+              <option value="exercise">Exercise</option>
+              <option value="meal">Meal</option>
+              <option value="routine">Routine</option>
+              <option value="break">Break</option>
+              <option value="personal">Personal</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Start Time</label>
+              <input 
+                type="time" 
+                value={formData.startTime} 
+                onChange={e => setFormData({...formData, startTime: e.target.value})} 
+                className="w-full p-2 rounded border border-border bg-surface" 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">End Time</label>
+              <input 
+                type="time" 
+                value={formData.endTime} 
+                onChange={e => setFormData({...formData, endTime: e.target.value})} 
+                className="w-full p-2 rounded border border-border bg-surface" 
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 mt-6">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddBlock} disabled={!formData.title}>Save Block</Button>
+          </div>
+        </div>
+      </Modal>
+
     </motion.div>
   );
 }

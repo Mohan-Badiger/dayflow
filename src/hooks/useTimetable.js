@@ -49,3 +49,33 @@ export function useUpdateBlock(date) {
     },
   })
 }
+
+export function useAddBlock(date) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data) =>
+      fetch(`/api/day/${date}/timetable`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }).then(r => r.json()),
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["timetable", date] })
+      qc.invalidateQueries({ queryKey: ["daylog", date] })
+    },
+  })
+}
+
+export function useDeleteBlock(date) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (blockId) =>
+      fetch(`/api/day/${date}/timetable/${blockId}`, {
+        method: "DELETE",
+      }).then(r => r.json()),
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["timetable", date] })
+      qc.invalidateQueries({ queryKey: ["daylog", date] })
+    },
+  })
+}

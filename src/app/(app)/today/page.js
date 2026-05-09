@@ -4,6 +4,9 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { useAppStore } from "@/store/useAppStore";
+import { QuickLogPanel } from "@/components/today/QuickLogPanel";
+import { useEffect } from "react";
 
 const pageAnim = {
   initial: { opacity: 0, y: 12 },
@@ -27,8 +30,20 @@ export default function TodayPage() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  // Mock data for display
-  const score = 85;
+  const { dayLog, fetchDayLog, activeDate, updateDayLog } = useAppStore();
+
+  useEffect(() => {
+    fetchDayLog(activeDate);
+  }, [activeDate]);
+
+  // Derived metrics from DayLog
+  const score = dayLog?.dayScore || 0;
+  const water = dayLog?.diet?.waterGlasses || 0;
+  const sessions = dayLog?.workSessions || [];
+  const studyMins = sessions.reduce((acc, curr) => acc + (curr.durationMinutes || 0), 0);
+  const studyHrs = Math.floor(studyMins / 60);
+  const studyRem = studyMins % 60;
+  
   const circumference = 2 * Math.PI * 36; // r=36
   
   return (
@@ -87,21 +102,21 @@ export default function TodayPage() {
         {/* Study Today */}
         <motion.div variants={itemAnim} className="card p-4">
           <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-2">Study Today</p>
-          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">2h 15m</p>
-          <p className="text-[12px] text-(--color-text-3) mt-1">/ 4h target</p>
+          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">{studyHrs}h {studyRem}m</p>
+          <p className="text-[12px] text-(--color-text-3) mt-1">logged time</p>
           <div style={{ height: "6px", background: "var(--color-surface-3)", borderRadius: "3px", overflow: "hidden", marginTop: "8px" }}>
-            <div style={{ height: "100%", width: "56%", background: "var(--color-study)", borderRadius: "3px", transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }}></div>
+            <div style={{ height: "100%", width: `${Math.min((studyMins / 240) * 100, 100)}%`, background: "var(--color-study)", borderRadius: "3px", transition: "width 0.8s cubic-bezier(0.34,1.56,0.64,1)" }}></div>
           </div>
         </motion.div>
 
         {/* Water */}
         <motion.div variants={itemAnim} className="card p-4">
           <p className="text-[12px] text-(--color-text-3) uppercase tracking-wider font-medium mb-2">Water</p>
-          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">3 / 8</p>
+          <p className="text-[28px] font-semibold text-(--color-text-1) leading-none">{water} / 8</p>
           <p className="text-[12px] text-(--color-text-3) mt-1">glasses</p>
-          <div className="flex gap-1 mt-2">
+          <div className="flex gap-1 mt-2 cursor-pointer" onClick={() => updateDayLog("UPDATE_WATER", Math.min(water + 1, 8))}>
             {[1,2,3,4,5,6,7,8].map(i => (
-              <div key={i} className={`h-2 flex-1 rounded-sm ${i <= 3 ? 'bg-(--color-water)' : 'bg-(--color-surface-3)'}`} />
+              <div key={i} className={`h-2 flex-1 rounded-sm ${i <= water ? 'bg-water' : 'bg-surface-3'}`} />
             ))}
           </div>
         </motion.div>
@@ -167,24 +182,7 @@ export default function TodayPage() {
         <div className="space-y-6">
           <motion.div variants={itemAnim} className="space-y-3">
             <h2>Quick Log</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-(--color-study-bg) text-(--color-study) flex items-center justify-center"><Plus size={20}/></div>
-                <span className="text-[13px] font-medium text-(--color-text-2)">Study</span>
-              </button>
-              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-(--color-meal-bg) text-(--color-meal) flex items-center justify-center"><Plus size={20}/></div>
-                <span className="text-[13px] font-medium text-(--color-text-2)">Meal</span>
-              </button>
-              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-(--color-exercise-bg) text-(--color-exercise) flex items-center justify-center"><Plus size={20}/></div>
-                <span className="text-[13px] font-medium text-(--color-text-2)">Exercise</span>
-              </button>
-              <button className="card-hover p-4 text-center flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-(--color-water-bg) text-(--color-water) flex items-center justify-center"><Plus size={20}/></div>
-                <span className="text-[13px] font-medium text-(--color-text-2)">Water</span>
-              </button>
-            </div>
+            <QuickLogPanel />
           </motion.div>
 
           <motion.div variants={itemAnim} className="space-y-3">

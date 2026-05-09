@@ -3,8 +3,34 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { User, Bell, Target, Download, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { useAppStore } from "@/store/useAppStore";
 
 export default function SettingsPage() {
+  const storeState = useAppStore();
+
+  const handleExportData = () => {
+    // Export zustand store and any local storage data
+    const dataToExport = {
+      appState: storeState,
+      exportedAt: new Date().toISOString()
+    };
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "dayflow_export.json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    await signOut({ callbackUrl: "/login" });
+  };
+
   return (
     <PageWrapper className="space-y-8 max-w-3xl mx-auto">
       <div>
@@ -102,10 +128,10 @@ export default function SettingsPage() {
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button variant="outline" className="gap-2 h-12">
+          <Button variant="outline" className="gap-2 h-12" onClick={handleExportData}>
             <Download className="w-4 h-4" /> Export Data (JSON)
           </Button>
-          <Button variant="danger" className="gap-2 h-12">
+          <Button variant="danger" className="gap-2 h-12" onClick={handleLogout}>
             <LogOut className="w-4 h-4" /> Sign Out
           </Button>
         </div>
