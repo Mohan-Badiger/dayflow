@@ -42,51 +42,37 @@ export const EXERCISE_LIBRARY = [
   { name: "Wall Sit", slug: "wall-sit", category: "legs", environment: "anywhere", difficulty: "beginner", muscleGroups: ["quads","glutes"], equipment: "none", defaultSets: 3, defaultReps: "45s", defaultRestSec: 60, caloriesPerMin: 5, icon: "🧱", instructions: "Back against wall, slide down to 90°, hold position." },
   { name: "Bulgarian Split Squat", slug: "bulgarian-split-squat", category: "legs", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["quads","glutes","hamstrings"], equipment: "bench", defaultSets: 3, defaultReps: "10 each", defaultRestSec: 75, caloriesPerMin: 7, icon: "🇧🇬", instructions: "Rear foot on bench, lower front knee to 90°, push up." },
 
-  // ── CORE ──
-  { name: "Plank", slug: "plank", category: "core", environment: "anywhere", difficulty: "beginner", muscleGroups: ["core","shoulders"], equipment: "none", defaultSets: 3, defaultReps: "60s", defaultRestSec: 45, caloriesPerMin: 4, icon: "🧘", isPopular: true, instructions: "Forearms on ground, body straight, hold position." },
-  { name: "Crunches", slug: "crunches", category: "core", environment: "anywhere", difficulty: "beginner", muscleGroups: ["abs"], equipment: "none", defaultSets: 3, defaultReps: "20", defaultRestSec: 30, caloriesPerMin: 5, icon: "🔥", instructions: "Hands behind head, curl shoulders off floor, squeeze abs." },
-  { name: "Russian Twists", slug: "russian-twists", category: "core", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["obliques","abs"], equipment: "none", defaultSets: 3, defaultReps: "20", defaultRestSec: 45, caloriesPerMin: 5, icon: "🌀", instructions: "Sit with feet off floor, twist torso side to side." },
-  { name: "Mountain Climbers", slug: "mountain-climbers", category: "core", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["core","shoulders","cardio"], equipment: "none", defaultSets: 3, defaultReps: "30s", defaultRestSec: 30, caloriesPerMin: 10, icon: "⛰️", isPopular: true, instructions: "Plank position, alternate driving knees to chest rapidly." },
-  { name: "Leg Raises", slug: "leg-raises", category: "core", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["lower abs","hip flexors"], equipment: "none", defaultSets: 3, defaultReps: "15", defaultRestSec: 45, caloriesPerMin: 5, icon: "🦵", instructions: "Lie flat, raise legs to 90°, lower without touching floor." },
-  { name: "Dead Bug", slug: "dead-bug", category: "core", environment: "anywhere", difficulty: "beginner", muscleGroups: ["core","hip flexors"], equipment: "none", defaultSets: 3, defaultReps: "12 each", defaultRestSec: 30, caloriesPerMin: 4, icon: "🪲", instructions: "Lie on back, extend opposite arm/leg, keep back flat." },
-  { name: "Hanging Leg Raise", slug: "hanging-leg-raise", category: "core", environment: "gym", difficulty: "advanced", muscleGroups: ["lower abs","hip flexors"], equipment: "pull-up bar", defaultSets: 3, defaultReps: "10", defaultRestSec: 60, caloriesPerMin: 6, icon: "🔝", instructions: "Hang from bar, raise legs to 90° or higher, lower controlled." },
+  // ── SIX PACK (ABS & CORE) ──
+  { name: "Crunches", slug: "crunches", category: "six-pack", environment: "anywhere", difficulty: "beginner", muscleGroups: ["abs"], equipment: "none", defaultSets: 4, defaultReps: "25", defaultRestSec: 30, caloriesPerMin: 5, icon: "🔥", instructions: "Lie on back, knees bent, curl shoulders towards ceiling." },
+  { name: "Leg Raises", slug: "leg-raises", category: "six-pack", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["lower abs"], equipment: "none", defaultSets: 4, defaultReps: "15", defaultRestSec: 45, caloriesPerMin: 5, icon: "🦵", instructions: "Lie flat, lift legs to 90 degrees, lower slowly without touching floor." },
+  { name: "Plank", slug: "plank", category: "six-pack", environment: "anywhere", difficulty: "beginner", muscleGroups: ["core"], equipment: "none", defaultSets: 3, defaultReps: "60s", defaultRestSec: 30, caloriesPerMin: 4, icon: "🧘", instructions: "Hold push-up position on forearms, keep back flat." },
+  { name: "Russian Twists", slug: "russian-twists", category: "six-pack", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["obliques"], equipment: "none", defaultSets: 3, defaultReps: "30", defaultRestSec: 45, caloriesPerMin: 6, icon: "🌀", instructions: "Sit with legs elevated, twist torso to touch floor on each side." },
+  { name: "Bicycle Crunches", slug: "bicycle-crunches", category: "six-pack", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["abs","obliques"], equipment: "none", defaultSets: 3, defaultReps: "20 each side", defaultRestSec: 45, caloriesPerMin: 7, icon: "🚲", instructions: "Alternate elbow to opposite knee in a pedaling motion." },
+  { name: "Mountain Climbers", slug: "mountain-climbers", category: "six-pack", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["core","cardio"], equipment: "none", defaultSets: 3, defaultReps: "40s", defaultRestSec: 30, caloriesPerMin: 10, icon: "⛰️", instructions: "In plank, drive knees rapidly towards chest." },
+  { name: "Hanging Leg Raise", slug: "hanging-leg-raise", category: "six-pack", environment: "gym", difficulty: "advanced", muscleGroups: ["lower abs"], equipment: "pull-up bar", defaultSets: 3, defaultReps: "12", defaultRestSec: 60, caloriesPerMin: 8, icon: "🔝", instructions: "Hang from bar, lift legs to parallel with floor." },
+  { name: "V-Ups", slug: "v-ups", category: "six-pack", environment: "anywhere", difficulty: "advanced", muscleGroups: ["abs"], equipment: "none", defaultSets: 3, defaultReps: "15", defaultRestSec: 60, caloriesPerMin: 8, icon: "✌️", instructions: "Fold body into a V shape by lifting torso and legs simultaneously." },
 
   // ── CARDIO ──
   { name: "Jumping Jacks", slug: "jumping-jacks", category: "cardio", environment: "anywhere", difficulty: "beginner", muscleGroups: ["full body"], equipment: "none", defaultSets: 3, defaultReps: "45s", defaultRestSec: 30, caloriesPerMin: 10, icon: "⭐", isPopular: true, instructions: "Jump feet apart while raising arms, return to start." },
   { name: "Burpees", slug: "burpees", category: "cardio", environment: "anywhere", difficulty: "advanced", muscleGroups: ["full body"], equipment: "none", defaultSets: 3, defaultReps: "10", defaultRestSec: 60, caloriesPerMin: 14, icon: "🔥", isPopular: true, instructions: "Squat, jump to plank, push-up, jump back, jump up." },
-  { name: "High Knees", slug: "high-knees", category: "cardio", environment: "anywhere", difficulty: "beginner", muscleGroups: ["quads","core","cardio"], equipment: "none", defaultSets: 3, defaultReps: "30s", defaultRestSec: 30, caloriesPerMin: 11, icon: "🦵", instructions: "Run in place, driving knees to waist height." },
   { name: "Jump Rope", slug: "jump-rope", category: "cardio", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["calves","shoulders","cardio"], equipment: "jump rope", defaultSets: 3, defaultReps: "60s", defaultRestSec: 30, caloriesPerMin: 12, icon: "🪢", instructions: "Jump over rope with both feet, keep elbows close." },
-  { name: "Treadmill Run", slug: "treadmill-run", category: "cardio", environment: "gym", difficulty: "beginner", muscleGroups: ["legs","cardio"], equipment: "treadmill", defaultSets: 1, defaultReps: "20min", defaultRestSec: 0, caloriesPerMin: 10, icon: "🏃", instructions: "Maintain steady pace, good posture, land midfoot." },
-  { name: "Box Jumps", slug: "box-jumps", category: "cardio", environment: "gym", difficulty: "intermediate", muscleGroups: ["quads","glutes","calves"], equipment: "plyo box", defaultSets: 3, defaultReps: "10", defaultRestSec: 60, caloriesPerMin: 10, icon: "📦", instructions: "Swing arms, jump onto box, stand fully, step down." },
-  { name: "Cycling", slug: "cycling", category: "cardio", environment: "gym", difficulty: "beginner", muscleGroups: ["quads","hamstrings","cardio"], equipment: "stationary bike", defaultSets: 1, defaultReps: "20min", defaultRestSec: 0, caloriesPerMin: 8, icon: "🚴", instructions: "Adjust seat height, maintain 80-100 RPM, control resistance." },
-
-  // ── FULL BODY ──
-  { name: "Turkish Get-Up", slug: "turkish-getup", category: "full-body", environment: "anywhere", difficulty: "advanced", muscleGroups: ["shoulders","core","legs"], equipment: "kettlebell", defaultSets: 3, defaultReps: "5 each", defaultRestSec: 90, caloriesPerMin: 8, icon: "🏋️", instructions: "From lying to standing while holding weight overhead." },
-  { name: "Kettlebell Swing", slug: "kettlebell-swing", category: "full-body", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["glutes","hamstrings","core","shoulders"], equipment: "kettlebell", defaultSets: 3, defaultReps: "15", defaultRestSec: 60, caloriesPerMin: 12, icon: "🔔", isPopular: true, instructions: "Hinge at hips, swing kettlebell to shoulder height using hip drive." },
-  { name: "Clean and Press", slug: "clean-press", category: "full-body", environment: "gym", difficulty: "advanced", muscleGroups: ["shoulders","legs","back","core"], equipment: "barbell", defaultSets: 4, defaultReps: "6", defaultRestSec: 120, caloriesPerMin: 10, icon: "🏋️", instructions: "Clean bar to shoulders, press overhead in one fluid motion." },
-  { name: "Thrusters", slug: "thrusters", category: "full-body", environment: "gym", difficulty: "intermediate", muscleGroups: ["quads","shoulders","core"], equipment: "dumbbells", defaultSets: 3, defaultReps: "12", defaultRestSec: 75, caloriesPerMin: 10, icon: "🚀", instructions: "Front squat into overhead press in one movement." },
-  { name: "Bear Crawl", slug: "bear-crawl", category: "full-body", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["shoulders","core","quads"], equipment: "none", defaultSets: 3, defaultReps: "30s", defaultRestSec: 45, caloriesPerMin: 9, icon: "🐻", instructions: "Crawl on hands and toes, knees hovering, opposite hand/foot." },
 
   // ── STRETCHING ──
   { name: "Hamstring Stretch", slug: "hamstring-stretch", category: "stretching", environment: "anywhere", difficulty: "beginner", muscleGroups: ["hamstrings"], equipment: "none", defaultSets: 2, defaultReps: "30s each", defaultRestSec: 15, caloriesPerMin: 2, icon: "🧘", instructions: "Reach for toes while keeping legs straight, hold stretch." },
-  { name: "Hip Flexor Stretch", slug: "hip-flexor-stretch", category: "stretching", environment: "anywhere", difficulty: "beginner", muscleGroups: ["hip flexors","quads"], equipment: "none", defaultSets: 2, defaultReps: "30s each", defaultRestSec: 15, caloriesPerMin: 2, icon: "🧘", instructions: "Lunge position, push hips forward, feel stretch in front hip." },
   { name: "Child's Pose", slug: "childs-pose", category: "stretching", environment: "anywhere", difficulty: "beginner", muscleGroups: ["back","shoulders","hips"], equipment: "none", defaultSets: 2, defaultReps: "45s", defaultRestSec: 15, caloriesPerMin: 1, icon: "🙏", instructions: "Kneel, sit back on heels, reach arms forward on floor." },
-  { name: "Cat-Cow Stretch", slug: "cat-cow", category: "stretching", environment: "anywhere", difficulty: "beginner", muscleGroups: ["spine","core"], equipment: "none", defaultSets: 2, defaultReps: "10", defaultRestSec: 15, caloriesPerMin: 2, icon: "🐱", instructions: "All fours, alternate arching and rounding spine." },
-  { name: "Pigeon Pose", slug: "pigeon-pose", category: "stretching", environment: "anywhere", difficulty: "intermediate", muscleGroups: ["glutes","hip flexors"], equipment: "none", defaultSets: 2, defaultReps: "30s each", defaultRestSec: 15, caloriesPerMin: 2, icon: "🕊️", instructions: "Front leg bent, back leg extended, fold forward." },
-]
+];
 
 export const CATEGORIES = [
   { id: "all", label: "All", icon: "🔥", color: "#f59e0b" },
+  { id: "six-pack", label: "Six Pack", icon: "💎", color: "#6366f1" },
   { id: "chest", label: "Chest", icon: "🫁", color: "#ef4444" },
   { id: "back", label: "Back", icon: "🔙", color: "#3b82f6" },
   { id: "shoulders", label: "Shoulders", icon: "🦅", color: "#8b5cf6" },
   { id: "arms", label: "Arms", icon: "💪", color: "#ec4899" },
   { id: "legs", label: "Legs", icon: "🦵", color: "#10b981" },
-  { id: "core", label: "Core", icon: "🔥", color: "#f97316" },
   { id: "cardio", label: "Cardio", icon: "❤️", color: "#ef4444" },
-  { id: "full-body", label: "Full Body", icon: "🏋️", color: "#6366f1" },
   { id: "stretching", label: "Stretch", icon: "🧘", color: "#14b8a6" },
-]
+];
 
 export const ENVIRONMENTS = [
   { id: "all", label: "All", icon: "🌍" },
@@ -94,22 +80,69 @@ export const ENVIRONMENTS = [
   { id: "home", label: "Home", icon: "🏠" },
   { id: "anywhere", label: "Anywhere", icon: "📍" },
   { id: "outdoor", label: "Outdoor", icon: "🌳" },
-]
+];
 
 export const DIFFICULTIES = [
   { id: "all", label: "All" },
   { id: "beginner", label: "Beginner", color: "#10b981" },
   { id: "intermediate", label: "Intermediate", color: "#f59e0b" },
   { id: "advanced", label: "Advanced", color: "#ef4444" },
-]
+];
+
+export const WEEKLY_SCHEDULE = [
+  { 
+    day: "Monday", 
+    title: "Chest & Upper Six-Pack", 
+    focus: "Chest Power & Upper Abs",
+    exercises: ["bench-press", "incline-db-press", "chest-flyes", "push-ups", "crunches", "plank"],
+    description: "Start the week with a strong chest pump and upper ab isolation."
+  },
+  { 
+    day: "Tuesday", 
+    title: "Back & Core Stability", 
+    focus: "Back Width & Lower Back",
+    exercises: ["deadlift", "pull-ups", "bent-over-row", "lat-pulldown", "superman-hold", "mountain-climbers"],
+    description: "Build a V-taper and a strong foundation for your core."
+  },
+  { 
+    day: "Wednesday", 
+    title: "Shoulders & Full Six-Pack", 
+    focus: "Shoulder Boulders & Total Core",
+    exercises: ["overhead-press", "lateral-raises", "arnold-press", "leg-raises", "bicycle-crunches", "russian-twists"],
+    description: "Sculpt your shoulders and hit every part of your abs."
+  },
+  { 
+    day: "Thursday", 
+    title: "Leg Day & Lower Abs", 
+    focus: "Leg Strength & Deep Core",
+    exercises: ["barbell-squats", "leg-press", "romanian-deadlift", "lunges", "hanging-leg-raise", "plank"],
+    description: "The hardest day. Power through legs and finish with lower ab control."
+  },
+  { 
+    day: "Friday", 
+    title: "Arms & Obliques", 
+    focus: "Bicep/Tricep Pump & Side Abs",
+    exercises: ["bicep-curls", "tricep-dips", "hammer-curls", "tricep-pushdown", "russian-twists", "mountain-climbers"],
+    description: "Arms for the weekend and obliques for the definition."
+  },
+  { 
+    day: "Saturday", 
+    title: "Full Body & Six-Pack HIIT", 
+    focus: "Burn & Shred",
+    exercises: ["burpees", "kettlebell-swing", "jump-rope", "v-ups", "bicycle-crunches", "plank"],
+    description: "High intensity to shred fat and make those abs pop."
+  },
+  { 
+    day: "Sunday", 
+    title: "Recovery & Stretching", 
+    focus: "Mobility & Rest",
+    exercises: ["hamstring-stretch", "childs-pose", "cat-cow", "pigeon-pose"],
+    description: "Rest your muscles so they can grow. Focus on flexibility."
+  }
+];
 
 export const PRESET_WORKOUTS = [
-  { name: "Push Day", category: "chest", icon: "🏋️", exercises: ["bench-press","incline-db-press","chest-flyes","overhead-press","lateral-raises","tricep-dips","skull-crushers"], durationMin: 60, environment: "gym" },
-  { name: "Pull Day", category: "back", icon: "🚣", exercises: ["deadlift","pull-ups","bent-over-row","lat-pulldown","face-pulls","bicep-curls","hammer-curls"], durationMin: 60, environment: "gym" },
-  { name: "Leg Day", category: "legs", icon: "🦵", exercises: ["barbell-squats","leg-press","romanian-deadlift","lunges","calf-raises","wall-sit","bulgarian-split-squat"], durationMin: 55, environment: "gym" },
-  { name: "Full Body Home", category: "full-body", icon: "🏠", exercises: ["push-ups","squats","lunges","plank","mountain-climbers","burpees","russian-twists","calf-raises"], durationMin: 40, environment: "home" },
-  { name: "Core Crusher", category: "core", icon: "🔥", exercises: ["plank","crunches","russian-twists","mountain-climbers","leg-raises","dead-bug"], durationMin: 25, environment: "anywhere" },
-  { name: "HIIT Cardio", category: "cardio", icon: "💥", exercises: ["jumping-jacks","burpees","high-knees","mountain-climbers","box-jumps","jump-rope"], durationMin: 30, environment: "anywhere" },
-  { name: "Upper Body Home", category: "chest", icon: "💪", exercises: ["push-ups","diamond-pushups","pike-pushups","tricep-dips","bicep-curls","lateral-raises","plank"], durationMin: 35, environment: "home" },
-  { name: "Flexibility Flow", category: "stretching", icon: "🧘", exercises: ["hamstring-stretch","hip-flexor-stretch","childs-pose","cat-cow","pigeon-pose"], durationMin: 20, environment: "anywhere" },
-]
+  { name: "Chest & Abs", category: "chest", icon: "🫁", exercises: ["bench-press","incline-db-press","crunches","plank"], durationMin: 45, environment: "gym" },
+  { name: "Six Pack Shred", category: "six-pack", icon: "💎", exercises: ["crunches","leg-raises","bicycle-crunches","v-ups","mountain-climbers"], durationMin: 20, environment: "anywhere" },
+  { name: "Home Full Body", category: "full-body", icon: "🏠", exercises: ["push-ups","squats","lunges","plank","burpees"], durationMin: 30, environment: "home" },
+];
