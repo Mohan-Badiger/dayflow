@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, CalendarDays, CheckSquare, Clock, Apple, Dumbbell, ListTodo, BarChart2, Target, Settings, Flame } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 const navItems = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
@@ -62,6 +63,11 @@ export function Sidebar() {
           <Settings className="w-5 h-5 shrink-0 mx-auto lg:mx-0" />
           <span className="hidden lg:block">Settings</span>
         </Link>
+        
+        <LogoutButton 
+          className="flex w-full items-center gap-3 px-3 h-[40px] rounded-md text-sm font-medium text-danger hover:bg-danger-bg hover:text-danger transition-fast"
+          text={<span className="hidden lg:block">Sign Out</span>}
+        />
         
         {session?.user && (
           <div className="flex items-center gap-3 px-3 py-2 mt-4">
