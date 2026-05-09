@@ -11,14 +11,14 @@ export function Timeline({ events = [] }) {
     return (
       <Card className="p-8 text-center border-dashed">
         <div className="flex flex-col items-center justify-center text-slate-500">
-          <div className="w-12 h-12 mb-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          <div className="w-12 h-12 mb-4 rounded-full bg-surface-3 flex items-center justify-center">
             <Clock className="w-6 h-6" />
           </div>
           <p className="font-medium">No events logged yet</p>
           <p className="text-sm mt-1 mb-4">Start your day by logging a session or habit.</p>
           <button 
             onClick={() => setActiveModal("session")}
-            className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            className="flex items-center gap-2 text-sm font-medium text-brand hover:underline"
           >
             <PlusCircle className="w-4 h-4" /> Add your first entry
           </button>
@@ -37,7 +37,7 @@ export function Timeline({ events = [] }) {
           transition={{ delay: index * 0.1 }}
           className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white dark:border-slate-900 bg-primary text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-surface-2 bg-brand text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
             <span className="text-[10px] font-bold">{event.time}</span>
           </div>
           <Card className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4">
