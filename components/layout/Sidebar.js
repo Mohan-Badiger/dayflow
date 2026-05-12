@@ -14,7 +14,7 @@ const navItems = [
   { name: "Study", href: "/sessions", icon: Clock },
   { name: "Diet", href: "/diet", icon: Apple },
   { name: "Exercise", href: "/exercise", icon: Dumbbell },
-  { name: "Review", href: "/review", icon: CheckSquare },
+
   { name: "Analytics", href: "/analytics", icon: BarChart2 },
 ];
 

@@ -425,22 +425,7 @@ export default function AnalyticsPage() {
           </div>
         </motion.div>
       )}
-
-      {/* ─── Habit Stats ─── */}
-      {data.habitStats?.length > 0 && (
-        <motion.div {...anim(0.55)} className="card p-6">
-          <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-5">
-            <Target className="w-5 h-5 text-personal" /> Habit Consistency
-          </h2>
-          <div className="space-y-4">
-            {data.habitStats.map((h, i) => (
-              <ProgressBar key={h._id} label={h.name}
-                sublabel={`${h.completed}/${h.total} days · ${h.rate}%`}
-                value={h.rate} max={100} color={h.color || "var(--color-brand)"} delay={0.1 * i} />
-            ))}
-          </div>
-        </motion.div>
-      )}
     </PageWrapper>
   );
 }
+

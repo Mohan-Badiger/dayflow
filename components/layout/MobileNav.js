@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CalendarDays, CheckSquare, BarChart2, MoreHorizontal } from "lucide-react";
+import { LayoutDashboard, CalendarDays, BarChart2, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
   { name: "Timetable", href: "/timetable", icon: CalendarDays },
-  { name: "Review", href: "/review", icon: CheckSquare },
   { name: "Analytics", href: "/analytics", icon: BarChart2 },
   { name: "More", href: "/settings", icon: MoreHorizontal },
 ];

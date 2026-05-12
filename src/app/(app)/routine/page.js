@@ -6,197 +6,47 @@ import { useAppStore } from "@/store/useAppStore";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sun, Moon, Check, Sunrise, Coffee, Dumbbell, Brain, Droplets,
-  BookOpen, Smartphone, Bed, ListChecks, Sparkles, Clock, Zap,
-  Eye, Shield, ChevronDown, AlertTriangle, CheckCircle2, Leaf,
-  Heart, Target, BedDouble,
+  Sun, Moon, Check, Sunrise, Dumbbell, Brain, Droplets,
+  BookOpen, Smartphone, Bed, ListChecks, Sparkles, Clock,
+  Eye, ChevronDown, AlertTriangle, CheckCircle2,
+  Heart, BedDouble, Footprints, Wind, Coffee,
 } from "lucide-react";
 
-const anim = (d = 0) => ({
-  initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4, delay: d, ease: [0.25, 0.46, 0.45, 0.94] },
-});
-
-/* ── Interactive check item (saves to DB) ── */
-function RoutineItem({ icon: Icon, label, sublabel, checked, onChange, color, delay = 0 }) {
-  return (
-    <motion.button {...anim(delay)} onClick={onChange}
-      className={`group flex items-center gap-4 w-full p-4 rounded-2xl border transition-all text-left
-        ${checked ? "bg-surface border-border-2" : "bg-surface border-border hover:border-border-2"}`}>
-      <motion.div
-        animate={{ scale: checked ? 1 : 0.85, backgroundColor: checked ? color : "var(--color-surface-3)" }}
-        transition={{ type: "spring", stiffness: 400, damping: 20 }}
-        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0">
-        {checked ? (
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500 }}>
-            <Check className="w-5 h-5 text-white" />
-          </motion.div>
-        ) : (
-          <Icon className="w-5 h-5 text-text-3 group-hover:text-text-2 transition-colors" />
-        )}
-      </motion.div>
-      <div className="flex-1 min-w-0">
-        <p className={`font-semibold text-sm transition-all ${checked ? "text-text-3 line-through" : "text-text-1"}`}>{label}</p>
-        {sublabel && <p className="text-xs text-text-3 mt-0.5">{sublabel}</p>}
-      </div>
-      {checked && (
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="shrink-0">
-          <Sparkles className="w-4 h-4 text-warning" />
-        </motion.div>
-      )}
-    </motion.button>
-  );
-}
-
-/* ── Time picker ── */
-function TimePicker({ icon: Icon, label, value, onChange, color }) {
-  return (
-    <div className="card p-4 flex items-center gap-4">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: color + "20" }}>
-        <Icon className="w-5 h-5" style={{ color }} />
-      </div>
-      <div className="flex-1">
-        <p className="text-xs text-text-3 font-medium uppercase tracking-wider">{label}</p>
-        <input type="time" value={value} onChange={e => onChange(e.target.value)}
-          className="bg-transparent text-text-1 font-bold text-lg outline-none w-full mt-0.5 scheme-dark" />
-      </div>
-    </div>
-  );
-}
-
-/* ── Score Ring ── */
-function ScoreRing({ score, max, size = 80, label }) {
-  const pct = max > 0 ? score / max : 0;
-  const r = (size - 8) / 2;
-  const circ = 2 * Math.PI * r;
-  const color = pct >= 0.8 ? "var(--color-success)" : pct >= 0.5 ? "var(--color-warning)" : "var(--color-danger)";
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-surface-3)" strokeWidth={6} />
-          <motion.circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={6}
-            strokeLinecap="round" initial={{ strokeDashoffset: circ }}
-            animate={{ strokeDashoffset: circ * (1 - pct) }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-            style={{ strokeDasharray: circ }} />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-black text-text-1">{score}</span>
-        </div>
-      </div>
-      <span className="text-xs text-text-3 font-medium">{label}</span>
-    </div>
-  );
-}
-
-/* ── Expandable guide section ── */
-function GuideSection({ title, icon: Icon, accent, gradient, items, defaultOpen = false, delay = 0 }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <motion.div {...anim(delay)} className="card overflow-hidden">
-      <button onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-4 p-5 text-left group transition-colors hover:bg-surface-3/40">
-        <div className={`w-11 h-11 rounded-2xl bg-linear-to-br ${gradient} flex items-center justify-center shrink-0 ring-1 ring-white/5`}>
-          <Icon className="w-5 h-5" style={{ color: accent }} />
-        </div>
-        <h3 className="flex-1 font-bold text-text-1">{title}</h3>
-        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
-          <ChevronDown className="w-5 h-5 text-text-3" />
-        </motion.div>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
-            <div className="px-5 pb-5 space-y-2">
-              {items.map((item, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-sm text-text-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: accent }} />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-/* ── Checklist items config ── */
+/* ── Morning items — `id` not `key` to avoid React spread warning ── */
 const MORNING_ITEMS = [
-  { key: "exercise", icon: Dumbbell, label: "Exercise / Strength Training", sublabel: "Push-ups, squats, lunges, plank — 30+ min", color: "#10b981" },
-  { key: "meditation", icon: Brain, label: "Sunlight + Deep Breathing", sublabel: "15-20 min outside, 5 deep breaths", color: "#f59e0b" },
-  { key: "coldShower", icon: Droplets, label: "Water + Cold Shower", sublabel: "1-2 glasses water + cold shower for alertness", color: "#0ea5e9" },
-  { key: "breakfast", icon: Coffee, label: "Testosterone-Support Breakfast", sublabel: "Eggs, banana, nuts, seeds — no junk", color: "#f59e0b" },
-  { key: "reviewedPlan", icon: ListChecks, label: "Reviewed Today's Plan", sublabel: "Know what you're attacking today", color: "#6366f1" },
-  { key: "noPhoneFirstHour", icon: Smartphone, label: "No Phone First Hour", sublabel: "Protect your morning dopamine", color: "#ef4444" },
+  { id: "exercise", icon: Dumbbell, label: "Exercise / Workout", sub: "Strength or cardio — 30+ min", color: "#10b981" },
+  { id: "meditation", icon: Wind, label: "Sunlight + Deep Breathing", sub: "15–20 min outside, no phone", color: "#f59e0b" },
+  { id: "coldShower", icon: Droplets, label: "Hydrate + Cold Shower", sub: "1–2 glasses water, cold shower", color: "#0ea5e9" },
+  { id: "breakfast", icon: Coffee, label: "Healthy Breakfast", sub: "Eggs, nuts, seeds — no junk", color: "#f59e0b" },
+  { id: "reviewedPlan", icon: ListChecks, label: "Review Today's Plan", sub: "Know what you're doing today", color: "#6366f1" },
+  { id: "noPhoneFirstHour", icon: Smartphone, label: "No Phone First Hour", sub: "Protect your morning focus", color: "#ef4444" },
 ];
 
 const NIGHT_ITEMS = [
-  { key: "reviewedDay", icon: Eye, label: "Reviewed Today + Wins", sublabel: "Reflect on what went well", color: "#8b5cf6" },
-  { key: "plannedTomorrow", icon: ListChecks, label: "Planned Tomorrow", sublabel: "Clarity = no wasted morning", color: "#6366f1" },
-  { key: "readingOrLearning", icon: BookOpen, label: "Reading / Stretching / Calm", sublabel: "Wind down — no doom scrolling", color: "#10b981" },
+  { id: "reviewedDay", icon: Eye, label: "Review Today's Wins", sub: "What went well, what to improve", color: "#8b5cf6" },
+  { id: "plannedTomorrow", icon: ListChecks, label: "Plan Tomorrow", sub: "Clarity = no wasted morning", color: "#6366f1" },
+  { id: "readingOrLearning", icon: BookOpen, label: "Read / Stretch / Calm", sub: "No doom scrolling before bed", color: "#10b981" },
 ];
 
-/* ── Guide data matching diet page ── */
-const GUIDES = [
-  {
-    title: "Exercise Schedule (Mon-Sun)", icon: Dumbbell, accent: "#10b981",
-    gradient: "from-emerald-500/15 to-green-500/8",
-    items: [
-      "Mon / Wed / Fri — Strength: Push-ups 3 sets, Squats 3 sets, Lunges 3 sets, Plank 3 rounds, Pull-ups",
-      "Tue / Thu / Sat — Cardio: Running, sprint intervals, stretching",
-      "Sunday — Rest or light walking",
-    ],
-  },
-  {
-    title: "Breakfast Options", icon: Coffee, accent: "#f59e0b",
-    gradient: "from-amber-500/15 to-orange-500/8",
-    items: [
-      "Option 1: 3 eggs + banana + milk",
-      "Option 2: Oats with nuts + peanut butter + fruit",
-      "Option 3 (Veg): Sprouts + paneer + dry fruits",
-      "Daily must-add: 4 soaked almonds, 2 walnuts, pumpkin seeds",
-    ],
-  },
-  {
-    title: "Mid-Day Nutrition", icon: Leaf, accent: "#8b5cf6",
-    gradient: "from-violet-500/15 to-purple-500/8",
-    items: [
-      "10:30 AM — Fruit: Pomegranate, apple, watermelon, banana",
-      "Lunch — Rice/roti + dal + veggies + chicken/fish/paneer + curd",
-      "Best veggies: Spinach, broccoli, beans, carrot",
-      "4:30 PM — Peanuts/chikki, fruit, green tea",
-    ],
-  },
-  {
-    title: "Evening & Night Rules", icon: Moon, accent: "#6366f1",
-    gradient: "from-indigo-500/15 to-blue-500/8",
-    items: [
-      "5:30-6:30 PM — Walking, sports, cycling, or light gym",
-      "Dinner: Keep lighter than lunch — roti + sabji, soup + eggs",
-      "9 PM — Light stretching, reading, calm music",
-      "Sleep before 11 PM — 7-9 hours for max testosterone production",
-    ],
-  },
+const EXERCISE_SCHEDULE = [
+  { day: "Mon / Wed / Fri", type: "Strength", accent: "#10b981", items: ["Push-ups — 3 sets", "Squats — 3 sets", "Lunges — 3 sets", "Plank — 3 rounds", "Pull-ups if possible"] },
+  { day: "Tue / Thu / Sat", type: "Cardio", accent: "#0ea5e9", items: ["Running or brisk walking", "Sprint intervals", "Stretching"] },
+  { day: "Sunday", type: "Rest", accent: "#8b5cf6", items: ["Rest or light walking"] },
 ];
 
-const REDUCE_LIST = ["Smoking", "Alcohol", "Too much junk food", "Sleeping late daily", "Excess doom scrolling"];
-
-const PRIORITY_STACK = [
-  { n: 1, text: "Sleep (7-9 hrs)", icon: BedDouble },
-  { n: 2, text: "Strength exercise", icon: Dumbbell },
-  { n: 3, text: "Healthy body fat", icon: Heart },
-  { n: 4, text: "Good nutrition", icon: Leaf },
-  { n: 5, text: "Stress reduction", icon: Brain },
+const SLEEP_TIPS = [
+  "Aim for 7–9 hours every night",
+  "Sleep before 11 PM regularly",
+  "No screens 1 hour before bed",
+  "Light stretching or reading to wind down",
+  "Your body recovers and rebuilds during deep sleep",
 ];
 
-/* ════════════════════════════════════════════════════════════
-   MAIN PAGE
-   ════════════════════════════════════════════════════════════ */
+const REDUCE = ["Smoking", "Alcohol", "Too much junk food", "Sleeping late daily", "Doom scrolling"];
+
+/* ═══════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════ */
 export default function RoutinePage() {
   const [morning, setMorning] = useState({
     exercise: false, meditation: false, coldShower: false,
@@ -217,8 +67,8 @@ export default function RoutinePage() {
 
   useEffect(() => {
     if (dayLog?.routine) {
-      if (dayLog.routine.morningChecklist) setMorning(prev => ({ ...prev, ...dayLog.routine.morningChecklist }));
-      if (dayLog.routine.nightChecklist) setNight(prev => ({ ...prev, ...dayLog.routine.nightChecklist }));
+      if (dayLog.routine.morningChecklist) setMorning(p => ({ ...p, ...dayLog.routine.morningChecklist }));
+      if (dayLog.routine.nightChecklist) setNight(p => ({ ...p, ...dayLog.routine.nightChecklist }));
       if (dayLog.routine.wakeTime) setWakeTime(dayLog.routine.wakeTime);
       else if (userSettings?.wakeTarget) setWakeTime(userSettings.wakeTarget);
       if (dayLog.routine.sleepTime) setSleepTime(dayLog.routine.sleepTime);
@@ -234,216 +84,315 @@ export default function RoutinePage() {
     await patch(`/api/day/${activeDate}/routine`, data);
   }, [activeDate, patch]);
 
-  const toggleMorning = (key) => {
-    const val = !morning[key];
-    setMorning(prev => ({ ...prev, [key]: val }));
-    save({ morningChecklist: { [key]: val } });
-    if (val) toast("Nice one! ✓", "success");
+  const toggleM = (id) => {
+    const v = !morning[id];
+    setMorning(p => ({ ...p, [id]: v }));
+    save({ morningChecklist: { [id]: v } });
+    if (v) toast("Nice! ✓", "success");
+  };
+  const toggleN = (id) => {
+    const v = !night[id];
+    setNight(p => ({ ...p, [id]: v }));
+    save({ nightChecklist: { [id]: v } });
+    if (v) toast("Done! ✓", "success");
+  };
+  const setTime = (f, v) => {
+    if (f === "wake") { setWakeTime(v); save({ wakeTime: v }); }
+    else if (f === "sleep") { setSleepTime(v); save({ sleepTime: v }); }
+    else { setScreenOff(v); save({ nightChecklist: { screenOffBy: v } }); }
   };
 
-  const toggleNight = (key) => {
-    const val = !night[key];
-    setNight(prev => ({ ...prev, [key]: val }));
-    save({ nightChecklist: { [key]: val } });
-    if (val) toast("Done! ✓", "success");
-  };
+  const mDone = Object.values(morning).filter(Boolean).length;
+  const nDone = Object.values(night).filter(Boolean).length;
+  const total = mDone + nDone;
+  const pct = Math.round((total / 9) * 100);
 
-  const handleTime = (field, value) => {
-    if (field === "wakeTime") { setWakeTime(value); save({ wakeTime: value }); }
-    else if (field === "sleepTime") { setSleepTime(value); save({ sleepTime: value }); }
-    else { setScreenOff(value); save({ nightChecklist: { screenOffBy: value } }); }
-  };
-
-  const morningDone = Object.values(morning).filter(Boolean).length;
-  const nightDone = Object.values(night).filter(Boolean).length;
-  const totalDone = morningDone + nightDone;
-  const totalItems = 9;
-
-  const sleepHours = (() => {
-    if (!wakeTime || !sleepTime) return "—";
+  const sleepH = (() => {
     const [wh, wm] = wakeTime.split(":").map(Number);
     const [sh, sm] = sleepTime.split(":").map(Number);
-    let diff = (wh * 60 + wm) - (sh * 60 + sm);
-    if (diff < 0) diff += 24 * 60;
-    if (diff > 12 * 60) diff = 24 * 60 - diff;
-    return (diff / 60).toFixed(1);
+    let d = (wh * 60 + wm) - (sh * 60 + sm);
+    if (d < 0) d += 1440;
+    if (d > 720) d = 1440 - d;
+    return (d / 60).toFixed(1);
   })();
 
-  const currentHour = new Date().getHours();
-  const phase = currentHour < 12 ? "morning" : currentHour < 17 ? "afternoon" : "evening";
+  const [exOpen, setExOpen] = useState(false);
+  const [slOpen, setSlOpen] = useState(false);
 
   return (
-    <PageWrapper className="space-y-8 pb-10">
-      {/* ─── Hero ─── */}
-      <motion.div {...anim(0)} className="card p-6 sm:p-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-amber-500/8 via-transparent to-emerald-500/5" />
-        <div className="relative flex flex-col md:flex-row items-center gap-6">
-          <div className="flex gap-4">
-            <ScoreRing score={morningDone} max={6} label="Morning" />
-            <ScoreRing score={nightDone} max={3} label="Night" />
-            <ScoreRing score={totalDone} max={totalItems} label="Total" size={90} />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center gap-2 justify-center md:justify-start mb-1">
-              <Shield className="w-5 h-5 text-amber-400" />
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Daily Protocol</span>
+    <PageWrapper className="space-y-6 pb-10">
+
+      {/* ════ HERO ════ */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+        className="card relative overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-linear-to-br from-brand/8 via-transparent to-success/5" />
+        <div className="relative p-5 sm:p-7 flex flex-col sm:flex-row items-center gap-6">
+          {/* ring */}
+          <div className="relative w-[100px] h-[100px] shrink-0">
+            <svg width={100} height={100} className="-rotate-90">
+              <circle cx={50} cy={50} r={42} fill="none" stroke="var(--color-surface-3)" strokeWidth={7} />
+              <motion.circle cx={50} cy={50} r={42} fill="none"
+                stroke={pct >= 80 ? "var(--color-success)" : pct >= 45 ? "var(--color-warning)" : "var(--color-brand)"}
+                strokeWidth={7} strokeLinecap="round"
+                initial={{ strokeDashoffset: 264 }}
+                animate={{ strokeDashoffset: 264 * (1 - total / 9) }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                style={{ strokeDasharray: 264 }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-black text-text-1">{pct}%</span>
+              <span className="text-[9px] text-text-3 font-bold uppercase tracking-widest">done</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-1">Daily Routine Tracker</h1>
-            <p className="text-text-3 mt-1 font-medium text-sm sm:text-base">
-              {totalDone === totalItems
-                ? "Perfect day! Every habit checked. 🔥"
-                : `${totalDone}/${totalItems} complete — ${totalItems - totalDone} left to crush.`}
+          </div>
+
+          <div className="flex-1 text-center sm:text-left space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-1">Daily Routine</h1>
+            <p className="text-sm text-text-3">
+              {total === 9 ? "Perfect day! Every task done 🔥" : `${total} of 9 tasks complete — ${9 - total} remaining`}
             </p>
-            {sleepHours !== "—" && (
-              <div className="flex flex-wrap items-center gap-2 mt-3 justify-center md:justify-start">
-                <span className="pill bg-surface-3 text-text-2 border border-border text-xs">
-                  <Bed className="w-3 h-3 mr-1" /> ~{sleepHours}h sleep
-                </span>
-                <span className="pill bg-surface-3 text-text-2 border border-border text-xs">
-                  <Clock className="w-3 h-3 mr-1" /> Wake {wakeTime}
-                </span>
-              </div>
-            )}
+            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+                <Bed className="w-3 h-3" /> {sleepH}h sleep
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+                <Clock className="w-3 h-3" /> Wake {wakeTime}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+                <Sun className="w-3 h-3 text-warning" /> {mDone}/6
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+                <Moon className="w-3 h-3 text-brand" /> {nDone}/3
+              </span>
+            </div>
           </div>
         </div>
       </motion.div>
 
-      {/* ─── Time Controls ─── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <TimePicker icon={Sunrise} label="Wake Up" value={wakeTime} onChange={v => handleTime("wakeTime", v)} color="#f59e0b" />
-        <TimePicker icon={Smartphone} label="Screens Off" value={screenOff} onChange={v => handleTime("screenOff", v)} color="#ef4444" />
-        <TimePicker icon={Moon} label="Sleep" value={sleepTime} onChange={v => handleTime("sleepTime", v)} color="#8b5cf6" />
-      </div>
-
-      {/* ─── Morning Checklist ─── */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <Sun className="w-5 h-5 text-warning" />
-            <h2 className="text-lg font-bold text-text-1">Morning Power-Up</h2>
+      {/* ════ TIME PICKERS ════ */}
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { icon: Sunrise, label: "Wake", value: wakeTime, field: "wake", color: "#f59e0b" },
+          { icon: Smartphone, label: "Screens Off", value: screenOff, field: "screen", color: "#ef4444" },
+          { icon: Moon, label: "Sleep", value: sleepTime, field: "sleep", color: "#8b5cf6" },
+        ].map(t => (
+          <div key={t.field} className="card p-3 flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: t.color + "20" }}>
+              <t.icon className="w-4 h-4" style={{ color: t.color }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[9px] text-text-3 font-bold uppercase tracking-wider">{t.label}</p>
+              <input type="time" value={t.value} onChange={e => setTime(t.field, e.target.value)}
+                className="bg-transparent text-text-1 font-bold text-sm outline-none w-full scheme-dark" />
+            </div>
           </div>
-          <motion.div key={morningDone} initial={{ scale: 1.4 }} animate={{ scale: 1 }}
-            className="text-sm font-bold px-3 py-1 rounded-full"
-            style={{ backgroundColor: morningDone === 6 ? "var(--color-success)" : "var(--color-surface-3)", color: morningDone === 6 ? "white" : "var(--color-text-2)" }}>
-            {morningDone}/6
-          </motion.div>
-        </div>
-        <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
-          <motion.div animate={{ width: `${(morningDone / 6) * 100}%` }}
-            transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="h-full rounded-full bg-linear-to-r from-warning to-success" />
-        </div>
-        <div className="space-y-2">
-          {MORNING_ITEMS.map((item, i) => (
-            <RoutineItem key={item.key} icon={item.icon} label={item.label} sublabel={item.sublabel}
-              checked={morning[item.key]} onChange={() => toggleMorning(item.key)} color={item.color} delay={i * 0.04} />
-          ))}
-        </div>
+        ))}
       </div>
 
-      {/* ─── Night Checklist ─── */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-brand" />
-            <h2 className="text-lg font-bold text-text-1">Night Wind-Down</h2>
-          </div>
-          <motion.div key={nightDone} initial={{ scale: 1.4 }} animate={{ scale: 1 }}
-            className="text-sm font-bold px-3 py-1 rounded-full"
-            style={{ backgroundColor: nightDone === 3 ? "var(--color-success)" : "var(--color-surface-3)", color: nightDone === 3 ? "white" : "var(--color-text-2)" }}>
-            {nightDone}/3
-          </motion.div>
+      {/* ════ MORNING SECTION ════ */}
+      <section className="space-y-2">
+        <div className="flex items-center justify-between px-0.5">
+          <h2 className="font-bold text-text-1 flex items-center gap-2 text-base">
+            <Sun className="w-5 h-5 text-warning" /> Morning Power‑Up
+          </h2>
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+            style={{ background: mDone === 6 ? "var(--color-success)" : "var(--color-surface-3)", color: mDone === 6 ? "#fff" : "var(--color-text-2)" }}>
+            {mDone}/6
+          </span>
         </div>
-        <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
-          <motion.div animate={{ width: `${(nightDone / 3) * 100}%` }}
-            transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="h-full rounded-full bg-linear-to-r from-brand to-brand-mid" />
+        <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
+          <motion.div animate={{ width: `${(mDone / 6) * 100}%` }} className="h-full rounded-full bg-linear-to-r from-warning to-success" />
         </div>
-        <div className="space-y-2">
-          {NIGHT_ITEMS.map((item, i) => (
-            <RoutineItem key={item.key} icon={item.icon} label={item.label} sublabel={item.sublabel}
-              checked={night[item.key]} onChange={() => toggleNight(item.key)} color={item.color} delay={i * 0.04} />
-          ))}
+        <div className="space-y-1.5">
+          {MORNING_ITEMS.map((item, i) => {
+            const Icon = item.icon;
+            const checked = morning[item.id];
+            return (
+              <motion.button key={item.id}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                onClick={() => toggleM(item.id)}
+                className={`group w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all
+                  ${checked ? "bg-surface-2 border-border-2" : "bg-surface border-border hover:border-border-2 hover:bg-surface-2/50"}`}
+              >
+                <motion.div
+                  animate={{ backgroundColor: checked ? item.color : "var(--color-surface-3)" }}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                >
+                  {checked
+                    ? <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check className="w-4 h-4 text-white" /></motion.div>
+                    : <Icon className="w-4 h-4 text-text-3" />}
+                </motion.div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-semibold ${checked ? "text-text-3 line-through" : "text-text-1"}`}>{item.label}</p>
+                  <p className="text-[11px] text-text-3 mt-0.5 truncate">{item.sub}</p>
+                </div>
+                {checked && <Sparkles className="w-3.5 h-3.5 text-warning shrink-0" />}
+              </motion.button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
-      {/* ─── Completion Banner ─── */}
+      {/* ════ NIGHT SECTION ════ */}
+      <section className="space-y-2">
+        <div className="flex items-center justify-between px-0.5">
+          <h2 className="font-bold text-text-1 flex items-center gap-2 text-base">
+            <Moon className="w-5 h-5 text-brand" /> Night Wind‑Down
+          </h2>
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+            style={{ background: nDone === 3 ? "var(--color-success)" : "var(--color-surface-3)", color: nDone === 3 ? "#fff" : "var(--color-text-2)" }}>
+            {nDone}/3
+          </span>
+        </div>
+        <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
+          <motion.div animate={{ width: `${(nDone / 3) * 100}%` }} className="h-full rounded-full bg-linear-to-r from-brand to-brand-mid" />
+        </div>
+        <div className="space-y-1.5">
+          {NIGHT_ITEMS.map((item, i) => {
+            const Icon = item.icon;
+            const checked = night[item.id];
+            return (
+              <motion.button key={item.id}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                onClick={() => toggleN(item.id)}
+                className={`group w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all
+                  ${checked ? "bg-surface-2 border-border-2" : "bg-surface border-border hover:border-border-2 hover:bg-surface-2/50"}`}
+              >
+                <motion.div
+                  animate={{ backgroundColor: checked ? item.color : "var(--color-surface-3)" }}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                >
+                  {checked
+                    ? <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check className="w-4 h-4 text-white" /></motion.div>
+                    : <Icon className="w-4 h-4 text-text-3" />}
+                </motion.div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-semibold ${checked ? "text-text-3 line-through" : "text-text-1"}`}>{item.label}</p>
+                  <p className="text-[11px] text-text-3 mt-0.5 truncate">{item.sub}</p>
+                </div>
+                {checked && <Sparkles className="w-3.5 h-3.5 text-warning shrink-0" />}
+              </motion.button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ════ COMPLETION ════ */}
       <AnimatePresence>
-        {totalDone === totalItems && (
-          <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+        {total === 9 && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
             className="card p-6 text-center bg-linear-to-r from-success/10 to-brand/10 border-success/30">
-            <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ repeat: Infinity, duration: 2 }}
-              className="text-4xl mb-2">🏆</motion.div>
-            <h3 className="text-xl font-bold text-text-1">Perfect Routine Day!</h3>
-            <p className="text-text-3 text-sm mt-1">Every morning and night habit checked. Consistency compounds.</p>
+            <div className="text-4xl mb-2">🏆</div>
+            <h3 className="text-lg font-bold text-text-1">Perfect Routine Day!</h3>
+            <p className="text-text-3 text-sm mt-1">Consistency compounds. Keep going.</p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ─── Reference Guides (diet-style) ─── */}
-      <div className="space-y-2">
-        <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 px-1">
-          <BookOpen className="w-5 h-5 text-brand" /> Quick Reference Guide
-        </h2>
-        <p className="text-sm text-text-3 px-1 mb-2">Your complete daily protocol at a glance.</p>
-        {GUIDES.map((g, i) => (
-          <GuideSection key={i} title={g.title} icon={g.icon} accent={g.accent}
-            gradient={g.gradient} items={g.items} delay={0.3 + i * 0.06} />
-        ))}
+      {/* ════ EXERCISE SCHEDULE ════ */}
+      <div className="card overflow-hidden">
+        <button onClick={() => setExOpen(!exOpen)}
+          className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-3/30 transition-colors">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/15 flex items-center justify-center shrink-0">
+            <Dumbbell className="w-4.5 h-4.5 text-emerald-400" />
+          </div>
+          <span className="flex-1 font-bold text-sm text-text-1">Exercise Schedule</span>
+          <motion.div animate={{ rotate: exOpen ? 180 : 0 }}><ChevronDown className="w-4 h-4 text-text-3" /></motion.div>
+        </button>
+        <AnimatePresence initial={false}>
+          {exOpen && (
+            <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
+              transition={{ duration: 0.3 }} className="overflow-hidden">
+              <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {EXERCISE_SCHEDULE.map((g, i) => (
+                  <div key={i} className="rounded-lg bg-surface-3/50 p-3">
+                    <p className="text-xs font-bold mb-1.5" style={{ color: g.accent }}>{g.day} — {g.type}</p>
+                    <ul className="space-y-1">{g.items.map((x, j) => (
+                      <li key={j} className="text-sm text-text-2 flex items-center gap-2">
+                        <CheckCircle2 className="w-3 h-3 shrink-0" style={{ color: g.accent }} />{x}
+                      </li>
+                    ))}</ul>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* ─── Reduce These ─── */}
-      <motion.div {...anim(0.5)} className="rounded-xl bg-danger/5 border border-danger/10 p-5">
-        <p className="text-sm font-bold text-danger flex items-center gap-1.5 mb-3">
+      {/* ════ SLEEP PROTOCOL ════ */}
+      <div className="card overflow-hidden">
+        <button onClick={() => setSlOpen(!slOpen)}
+          className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-3/30 transition-colors">
+          <div className="w-9 h-9 rounded-lg bg-violet-500/15 flex items-center justify-center shrink-0">
+            <BedDouble className="w-4.5 h-4.5 text-violet-400" />
+          </div>
+          <span className="flex-1 font-bold text-sm text-text-1">Sleep Protocol</span>
+          <motion.div animate={{ rotate: slOpen ? 180 : 0 }}><ChevronDown className="w-4 h-4 text-text-3" /></motion.div>
+        </button>
+        <AnimatePresence initial={false}>
+          {slOpen && (
+            <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
+              transition={{ duration: 0.3 }} className="overflow-hidden">
+              <ul className="px-4 pb-4 space-y-1.5">{SLEEP_TIPS.map((x, i) => (
+                <li key={i} className="text-sm text-text-2 flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 text-violet-400 shrink-0" />{x}
+                </li>
+              ))}</ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ════ REDUCE ════ */}
+      <div className="rounded-xl bg-danger/5 border border-danger/10 p-4">
+        <p className="text-sm font-bold text-danger flex items-center gap-1.5 mb-2">
           <AlertTriangle className="w-4 h-4" /> Reduce These
         </p>
         <div className="flex flex-wrap gap-2">
-          {REDUCE_LIST.map((r, i) => (
-            <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-full bg-danger/8 text-danger/80 border border-danger/10">
-              {r}
-            </span>
+          {REDUCE.map((r, i) => (
+            <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-full bg-danger/8 text-danger/80 border border-danger/10">{r}</span>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      {/* ─── Priority Stack ─── */}
-      <motion.div {...anim(0.55)} className="card p-6 relative overflow-hidden">
+      {/* ════ WHAT MATTERS ════ */}
+      <div className="card p-5 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-brand/5 via-transparent to-transparent" />
         <div className="relative">
-          <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 mb-1">
-            <Zap className="w-5 h-5 text-warning" /> What Actually Matters
+          <h2 className="font-bold text-text-1 flex items-center gap-2 mb-4">
+            <Heart className="w-5 h-5 text-danger" /> What Actually Matters
           </h2>
-          <p className="text-sm text-text-3 mb-5">Consistency over intensity. The biggest natural gains come from:</p>
-          <div className="space-y-3">
-            {PRIORITY_STACK.map((p, i) => {
-              const PIcon = p.icon;
-              const pct = ((5 - i) / 5) * 100;
-              return (
-                <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + i * 0.08 }} className="flex items-center gap-4">
-                  <span className="w-7 h-7 rounded-lg bg-brand/15 flex items-center justify-center text-xs font-black text-brand shrink-0">
-                    {p.n}
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-semibold text-text-1 flex items-center gap-1.5">
-                        <PIcon className="w-3.5 h-3.5 text-text-3" /> {p.text}
-                      </span>
-                      <span className="text-[10px] text-text-3 font-mono">{pct}%</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
-                      <motion.div className="h-full rounded-full bg-brand"
-                        initial={{ width: 0 }} animate={{ width: `${pct}%` }}
-                        transition={{ duration: 1, delay: 0.7 + i * 0.1, ease: "easeOut" }} />
-                    </div>
+          <div className="space-y-2.5">
+            {[
+              { n: 1, t: "Sleep (7–9 hrs)", ic: BedDouble, pct: 100 },
+              { n: 2, t: "Strength exercise", ic: Dumbbell, pct: 80 },
+              { n: 3, t: "Healthy body fat", ic: Heart, pct: 60 },
+              { n: 4, t: "Stress reduction", ic: Brain, pct: 40 },
+            ].map((p, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span className="w-6 h-6 rounded-md bg-brand/15 flex items-center justify-center text-[10px] font-black text-brand shrink-0">{p.n}</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="text-sm font-semibold text-text-1 flex items-center gap-1.5">
+                      <p.ic className="w-3.5 h-3.5 text-text-3" />{p.t}
+                    </span>
+                    <span className="text-[10px] text-text-3 font-mono">{p.pct}%</span>
                   </div>
-                </motion.div>
-              );
-            })}
+                  <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
+                    <motion.div className="h-full rounded-full bg-brand" initial={{ width: 0 }}
+                      animate={{ width: `${p.pct}%` }} transition={{ duration: 1, delay: 0.3 + i * 0.1 }} />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </PageWrapper>
   );
 }
