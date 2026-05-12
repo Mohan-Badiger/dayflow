@@ -14,10 +14,11 @@ export const schemas = {
 
   // ─ User ─────────────────────────────────────────────
   updateSettings: z.object({
+    theme:               z.string().optional(),
     wakeTarget:          timeStr,
     sleepTarget:         timeStr,
-    dailyStudyGoalHours: z.number().min(0).max(24).optional(),
-    waterGoalGlasses:    z.number().min(1).max(20).optional(),
+    studyGoalHours:      z.number().min(0).max(24).optional(),
+    waterGoal:           z.number().min(1).max(20).optional(),
     timezone:            z.string().max(50).optional(),
     weekStartsOn:        z.enum(["monday","sunday"]).optional(),
   }),
@@ -25,7 +26,7 @@ export const schemas = {
   updateJobGoal: z.object({
     role:                  z.string().max(200).optional(),
     targetDate:            z.string().optional().nullable(),
-    weeklyStudyHourTarget: z.number().min(0).optional(),
+    weeklyHours:           z.number().min(0).optional(),
     totalTargetHours:      z.number().min(0).optional(),
   }),
 

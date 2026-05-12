@@ -3,14 +3,15 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { User, Bell, Target, Download, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useApi } from "@/hooks/useApi";
 import { useToast } from "@/hooks/useToast";
 import { useAppStore } from "@/store/useAppStore";
 
 export default function SettingsPage() {
-  const storeState = useAppStore();
+  const { data: session } = useSession();
+  const { userSettings, jobGoal: storeJobGoal, fetchUser } = useAppStore();
   const { patch, get } = useApi();
   const { add: toast } = useToast();
 
@@ -29,24 +30,19 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    // Fetch current user settings
-    const loadUser = async () => {
-      const data = await get("/api/user");
-      if (data) {
-        if (data.settings) setSettings(data.settings);
-        if (data.jobGoal) setJobGoal(data.jobGoal);
-      }
-    };
-    loadUser();
-  }, []);
+    if (userSettings) setSettings(prev => ({ ...prev, ...userSettings }));
+    if (storeJobGoal) setJobGoal(prev => ({ ...prev, ...storeJobGoal }));
+  }, [userSettings, storeJobGoal]);
 
   const handleSaveSettings = async () => {
     await patch("/api/user/settings", { settings });
+    fetchUser(); // Refresh global store
     toast("Settings saved!", "success");
   };
 
   const handleSaveJobGoal = async () => {
     await patch("/api/user/settings", { jobGoal });
+    fetchUser(); // Refresh global store
     toast("Career goal saved!", "success");
   };
 
@@ -74,12 +70,12 @@ export default function SettingsPage() {
           </h2>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-xl text-slate-500">
-                U
+              <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center font-bold text-xl text-brand">
+                {session?.user?.name?.[0] || "U"}
               </div>
               <div>
-                <p className="font-bold text-lg">User Name</p>
-                <p className="text-slate-500">user@example.com</p>
+                <p className="font-bold text-lg">{session?.user?.name || "User"}</p>
+                <p className="text-slate-500">{session?.user?.email || "No email"}</p>
               </div>
             </div>
             <Button variant="outline">Edit</Button>
