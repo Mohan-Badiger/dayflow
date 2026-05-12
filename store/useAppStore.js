@@ -16,7 +16,32 @@ export const useAppStore = create((set, get) => ({
 
   // Data State
   dayLog: null,
+  user: null,
+  userSettings: null,
+  jobGoal: null,
   isLoadingLog: false,
+  isLoadingUser: false,
+
+  fetchUser: async () => {
+    set({ isLoadingUser: true });
+    try {
+      const res = await fetch("/api/user");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          set({ 
+            user: data.data,
+            userSettings: data.data.settings,
+            jobGoal: data.data.jobGoal
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Failed to fetch user", e);
+    } finally {
+      set({ isLoadingUser: false });
+    }
+  },
 
   fetchDayLog: async (date) => {
     set({ isLoadingLog: true });

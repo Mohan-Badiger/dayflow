@@ -13,19 +13,19 @@ const UserSchema = new mongoose.Schema({
   totalDaysLogged:{ type: Number, default: 0 },
 
   settings: {
+    theme:               { type: String, default: "system" },
     wakeTarget:          { type: String, default: "06:30" },
-    sleepTarget:         { type: String, default: "22:30" },
-    dailyStudyGoalHours: { type: Number, default: 6, min: 0, max: 24 },
-    waterGoalGlasses:    { type: Number, default: 8, min: 1, max: 20 },
+    sleepTarget:         { type: String, default: "23:00" },
+    studyGoalHours:      { type: Number, default: 4, min: 0, max: 24 },
+    waterGoal:           { type: Number, default: 8, min: 1, max: 20 },
     timezone:            { type: String, default: "Asia/Kolkata" },
-    weekStartsOn:        { type: String, default: "monday",
-                           enum: ["monday","sunday"] },
+    weekStartsOn:        { type: String, default: "monday", enum: ["monday","sunday"] },
   },
 
   jobGoal: {
-    role:                  { type: String, default: "", trim: true },
+    role:                  { type: String, default: "React / Next.js Developer", trim: true },
     targetDate:            { type: Date,   default: null },
-    weeklyStudyHourTarget: { type: Number, default: 40, min: 0 },
+    weeklyHours:           { type: Number, default: 28, min: 0 },
     totalTargetHours:      { type: Number, default: 500, min: 0 },
   },
 }, {
