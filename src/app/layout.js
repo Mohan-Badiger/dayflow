@@ -3,6 +3,7 @@ import "./globals.css";
 import { SessionProviderWrapper } from "@/components/providers/SessionProviderWrapper";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { ToastContainer } from "@/components/ui/Toast";
+import { StoreInitializer } from "@/components/providers/StoreInitializer";
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXTAUTH_URL || "https://dayflow.app"),
@@ -97,6 +98,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <SessionProviderWrapper>
           <QueryProvider>
+            <StoreInitializer />
             {children}
             <ToastContainer />
           </QueryProvider>

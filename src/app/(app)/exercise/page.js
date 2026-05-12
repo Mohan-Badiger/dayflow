@@ -98,7 +98,7 @@ function ActiveWorkout({ workout, exercises, onClose, onComplete }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-surface-2/95 backdrop-blur-xl overflow-y-auto flex flex-col items-center p-4 md:p-8"
+      className="fixed inset-0 z-100 bg-surface-2/95 backdrop-blur-xl overflow-y-auto flex flex-col items-center p-4 md:p-8"
     >
       <div className="w-full max-w-2xl bg-surface border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col min-h-[90vh]">
         <div className="p-6 md:p-8 border-b border-border bg-surface sticky top-0 z-20 flex justify-between items-center">
@@ -211,7 +211,7 @@ export default function ExercisePage() {
           <ActiveWorkout workout={activeWorkout} exercises={activeWorkoutExercises} onClose={() => setActiveWorkout(null)} onComplete={completeWorkout} />
         )}
         {infoExercise && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setInfoExercise(null)}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-110 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setInfoExercise(null)}>
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-surface w-full max-w-md rounded-3xl p-6 border border-border shadow-2xl" onClick={e => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
