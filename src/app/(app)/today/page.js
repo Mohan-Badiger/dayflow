@@ -175,9 +175,9 @@ export default function TodayPage() {
           value={`${meals.length} meals`}
           sublabel={`${water}/${waterGoal} glasses water`}
           color="#10b981" delay={0.2} />
-        <QuickNavCard href="/habits" icon={CheckCircle2} label="Habits"
-          value={`${habitsDone}/${habits.length} done`}
-          sublabel={habits.length ? `${habits.length - habitsDone} left today` : "No habits set"}
+        <QuickNavCard href="/review" icon={Sparkles} label="Evening Review"
+          value={dayLog?.eveningReview?.reflection ? "Done ✓" : "Pending"}
+          sublabel="Reflect & plan tomorrow"
           color="#ec4899" delay={0.25} />
         <QuickNavCard href="/analytics" icon={TrendingUp} label="Analytics"
           value="View insights"

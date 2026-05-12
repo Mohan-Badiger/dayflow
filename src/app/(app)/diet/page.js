@@ -1,308 +1,489 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
-import { useApi } from "@/hooks/useApi";
-import { useToast } from "@/hooks/useToast";
-import { useAppStore } from "@/store/useAppStore";
-import { PageWrapper } from "@/components/layout/PageWrapper";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Modal } from "@/components/ui/Modal";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import {
-  Droplets, Plus, Apple, AlertTriangle, CheckCircle2,
-  Coffee, Salad, Cookie, Utensils, Flame, Heart,
-  Trash2, Clock, Sparkles
+  Sun, Dumbbell, Coffee, Apple, Utensils, Moon, Brain, BedDouble,
+  Droplets, ChevronDown, ChevronRight, Flame, Heart, Zap, Leaf,
+  Clock, AlertTriangle, CheckCircle2, Sparkles, Target, Shield,
 } from "lucide-react";
 
-const MEAL_TYPES = [
-  { value: "Breakfast", icon: Coffee,   color: "#f59e0b", label: "Breakfast" },
-  { value: "Lunch",     icon: Utensils, color: "#10b981", label: "Lunch" },
-  { value: "Dinner",    icon: Salad,    color: "#8b5cf6", label: "Dinner" },
-  { value: "Snack",     icon: Cookie,   color: "#ec4899", label: "Snack" },
+/* ── colour palette per section ── */
+const SECTIONS = [
+  {
+    id: "morning",
+    title: "Morning Routine",
+    subtitle: "6:00 – 7:30 AM",
+    icon: Sun,
+    gradient: "from-amber-500/15 to-orange-500/8",
+    accent: "#f59e0b",
+    blocks: [
+      {
+        heading: "6:00 – 6:30 AM  ·  Wake Up",
+        icon: Sun,
+        items: [
+          "Drink 1–2 glasses of water",
+          "Go outside for sunlight for 15–20 mins",
+          "Avoid phone immediately after waking",
+        ],
+        optional: ["Warm water + lemon", "5 deep breaths outside"],
+      },
+      {
+        heading: "6:30 – 7:15 AM  ·  Exercise",
+        icon: Dumbbell,
+        subgroups: [
+          {
+            label: "Mon / Wed / Fri — Strength",
+            items: ["Push‑ups — 3 sets", "Squats — 3 sets", "Lunges — 3 sets", "Plank — 3 rounds", "Pull‑ups if possible"],
+          },
+          {
+            label: "Tue / Thu / Sat — Cardio",
+            items: ["Running or brisk walking", "Sprint intervals", "Stretching"],
+          },
+          { label: "Sunday", items: ["Rest or light walking"] },
+        ],
+      },
+      {
+        heading: "7:30 AM  ·  Breakfast",
+        icon: Coffee,
+        options: [
+          { label: "Option 1", items: ["3 eggs", "Banana", "Milk"] },
+          { label: "Option 2", items: ["Oats with nuts", "Peanut butter", "Fruit"] },
+          { label: "Option 3 (Veg)", items: ["Sprouts", "Paneer", "Dry fruits"] },
+        ],
+        daily: ["4 soaked almonds", "2 walnuts", "Pumpkin seeds"],
+      },
+    ],
+  },
+  {
+    id: "midmorning",
+    title: "Mid‑Morning",
+    subtitle: "10:30 – 11:00 AM",
+    icon: Apple,
+    gradient: "from-emerald-500/15 to-green-500/8",
+    accent: "#10b981",
+    blocks: [
+      {
+        heading: "Fruit Snack",
+        icon: Apple,
+        items: ["Pomegranate", "Apple", "Watermelon", "Banana"],
+        note: "Drink enough water throughout.",
+      },
+    ],
+  },
+  {
+    id: "afternoon",
+    title: "Afternoon",
+    subtitle: "1:00 – 2:00 PM",
+    icon: Utensils,
+    gradient: "from-violet-500/15 to-purple-500/8",
+    accent: "#8b5cf6",
+    blocks: [
+      {
+        heading: "Lunch — Balanced Meal",
+        icon: Utensils,
+        items: ["Rice or roti", "Dal", "Vegetables", "Chicken / fish / paneer", "Curd"],
+        bestVeg: ["Spinach", "Broccoli", "Beans", "Carrot"],
+        avoid: ["Too much fried food", "Soft drinks", "Heavy sugary desserts daily"],
+      },
+    ],
+  },
+  {
+    id: "evening",
+    title: "Evening",
+    subtitle: "4:30 – 6:30 PM",
+    icon: Zap,
+    gradient: "from-sky-500/15 to-cyan-500/8",
+    accent: "#0ea5e9",
+    blocks: [
+      {
+        heading: "4:30 – 5:00 PM  ·  Snack",
+        icon: Leaf,
+        items: ["Peanuts / chikki", "Fruit", "Green tea or normal tea"],
+      },
+      {
+        heading: "5:30 – 6:30 PM  ·  Activity",
+        icon: Dumbbell,
+        items: ["Walking", "Sports", "Cycling", "Light gym"],
+        note: "Avoid sitting the whole evening.",
+      },
+    ],
+  },
+  {
+    id: "night",
+    title: "Night",
+    subtitle: "7:30 – 10:30 PM",
+    icon: Moon,
+    gradient: "from-indigo-500/15 to-blue-500/8",
+    accent: "#6366f1",
+    blocks: [
+      {
+        heading: "7:30 – 8:30 PM  ·  Dinner",
+        icon: Utensils,
+        items: ["Roti + sabji + paneer/chicken", "Soup + eggs", "Rice + dal + vegetables"],
+        avoid: ["Heavy junk food at night", "Too much sugar", "Eating very late"],
+      },
+      {
+        heading: "9:00 PM  ·  Relax",
+        icon: Brain,
+        items: ["Light stretching", "Read something", "Calm music"],
+        avoid: ["Stress", "Doom scrolling", "Excess late‑night gaming"],
+      },
+      {
+        heading: "10:00 – 10:30 PM  ·  Sleep",
+        icon: BedDouble,
+        items: ["7–9 hours sleep", "Sleep before 11 PM regularly"],
+        note: "Your body produces most testosterone during deep sleep.",
+      },
+    ],
+  },
 ];
 
-// ─── Water Glass ────────────────────────────────────────
-function WaterGlass({ filled, index, onClick }) {
+const WEEKLY_HABITS = [
+  { icon: Dumbbell, text: "3–5 days strength training", color: "#10b981" },
+  { icon: Target, text: "Maintain healthy weight — less belly fat helps hormone balance", color: "#6366f1" },
+  { icon: Droplets, text: "Stay hydrated — 2.5–3.5 litres water daily", color: "#0ea5e9" },
+];
+
+const REDUCE_LIST = [
+  "Smoking",
+  "Alcohol",
+  "Excess porn / masturbation if it affects energy",
+  "Too much junk food",
+  "Sleeping late daily",
+];
+
+const DAILY_FOODS = [
+  "Eggs", "Banana", "Milk / curd", "Nuts", "Seeds",
+  "Chicken / fish / paneer", "Dal", "Fruits", "Vegetables",
+];
+
+const PRIORITY_STACK = [
+  { n: 1, text: "Sleep", icon: BedDouble },
+  { n: 2, text: "Strength exercise", icon: Dumbbell },
+  { n: 3, text: "Healthy body fat", icon: Heart },
+  { n: 4, text: "Good nutrition", icon: Leaf },
+  { n: 5, text: "Stress reduction", icon: Brain },
+];
+
+/* ── helpers ── */
+const anim = (d = 0) => ({
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, delay: d, ease: [0.25, 0.46, 0.45, 0.94] },
+});
+
+/* ── Expandable Section Card ── */
+function SectionCard({ section, index }) {
+  const [open, setOpen] = useState(index === 0);
+  const Icon = section.icon;
+
   return (
-    <motion.button
-      whileTap={{ scale: 0.85 }}
-      onClick={onClick}
-      className="relative w-9 h-12 rounded-b-xl rounded-t-md overflow-hidden border-2 transition-colors"
-      style={{ borderColor: filled ? "#0ea5e9" : "var(--color-border)" }}
-    >
-      <motion.div
-        initial={false}
-        animate={{ height: filled ? "100%" : "0%" }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-water to-[#38bdf8]"
-      />
-      {filled && (
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute inset-0 flex items-center justify-center">
-          <Droplets className="w-3.5 h-3.5 text-white" />
+    <motion.div {...anim(index * 0.06)} className="card overflow-hidden">
+      {/* Header — always visible */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-4 p-5 sm:p-6 text-left group transition-colors hover:bg-surface-3/40"
+      >
+        <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${section.gradient} flex items-center justify-center shrink-0 ring-1 ring-white/5`}>
+          <Icon className="w-6 h-6" style={{ color: section.accent }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg font-bold text-text-1">{section.title}</h2>
+          <p className="text-xs text-text-3 font-medium mt-0.5">{section.subtitle}</p>
+        </div>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
+          <ChevronDown className="w-5 h-5 text-text-3" />
         </motion.div>
-      )}
-    </motion.button>
+      </button>
+
+      {/* Content */}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-6 sm:px-6 space-y-5">
+              {section.blocks.map((block, bi) => (
+                <BlockCard key={bi} block={block} accent={section.accent} delay={bi * 0.05} />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
-export default function DietPage() {
-  const { get, post, patch, del } = useApi();
-  const { add: toast } = useToast();
-  const { activeDate, dayLog, fetchDayLog } = useAppStore();
-
-  const [meals, setMeals] = useState([]);
-  const [waterGlasses, setWaterGlasses] = useState(0);
-  const [junkFood, setJunkFood] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  // Modal
-  const [showModal, setShowModal] = useState(false);
-  const [mealForm, setMealForm] = useState({ type: "Breakfast", description: "", time: "", isHealthy: true });
-
-  const waterGoal = 8;
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    fetchDayLog(activeDate);
-    const dietData = await get(`/api/day/${activeDate}/diet`);
-    if (dietData) {
-      setWaterGlasses(dietData.waterGlasses || 0);
-      setJunkFood(dietData.junkFood || false);
-    }
-    const mealData = await get(`/api/day/${activeDate}/diet/meals`);
-    if (mealData) setMeals(mealData);
-    setLoading(false);
-  }, [activeDate]);
-
-  useEffect(() => { fetchData(); }, [fetchData]);
-
-  const handleWaterClick = async (index) => {
-    const newVal = index === waterGlasses - 1 ? index : index + 1;
-    setWaterGlasses(newVal);
-    await patch(`/api/day/${activeDate}/diet`, { waterGlasses: newVal });
-  };
-
-  const handleJunkToggle = async () => {
-    const val = !junkFood;
-    setJunkFood(val);
-    await patch(`/api/day/${activeDate}/diet`, { junkFood: val });
-  };
-
-  const handleAddMeal = async () => {
-    if (!mealForm.description) return;
-    const now = new Date();
-    const time = mealForm.time || `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-    const res = await post(`/api/day/${activeDate}/diet/meals`, { ...mealForm, time });
-    if (res) {
-      toast("Meal logged! 🍽️", "success");
-      setShowModal(false);
-      setMealForm({ type: "Breakfast", description: "", time: "", isHealthy: true });
-      fetchData();
-    }
-  };
-
-  // Stats
-  const healthyCount = meals.filter(m => m.isHealthy).length;
-  const waterPct = Math.min(waterGlasses / waterGoal, 1);
-
+/* ── Block Card (inside sections) ── */
+function BlockCard({ block, accent, delay }) {
+  const BIcon = block.icon;
   return (
-    <PageWrapper className="space-y-6 pb-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-text-1">Diet & Nutrition</h1>
-          <p className="text-text-3 font-medium">Fuel your body right. Track every meal.</p>
-        </div>
-        <Button onClick={() => setShowModal(true)} className="gap-2 h-10">
-          <Plus className="w-4 h-4" /> Log Meal
-        </Button>
+    <motion.div {...anim(delay)}
+      className="rounded-xl border border-border bg-surface-2 p-4 sm:p-5 space-y-3"
+    >
+      <div className="flex items-center gap-2.5">
+        <BIcon className="w-4.5 h-4.5 shrink-0" style={{ color: accent }} />
+        <h3 className="font-semibold text-text-1 text-sm sm:text-base">{block.heading}</h3>
       </div>
 
-      {/* Water + Stats Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Water Tracker */}
-        <div className="lg:col-span-2 card p-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-linear-to-br from-water/5 to-transparent" />
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Droplets className="w-5 h-5 text-water" />
-                <h2 className="font-bold text-text-1">Water Intake</h2>
-              </div>
-              <motion.span key={waterGlasses} initial={{ scale: 1.3 }} animate={{ scale: 1 }}
-                className="text-sm font-bold px-3 py-1 rounded-full"
-                style={{ backgroundColor: waterPct >= 1 ? "var(--color-success)" : "var(--color-surface-3)", color: waterPct >= 1 ? "white" : "var(--color-text-2)" }}>
-                {waterGlasses}/{waterGoal}
-              </motion.span>
-            </div>
+      {/* Simple item list */}
+      {block.items && (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          {block.items.map((item, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-text-2">
+              <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: accent }} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
-            {/* Progress bar */}
-            <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden mb-4">
-              <motion.div animate={{ width: `${waterPct * 100}%` }}
-                transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                className="h-full rounded-full bg-linear-to-r from-water to-[#38bdf8]" />
-            </div>
+      {/* Optional items */}
+      {block.optional && (
+        <div className="rounded-lg bg-warning/5 border border-warning/10 p-3">
+          <p className="text-xs font-bold text-warning mb-1.5 flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Optional
+          </p>
+          <ul className="space-y-1">
+            {block.optional.map((item, i) => (
+              <li key={i} className="text-sm text-text-2 flex items-center gap-2">
+                <ChevronRight className="w-3 h-3 text-warning shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-            <div className="flex gap-2 flex-wrap">
-              {Array.from({ length: waterGoal }).map((_, i) => (
-                <WaterGlass key={i} filled={i < waterGlasses} index={i} onClick={() => handleWaterClick(i)} />
-              ))}
+      {/* Subgroups (exercise schedule) */}
+      {block.subgroups && (
+        <div className="grid grid-cols-1 gap-3">
+          {block.subgroups.map((sg, i) => (
+            <div key={i} className="rounded-lg bg-surface-3/50 p-3">
+              <p className="text-xs font-bold text-text-1 mb-2">{sg.label}</p>
+              <ul className="space-y-1">
+                {sg.items.map((item, j) => (
+                  <li key={j} className="text-sm text-text-2 flex items-center gap-2">
+                    <CheckCircle2 className="w-3 h-3 shrink-0" style={{ color: accent }} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
+          ))}
+        </div>
+      )}
 
-            {waterPct >= 1 && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-success font-medium mt-3 flex items-center gap-1">
-                <Sparkles className="w-4 h-4" /> Hydration goal reached!
-              </motion.p>
-            )}
+      {/* Options (breakfast) */}
+      {block.options && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {block.options.map((opt, i) => (
+            <div key={i} className="rounded-lg bg-surface-3/50 p-3">
+              <p className="text-xs font-bold mb-2" style={{ color: accent }}>{opt.label}</p>
+              <ul className="space-y-1">
+                {opt.items.map((item, j) => (
+                  <li key={j} className="text-sm text-text-2 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accent }} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Daily must‑add */}
+      {block.daily && (
+        <div className="rounded-lg bg-success/5 border border-success/10 p-3">
+          <p className="text-xs font-bold text-success mb-1.5 flex items-center gap-1">
+            <Zap className="w-3 h-3" /> Daily Must‑Have
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {block.daily.map((d, i) => (
+              <span key={i} className="text-xs font-medium px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/15">
+                {d}
+              </span>
+            ))}
           </div>
         </div>
+      )}
 
-        {/* Quick Stats */}
-        <div className="space-y-3">
-          <div className="card p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center">
-              <Heart className="w-5 h-5 text-success" />
-            </div>
-            <div>
-              <p className="text-xs text-text-3">Healthy Meals</p>
-              <p className="font-bold text-text-1 text-lg">{healthyCount}/{meals.length || 0}</p>
-            </div>
-          </div>
-          <div className="card p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center">
-              <Utensils className="w-5 h-5 text-warning" />
-            </div>
-            <div>
-              <p className="text-xs text-text-3">Meals Logged</p>
-              <p className="font-bold text-text-1 text-lg">{meals.length}</p>
-            </div>
-          </div>
-          {/* Junk Food Flag */}
-          <div className="card p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-danger/10 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-danger" />
-              </div>
-              <div>
-                <p className="text-xs text-text-3">Junk Food</p>
-                <p className="font-bold text-text-1 text-sm">{junkFood ? "Yes 😬" : "Clean ✓"}</p>
-              </div>
-            </div>
-            <button onClick={handleJunkToggle}
-              className={`w-12 h-6 rounded-full p-0.5 transition-colors ${junkFood ? "bg-danger" : "bg-surface-3"}`}>
-              <motion.div className="w-5 h-5 bg-white rounded-full shadow"
-                animate={{ x: junkFood ? 24 : 0 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }} />
-            </button>
+      {/* Best vegetables */}
+      {block.bestVeg && (
+        <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/10 p-3">
+          <p className="text-xs font-bold text-emerald-400 mb-1.5 flex items-center gap-1">
+            <Leaf className="w-3 h-3" /> Best Vegetables
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {block.bestVeg.map((v, i) => (
+              <span key={i} className="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">
+                {v}
+              </span>
+            ))}
           </div>
         </div>
+      )}
+
+      {/* Avoid list */}
+      {block.avoid && (
+        <div className="rounded-lg bg-danger/5 border border-danger/10 p-3">
+          <p className="text-xs font-bold text-danger mb-1.5 flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" /> Avoid
+          </p>
+          <ul className="space-y-1">
+            {block.avoid.map((a, i) => (
+              <li key={i} className="text-sm text-text-2 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-danger shrink-0" />
+                {a}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Note */}
+      {block.note && (
+        <p className="text-xs text-text-3 italic flex items-start gap-1.5 pt-1">
+          <Sparkles className="w-3 h-3 shrink-0 mt-0.5 text-brand" />
+          {block.note}
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   MAIN PAGE
+   ════════════════════════════════════════════════════════════ */
+export default function DietPage() {
+  return (
+    <PageWrapper className="space-y-8 pb-10">
+      {/* ─── Hero ─── */}
+      <motion.div {...anim(0)} className="card p-6 sm:p-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-br from-amber-500/8 via-transparent to-emerald-500/5" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-amber-400" />
+            </div>
+            <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Daily Protocol</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-1 mt-2">
+            Natural Testosterone Support
+          </h1>
+          <p className="text-text-3 font-medium mt-1.5 max-w-xl leading-relaxed text-sm sm:text-base">
+            A practical daily routine for home and student/work life. Follow consistently for at least 8–12 weeks to see results.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ─── Timeline Sections ─── */}
+      <div className="space-y-4">
+        {SECTIONS.map((section, i) => (
+          <SectionCard key={section.id} section={section} index={i} />
+        ))}
       </div>
 
-      {/* Meals List */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="font-bold text-text-1 text-lg">Today's Meals</h2>
-          <span className="text-xs text-text-3 font-medium">{meals.length} logged</span>
+      {/* ─── Weekly Habits ─── */}
+      <motion.div {...anim(0.35)} className="card p-6">
+        <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 mb-5">
+          <Target className="w-5 h-5 text-brand" /> Weekly Habits
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {WEEKLY_HABITS.map((h, i) => {
+            const HIcon = h.icon;
+            return (
+              <motion.div key={i} {...anim(0.35 + i * 0.06)}
+                className="rounded-xl bg-surface-2 border border-border p-4 flex items-start gap-3 hover:border-border-2 transition-colors">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: h.color + "18" }}>
+                  <HIcon className="w-4.5 h-4.5" style={{ color: h.color }} />
+                </div>
+                <p className="text-sm text-text-2 leading-relaxed">{h.text}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {meals.length === 0 && !loading ? (
-          <div className="card p-12 text-center">
-            <Apple className="w-12 h-12 text-text-3 mx-auto mb-3 opacity-30" />
-            <p className="text-text-3 font-medium">No meals logged yet.</p>
-            <Button onClick={() => setShowModal(true)} variant="outline" className="mt-3 gap-2 text-xs">
-              <Plus className="w-3 h-3" /> Log First Meal
-            </Button>
+        {/* Reduce list */}
+        <div className="mt-5 rounded-xl bg-danger/5 border border-danger/10 p-4">
+          <p className="text-sm font-bold text-danger flex items-center gap-1.5 mb-3">
+            <AlertTriangle className="w-4 h-4" /> Reduce These
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {REDUCE_LIST.map((r, i) => (
+              <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-full bg-danger/8 text-danger/80 border border-danger/10">
+                {r}
+              </span>
+            ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {meals.map((meal, i) => {
-              const mealCfg = MEAL_TYPES.find(m => m.value === meal.type) || MEAL_TYPES[0];
-              const MealIcon = mealCfg.icon;
+        </div>
+      </motion.div>
+
+      {/* ─── Daily Foods List ─── */}
+      <motion.div {...anim(0.4)} className="card p-6">
+        <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 mb-4">
+          <Leaf className="w-5 h-5 text-emerald-400" /> Simple Daily Foods
+        </h2>
+        <p className="text-sm text-text-3 mb-4">Eat these regularly for best results:</p>
+        <div className="flex flex-wrap gap-2">
+          {DAILY_FOODS.map((f, i) => (
+            <motion.span key={i} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 + i * 0.04 }}
+              className="text-sm font-medium px-4 py-2 rounded-xl bg-emerald-500/8 text-emerald-400 border border-emerald-500/12 hover:bg-emerald-500/14 transition-colors cursor-default">
+              {f}
+            </motion.span>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ─── Priority Stack ─── */}
+      <motion.div {...anim(0.45)} className="card p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-br from-brand/5 via-transparent to-transparent" />
+        <div className="relative">
+          <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 mb-2">
+            <Flame className="w-5 h-5 text-warning" /> What Actually Works
+          </h2>
+          <p className="text-sm text-text-3 mb-5 max-w-lg">
+            No food will suddenly boost testosterone overnight. Consistency matters more than "special boosters." The biggest gains come from:
+          </p>
+          <div className="space-y-3">
+            {PRIORITY_STACK.map((p, i) => {
+              const PIcon = p.icon;
+              const pct = ((5 - i) / 5) * 100;
               return (
-                <motion.div key={meal._id || i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <div className="card p-4 flex items-center gap-4 border-l-4" style={{ borderLeftColor: mealCfg.color }}>
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: mealCfg.color + "18" }}>
-                      <MealIcon className="w-5 h-5" style={{ color: mealCfg.color }} />
+                <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + i * 0.08 }}
+                  className="flex items-center gap-4">
+                  <span className="w-7 h-7 rounded-lg bg-brand/15 flex items-center justify-center text-xs font-black text-brand shrink-0">
+                    {p.n}
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-semibold text-text-1 flex items-center gap-1.5">
+                        <PIcon className="w-3.5 h-3.5 text-text-3" /> {p.text}
+                      </span>
+                      <span className="text-[10px] text-text-3 font-mono">{pct}%</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: mealCfg.color + "18", color: mealCfg.color }}>{meal.type}</span>
-                        {meal.time && <span className="text-[10px] text-text-3 font-mono">{meal.time}</span>}
-                      </div>
-                      <p className="font-semibold text-text-1 text-sm mt-0.5 truncate">{meal.description || "No description"}</p>
-                    </div>
-                    <div className="shrink-0">
-                      {meal.isHealthy ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded-full">
-                          <CheckCircle2 className="w-3 h-3" /> Healthy
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-warning bg-warning/10 px-2 py-1 rounded-full">
-                          <Flame className="w-3 h-3" /> Indulgent
-                        </span>
-                      )}
+                    <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
+                      <motion.div className="h-full rounded-full bg-brand"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 1, delay: 0.6 + i * 0.1, ease: "easeOut" }}
+                      />
                     </div>
                   </div>
                 </motion.div>
               );
             })}
           </div>
-        )}
-      </div>
-
-      {/* Add Meal Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Log a Meal">
-        <div className="space-y-5">
-          {/* Meal Type */}
-          <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Meal Type</label>
-            <div className="grid grid-cols-4 gap-2">
-              {MEAL_TYPES.map(mt => {
-                const Icon = mt.icon;
-                return (
-                  <button key={mt.value} onClick={() => setMealForm({ ...mealForm, type: mt.value })}
-                    className={`p-3 rounded-xl flex flex-col items-center gap-1.5 border transition-all ${mealForm.type === mt.value ? "border-brand bg-brand/10" : "border-border bg-surface hover:border-border-2"}`}>
-                    <Icon className="w-5 h-5" style={{ color: mt.color }} />
-                    <span className="text-[10px] font-bold text-text-2">{mt.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">What did you eat?</label>
-            <input type="text" value={mealForm.description} onChange={e => setMealForm({ ...mealForm, description: e.target.value })}
-              className="input-field" placeholder="e.g. Grilled chicken with rice and salad" />
-          </div>
-
-          {/* Time */}
-          <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Time</label>
-            <input type="time" value={mealForm.time} onChange={e => setMealForm({ ...mealForm, time: e.target.value })}
-              className="input-field scheme-dark" placeholder="Leave blank for now" />
-          </div>
-
-          {/* Healthy Toggle */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-surface-3 border border-border">
-            <div>
-              <p className="font-bold text-sm text-text-1">Healthy Meal?</p>
-              <p className="text-xs text-text-3 mt-0.5">Was this a clean, nutritious meal?</p>
-            </div>
-            <button onClick={() => setMealForm({ ...mealForm, isHealthy: !mealForm.isHealthy })}
-              className={`w-12 h-6 rounded-full p-0.5 transition-colors ${mealForm.isHealthy ? "bg-success" : "bg-surface-3 border border-border"}`}>
-              <motion.div className="w-5 h-5 bg-white rounded-full shadow"
-                animate={{ x: mealForm.isHealthy ? 24 : 0 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }} />
-            </button>
-          </div>
-
-          <Button className="w-full h-11" onClick={handleAddMeal} disabled={!mealForm.description}>
-            <Apple className="w-4 h-4 mr-2" /> Log Meal
-          </Button>
         </div>
-      </Modal>
+      </motion.div>
     </PageWrapper>
   );
 }
