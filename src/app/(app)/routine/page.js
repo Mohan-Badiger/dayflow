@@ -129,7 +129,7 @@ export default function RoutinePage() {
 
   const { patch } = useApi();
   const { add: toast } = useToast();
-  const { activeDate, dayLog, fetchDayLog } = useAppStore();
+  const { activeDate, dayLog, fetchDayLog, userSettings } = useAppStore();
 
   useEffect(() => { fetchDayLog(activeDate); }, [activeDate]);
 
@@ -138,10 +138,17 @@ export default function RoutinePage() {
       if (dayLog.routine.morningChecklist) setMorning(prev => ({ ...prev, ...dayLog.routine.morningChecklist }));
       if (dayLog.routine.nightChecklist) setNight(prev => ({ ...prev, ...dayLog.routine.nightChecklist }));
       if (dayLog.routine.wakeTime) setWakeTime(dayLog.routine.wakeTime);
+      else if (userSettings?.wakeTarget) setWakeTime(userSettings.wakeTarget);
+
       if (dayLog.routine.sleepTime) setSleepTime(dayLog.routine.sleepTime);
+      else if (userSettings?.sleepTarget) setSleepTime(userSettings.sleepTarget);
+
       if (dayLog.routine.nightChecklist?.screenOffBy) setScreenOff(dayLog.routine.nightChecklist.screenOffBy);
+    } else if (userSettings) {
+      if (userSettings.wakeTarget) setWakeTime(userSettings.wakeTarget);
+      if (userSettings.sleepTarget) setSleepTime(userSettings.sleepTarget);
     }
-  }, [dayLog]);
+  }, [dayLog, userSettings]);
 
   const save = useCallback(async (data) => {
     setSaving(true);
