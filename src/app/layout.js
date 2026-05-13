@@ -60,10 +60,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor:    [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)",  color: "#0f172a" },
-  ],
+  themeColor: "#09090b",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -72,7 +69,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <script
           type="application/ld+json"
