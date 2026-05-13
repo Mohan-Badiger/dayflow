@@ -15,7 +15,7 @@ export function Timeline({ events = [] }) {
             <Clock className="w-6 h-6" />
           </div>
           <p className="font-medium">No events logged yet</p>
-          <p className="text-sm mt-1 mb-4">Start your day by logging a session or habit.</p>
+          <p className="text-sm mt-1 mb-4">Start your day by logging a session or routine.</p>
           <button 
             onClick={() => setActiveModal("session")}
             className="flex items-center gap-2 text-sm font-medium text-brand hover:underline"

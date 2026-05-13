@@ -1,8 +1,6 @@
 import { auth }      from "@/lib/auth"
 import connectDB     from "@/lib/db"
 import User          from "@/models/User"
-import Habit         from "@/models/Habit"
-import HabitLog      from "@/models/HabitLog"
 import DayLog        from "@/models/DayLog"
 import { getOrCreateDayLog } from "@/lib/daylogHelpers"
 import { ok, err, unauthorized, serverError } from "@/lib/apiResponse"
@@ -18,23 +16,12 @@ export async function GET(req) {
 
     await connectDB()
 
-    const [user, dayLog, habits, habitLogs] = await Promise.all([
+    const [user, dayLog] = await Promise.all([
       User.findById(session.user.id)
         .select("name image streak longestStreak settings jobGoal totalDaysLogged")
         .lean(),
       getOrCreateDayLog(session.user.id, date),
-      Habit.find({ userId: session.user.id, isActive: true })
-        .sort({ order: 1 }).lean(),
-      HabitLog.find({ userId: session.user.id, date }).lean(),
     ])
-
-    // Merge habit completion status into habits
-    const habitsWithStatus = habits.map(h => ({
-      ...h,
-      completed: habitLogs.some(
-        l => l.habitId.toString() === h._id.toString() && l.completed
-      ),
-    }))
 
     // Job goal progress
     const jobGoalProgress = user.jobGoal?.totalTargetHours
@@ -44,7 +31,6 @@ export async function GET(req) {
     return ok({
       user,
       dayLog,
-      habits: habitsWithStatus,
       jobGoalProgress,
     })
   } catch (e) { return serverError(e) }

@@ -38,7 +38,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-xs text-slate-400 pt-4">
-            By logging in, you agree to track your habits effectively.
+            By logging in, you agree to track your routines effectively.
           </p>
         </Card>
       </motion.div>

@@ -113,25 +113,6 @@ export const schemas = {
                 .optional(),
   }),
 
-  // ─ Habit ────────────────────────────────────────────
-  createHabit: z.object({
-    name:       z.string().min(1).max(100),
-    category:   z.enum(["routine","health","study","diet","custom"])
-                 .optional(),
-    targetDays: z.array(
-      z.enum(["Mon","Tue","Wed","Thu","Fri","Sat","Sun"])
-    ).optional(),
-    color: z.string().max(20).optional(),
-    icon:  z.string().max(50).optional(),
-    order: z.number().optional(),
-  }),
-
-  toggleHabit: z.object({
-    habitId:   z.string().min(1),
-    date:      dateStr,
-    completed: z.boolean(),
-    notes:     z.string().max(300).optional(),
-  }),
 
   // ─ Template ─────────────────────────────────────────
   createTemplate: z.object({

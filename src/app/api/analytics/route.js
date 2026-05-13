@@ -67,29 +67,6 @@ export async function GET(req) {
                pct: total > 0 ? Math.round((done/total)*100) : null }
     })
 
-    // ── Habit consistency ────────────────────────────
-    const habits    = await Habit.find({
-      userId: session.user.id, isActive: true
-    }).lean()
-    const habitLogs = await HabitLog.find({
-      userId: session.user.id,
-      date: { $gte: from, $lte: to }
-    }).lean()
-
-    const habitStats = habits.map(h => {
-      const hLogs = habitLogs.filter(
-        l => l.habitId.toString() === h._id.toString()
-      )
-      const completed = hLogs.filter(l => l.completed).length
-      const rate = hLogs.length > 0
-        ? Math.round((completed / hLogs.length) * 100) : 0
-      return {
-        _id:  h._id, name: h.name, color: h.color,
-        completed, total: hLogs.length, rate,
-        currentStreak: h.currentStreak,
-      }
-    }).sort((a, b) => b.rate - a.rate)
-
     // ── Water & exercise ─────────────────────────────
     const totalExerciseDays = logs.filter(l => l.exercise?.done).length
     const avgWater = logs.length
@@ -120,7 +97,6 @@ export async function GET(req) {
       studyByDay,
       categoryTotals,
       timetableStats,
-      habitStats,
       health: { totalExerciseDays, avgWater },
       summary: {
         avgScore, bestDay, worstDay,

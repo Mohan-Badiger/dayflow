@@ -70,7 +70,6 @@ export default function TodayPage() {
   const { get, patch } = useApi();
   const { add: toast } = useToast();
 
-  const [habits, setHabits] = useState([]);
   const [streak, setStreak] = useState(0);
 
   const firstName = session?.user?.name?.split(" ")[0] || "User";
@@ -81,13 +80,6 @@ export default function TodayPage() {
   useEffect(() => { fetchDayLog(activeDate); }, [activeDate]);
 
   const fetchExtras = useCallback(async () => {
-    const h = await get("/api/habits");
-    if (h) {
-      const logs = await get(`/api/habits/log?date=${activeDate}`);
-      if (logs) {
-        setHabits(h.map(hb => ({ ...hb, completed: logs.some(l => l.habitId === hb._id && l.completed) })));
-      } else setHabits(h);
-    }
     const s = await get("/api/user/streak");
     if (s?.currentStreak !== undefined) setStreak(s.currentStreak);
   }, [activeDate]);
@@ -105,7 +97,6 @@ export default function TodayPage() {
   const morningDone = Object.values(morning).filter(v => v === true).length;
   const nightDone = Object.values(night).filter(v => v === true).length;
   const routineTotal = morningDone + nightDone;
-  const habitsDone = habits.filter(h => h.completed).length;
   const exerciseDone = dayLog?.exercise?.done || false;
 
   const scoreColor = score >= 75 ? "var(--color-success)" : score >= 40 ? "var(--color-warning)" : "var(--color-danger)";

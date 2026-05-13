@@ -59,7 +59,7 @@ export default function LandingPage() {
               <Activity className="w-6 h-6" />
             </div>
             <h2 className="text-lg font-bold">Rich Analytics</h2>
-            <p className="text-slate-500 text-sm">Discover patterns between your habits, sleep, study time, and mood.</p>
+            <p className="text-slate-500 text-sm">Discover patterns between your routines, sleep, study time, and health.</p>
           </div>
         </motion.div>
 
