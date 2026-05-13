@@ -51,8 +51,6 @@ export const schemas = {
   }),
 
   addWorkSession: z.object({
-    category: z.enum(["React","Next.js","DSA","Interview Prep",
-                       "Aptitude","English","System Design","Other"]),
     topic:           z.string().max(200).optional(),
     platform:        z.string().max(100).optional(),
     startTime:       timeStr,

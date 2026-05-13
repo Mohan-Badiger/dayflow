@@ -144,13 +144,7 @@ export default function AnalyticsPage() {
     }));
   }, [data, studyGoal]);
 
-  const categoryPie = useMemo(() => {
-    if (!data?.categoryTotals) return [];
-    const colors = ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6", "#0ea5e9", "#ef4444"];
-    return Object.entries(data.categoryTotals)
-      .map(([name, mins], i) => ({ name, value: +(mins / 60).toFixed(1), fill: colors[i % colors.length] }))
-      .sort((a, b) => b.value - a.value);
-  }, [data]);
+
 
   const ttData = useMemo(() => {
     if (!data?.timetableStats) return [];
@@ -254,7 +248,7 @@ export default function AnalyticsPage() {
             <Activity className="w-5 h-5 text-brand" /> Day Score Trend
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
               <AreaChart data={scoreTrend} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
@@ -279,7 +273,7 @@ export default function AnalyticsPage() {
             <Brain className="w-5 h-5 text-study" /> Daily Study Hours
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
               <BarChart data={studyChartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />
@@ -301,7 +295,7 @@ export default function AnalyticsPage() {
             <CalendarDays className="w-5 h-5 text-routine" /> Timetable Completion
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
               <BarChart data={ttData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />
@@ -316,35 +310,7 @@ export default function AnalyticsPage() {
           </div>
         </motion.div>
 
-        {/* Study Category Breakdown */}
-        <motion.div {...anim(0.3)} className="card p-5 flex flex-col">
-          <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-brand" /> Study Breakdown
-          </h2>
-          {categoryPie.length > 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <ResponsiveContainer width="100%" height={200} minWidth={0} minHeight={0}>
-                <PieChart>
-                  <Pie data={categoryPie} cx="50%" cy="50%" innerRadius={55} outerRadius={80}
-                    paddingAngle={4} dataKey="value" stroke="none">
-                    {categoryPie.map((e, i) => <Cell key={i} fill={e.fill} />)}
-                  </Pie>
-                  <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${v}h`, "Hours"]} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-2">
-                {categoryPie.map((d) => (
-                  <div key={d.name} className="flex items-center gap-1.5 text-xs font-medium text-text-2">
-                    <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.fill }} />
-                    {d.name} <span className="text-text-3">({d.value}h)</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-text-3 text-sm">No study data yet</div>
-          )}
-        </motion.div>
+
       </div>
 
       {/* ─── Progress Goals ─── */}

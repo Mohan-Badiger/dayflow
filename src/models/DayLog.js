@@ -1,12 +1,6 @@
 import mongoose from "mongoose"
 
 const WorkSessionSchema = new mongoose.Schema({
-  category: {
-    type: String,
-    enum: ["React","Next.js","DSA","Interview Prep",
-           "Aptitude","English","System Design","Other"],
-    default: "Other"
-  },
   topic:           { type: String, trim: true, maxlength: 200 },
   platform:        { type: String, trim: true, maxlength: 100 },
   startTime:       { type: String },  // "09:00"

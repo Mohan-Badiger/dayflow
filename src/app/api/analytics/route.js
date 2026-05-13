@@ -1,8 +1,6 @@
 import { auth }      from "@/lib/auth"
 import connectDB     from "@/lib/db"
 import DayLog        from "@/models/DayLog"
-import HabitLog      from "@/models/HabitLog"
-import Habit         from "@/models/Habit"
 import { generateInsights } from "@/lib/insights"
 import { ok, err, unauthorized, serverError } from "@/lib/apiResponse"
 import { format, subDays } from "date-fns"
@@ -41,20 +39,9 @@ export async function GET(req) {
       totalMins: (l.workSessions || []).reduce(
         (s, w) => s + (w.durationMinutes || 0), 0
       ),
-      byCategory: (l.workSessions || []).reduce((acc, w) => {
-        acc[w.category] = (acc[w.category] || 0) + (w.durationMinutes || 0)
-        return acc
-      }, {}),
     }))
 
-    // ── Category totals ──────────────────────────────
-    const categoryTotals = {}
-    logs.forEach(l => {
-      ;(l.workSessions || []).forEach(w => {
-        categoryTotals[w.category] =
-          (categoryTotals[w.category] || 0) + (w.durationMinutes || 0)
-      })
-    })
+
 
     // ── Timetable completion ─────────────────────────
     const timetableStats = logs.map(l => {
@@ -76,8 +63,9 @@ export async function GET(req) {
       : 0
 
     // ── Overall stats ────────────────────────────────
-    const totalStudyMins = Object.values(categoryTotals)
-      .reduce((s, v) => s + v, 0)
+    const totalStudyMins = logs.reduce((s, l) =>
+      s + (l.workSessions || []).reduce((acc, w) => acc + (w.durationMinutes || 0), 0), 0
+    )
     const avgScore = logs.length
       ? Math.round(logs.reduce((s, l) => s + l.dayScore, 0) / logs.length)
       : 0
@@ -95,7 +83,7 @@ export async function GET(req) {
       period: { from, to, days: logs.length },
       scoreTrend,
       studyByDay,
-      categoryTotals,
+
       timetableStats,
       health: { totalExerciseDays, avgWater },
       summary: {
