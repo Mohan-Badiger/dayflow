@@ -257,40 +257,40 @@ export default function TimetablePage() {
 
       {/* Add Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Timetable Block">
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Title</label>
+            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Title</label>
             <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
-              className="input-field" placeholder="e.g. Deep Work — React Hooks" />
+              className="input-field text-sm" placeholder="e.g. Deep Work" />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Category</label>
-            <div className="grid grid-cols-3 gap-2">
+            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Category</label>
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {Object.entries(CAT_CONFIG).map(([key, cfg]) => {
                 const Icon = cfg.icon;
                 return (
                   <button key={key} onClick={() => setFormData({ ...formData, category: key })}
-                    className={`p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
-                    <Icon className="w-4 h-4" style={{ color: cfg.color }} />{cfg.label}
+                    className={`p-2 rounded-lg text-[11px] sm:text-xs font-medium flex items-center gap-1.5 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand font-bold" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
+                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: cfg.color }} /><span className="truncate">{cfg.label}</span>
                   </button>
                 );
               })}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-sm font-bold mb-2 text-text-2">Start</label>
+              <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Start</label>
               <input type="time" value={formData.startTime} onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="input-field scheme-dark" />
+                className="input-field text-sm scheme-dark" />
             </div>
             <div>
-              <label className="block text-sm font-bold mb-2 text-text-2">End</label>
+              <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">End</label>
               <input type="time" value={formData.endTime} onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="input-field scheme-dark" />
+                className="input-field text-sm scheme-dark" />
             </div>
           </div>
-          <Button className="w-full h-11 text-sm" onClick={handleAdd} disabled={!formData.title}>
-            <Plus className="w-4 h-4 mr-2" /> Add to Timeline
+          <Button className="w-full h-10 sm:h-11 text-sm mt-2" onClick={handleAdd} disabled={!formData.title}>
+            <Plus className="w-4 h-4 mr-2" /> Add Block
           </Button>
         </div>
       </Modal>

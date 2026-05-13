@@ -90,7 +90,7 @@ export default function SessionsPage() {
 
   // ─── Setup Modal State ────────────────────────────
   const [showSetup, setShowSetup] = useState(false);
-  const [setupCategory, setSetupCategory] = useState("React");
+  const setupCategory = "Study"; // Fixed category
   const [setupTopic, setSetupTopic] = useState("");
   const [setupIntention, setSetupIntention] = useState("");
   const [setupDuration, setSetupDuration] = useState(45);
@@ -414,53 +414,39 @@ export default function SessionsPage() {
 
       {/* Start Session Modal */}
       <Modal isOpen={showSetup} onClose={() => setShowSetup(false)} title="Start Deep Work Session">
-        <div className="space-y-5">
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Category</label>
-            <div className="grid grid-cols-2 gap-2">
-              {CATEGORIES.map(cat => (
-                <button key={cat} onClick={() => setSetupCategory(cat)}
-                  className={`p-2.5 rounded-lg text-sm font-medium transition-all border ${setupCategory === cat ? "bg-brand text-white border-brand" : "bg-surface-3 text-text-2 border-border hover:border-brand/50"}`}>
-                  <span className="w-2 h-2 rounded-full inline-block mr-1.5" style={{ backgroundColor: CAT_COLORS[cat] }} />
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
+        <div className="space-y-4 sm:space-y-5">
           {/* Topic */}
           <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Topic</label>
+            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Topic</label>
             <input type="text" value={setupTopic} onChange={e => setSetupTopic(e.target.value)}
-              className="input-field" placeholder="e.g. useCallback & useMemo deep dive" />
+              className="input-field text-sm" placeholder="e.g. Hooks deep dive" />
           </div>
 
           {/* Intention */}
           <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">
-              <Target className="w-4 h-4 inline mr-1" /> What will you accomplish?
+            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2 items-center gap-1.5">
+              <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> What will you accomplish?
             </label>
             <input type="text" value={setupIntention} onChange={e => setSetupIntention(e.target.value)}
-              className="input-field" placeholder="I will finish understanding..." />
+              className="input-field text-sm" placeholder="I will finish understanding..." />
           </div>
 
           {/* Duration */}
           <div>
-            <label className="block text-sm font-bold mb-2 text-text-2">Duration</label>
-            <div className="grid grid-cols-4 gap-2">
+            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Duration</label>
+            <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
               {DURATIONS.map(d => (
                 <button key={d.value} onClick={() => setSetupDuration(d.value)}
-                  className={`p-3 rounded-lg text-center transition-all border ${setupDuration === d.value ? "bg-brand text-white border-brand" : "bg-surface-3 text-text-2 border-border hover:border-brand/50"}`}>
-                  <span className="block font-bold">{d.label}</span>
-                  <span className="text-xs opacity-70">{d.type}</span>
+                  className={`p-2 sm:p-3 rounded-lg text-center transition-all border ${setupDuration === d.value ? "bg-brand text-white border-brand" : "bg-surface-3 text-text-2 border-border hover:border-brand/50"}`}>
+                  <span className="block font-bold text-xs sm:text-sm">{d.label}</span>
+                  <span className="text-[10px] sm:text-xs opacity-70">{d.type}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <Button className="w-full h-12 text-lg gap-2" onClick={startTimer} disabled={!setupCategory}>
-            <Play className="w-5 h-5" /> Start Focus Timer
+          <Button className="w-full h-10 sm:h-12 text-sm sm:text-base gap-2 mt-2" onClick={startTimer}>
+            <Play className="w-4 h-4 sm:w-5 sm:h-5" /> Start Timer
           </Button>
         </div>
       </Modal>

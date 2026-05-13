@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,20 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch("/api/user/streak")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data?.streak !== undefined) {
+            setStreak(data.data.streak);
+          }
+        })
+        .catch(err => console.error("Failed to fetch streak:", err));
+    }
+  }, [session]);
 
   return (
     <aside className="hidden md:flex flex-col w-[80px] lg:w-[240px] border-r border-border bg-surface h-screen sticky top-0 transition-all">
@@ -72,10 +87,12 @@ export function Sidebar() {
             <img src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} alt="Avatar" className="w-8 h-8 rounded-full border border-border mx-auto lg:mx-0" />
             <div className="hidden lg:block flex-1 min-w-0">
               <p className="text-sm font-semibold text-text-1 truncate">{session.user.name}</p>
-              <div className="flex items-center gap-1 text-[11px] font-bold text-warning mt-0.5">
-                <Flame size={12} fill="currentColor" />
-                14 Day Streak
-              </div>
+              {streak > 0 && (
+                <div className="flex items-center gap-1 text-[11px] font-bold text-warning mt-0.5">
+                  <Flame size={12} fill="currentColor" />
+                  {streak} Day Streak
+                </div>
+              )}
             </div>
           </div>
         )}
