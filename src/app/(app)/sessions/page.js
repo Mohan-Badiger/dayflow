@@ -295,7 +295,7 @@ export default function SessionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Study</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Study</h1>
           <p className="text-text-3 font-medium">Deep work. Real progress. No faking it.</p>
         </div>
         <Button onClick={() => setShowSetup(true)} className="gap-2 h-11 px-5">

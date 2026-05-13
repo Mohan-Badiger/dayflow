@@ -149,7 +149,7 @@ export default function RoutinePage() {
           </div>
 
           <div className="flex-1 text-center sm:text-left space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-1">Daily Routine</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-1">Daily Routine</h1>
             <p className="text-sm text-text-3">
               {total === 9 ? "Perfect day! Every task done 🔥" : `${total} of 9 tasks complete — ${9 - total} remaining`}
             </p>

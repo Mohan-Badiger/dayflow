@@ -120,7 +120,7 @@ export default function TodayPage() {
       {/* ─── Header ──────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-text-1">{greeting}, {firstName}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-text-1">{greeting}, {firstName}</h1>
           <p className="text-text-3 font-medium mt-0.5">{todayStr}</p>
         </div>
         {streak > 0 && (

@@ -246,7 +246,7 @@ export default function ExercisePage() {
           <Calendar size={20} />
           <span className="text-sm font-bold uppercase tracking-wider">{todayName}, {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-text-1 leading-tight">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-text-1 leading-tight">
           Today's Routine: <br />
           <span className="text-brand">{WEEKLY_SCHEDULE[todayIndex].title}</span>
         </h1>
