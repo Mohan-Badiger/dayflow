@@ -161,7 +161,7 @@ export default function DietPage() {
             </div>
             <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Nutrition Plan</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-1">Diet & Nutrition</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-1">Diet & Nutrition</h1>
           <p className="text-text-3 font-medium mt-1 text-sm sm:text-base max-w-xl">
             What you eat fuels everything. Follow this daily nutrition plan consistently for best results.
           </p>

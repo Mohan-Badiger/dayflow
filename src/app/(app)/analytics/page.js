@@ -207,7 +207,7 @@ export default function AnalyticsPage() {
       {/* ─── Header ─── */}
       <motion.div {...anim(0)} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-text-1">Analytics</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-text-1">Analytics</h1>
           <p className="text-text-3 font-medium mt-1">
             {s.daysLogged} days tracked · Deep insights into your productivity
           </p>
@@ -254,7 +254,7 @@ export default function AnalyticsPage() {
             <Activity className="w-5 h-5 text-brand" /> Day Score Trend
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={scoreTrend} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
@@ -279,7 +279,7 @@ export default function AnalyticsPage() {
             <Brain className="w-5 h-5 text-study" /> Daily Study Hours
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={studyChartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />
@@ -301,7 +301,7 @@ export default function AnalyticsPage() {
             <CalendarDays className="w-5 h-5 text-routine" /> Timetable Completion
           </h2>
           <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={ttData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />
@@ -323,7 +323,7 @@ export default function AnalyticsPage() {
           </h2>
           {categoryPie.length > 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center">
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height={200} minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={categoryPie} cx="50%" cy="50%" innerRadius={55} outerRadius={80}
                     paddingAngle={4} dataKey="value" stroke="none">
