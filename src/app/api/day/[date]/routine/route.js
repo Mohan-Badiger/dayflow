@@ -21,14 +21,24 @@ export async function PATCH(req, { params }) {
     const log = await getOrCreateDayLog(session.user.id, date)
 
     const d = parsed.data
-    if (d.wakeTime  !== undefined) log.routine.wakeTime  = d.wakeTime
+    if (!log.routine) log.routine = {}
+    if (!log.routine.morningChecklist) log.routine.morningChecklist = {}
+    if (!log.routine.nightChecklist) log.routine.nightChecklist = {}
+
+    if (d.wakeTime  !== undefined) log.routine.wakeTime = d.wakeTime
     if (d.sleepTime !== undefined) log.routine.sleepTime = d.sleepTime
+    
     if (d.morningChecklist) {
-      Object.assign(log.routine.morningChecklist, d.morningChecklist)
+      for (const [k, v] of Object.entries(d.morningChecklist)) {
+        log.routine.morningChecklist[k] = v
+      }
     }
     if (d.nightChecklist) {
-      Object.assign(log.routine.nightChecklist, d.nightChecklist)
+      for (const [k, v] of Object.entries(d.nightChecklist)) {
+        log.routine.nightChecklist[k] = v
+      }
     }
+    
     log.markModified("routine")
 
     const user = await User.findById(session.user.id).select("settings").lean()

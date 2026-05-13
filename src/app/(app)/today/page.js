@@ -102,8 +102,8 @@ export default function TodayPage() {
   const ttDone = timetable.filter(b => b.status === "done").length;
   const morning = dayLog?.routine?.morningChecklist || {};
   const night = dayLog?.routine?.nightChecklist || {};
-  const morningDone = Object.values(morning).filter(Boolean).length;
-  const nightDone = Object.values(night).filter(Boolean).length;
+  const morningDone = Object.values(morning).filter(v => v === true).length;
+  const nightDone = Object.values(night).filter(v => v === true).length;
   const routineTotal = morningDone + nightDone;
   const habitsDone = habits.filter(h => h.completed).length;
   const exerciseDone = dayLog?.exercise?.done || false;

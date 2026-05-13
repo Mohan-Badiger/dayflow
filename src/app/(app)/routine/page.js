@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/useToast";
 import { useAppStore } from "@/store/useAppStore";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion, AnimatePresence } from "framer-motion";
+import { useInvalidateDayLog } from "@/hooks/useTimetable";
 import {
   Sun, Moon, Check, Sunrise, Dumbbell, Brain, Droplets,
   BookOpen, Smartphone, Bed, ListChecks, Sparkles, Clock,
@@ -62,6 +63,7 @@ export default function RoutinePage() {
   const { patch } = useApi();
   const { add: toast } = useToast();
   const { activeDate, dayLog, fetchDayLog, userSettings } = useAppStore();
+  const invalidateDayLog = useInvalidateDayLog();
 
   useEffect(() => { fetchDayLog(activeDate); }, [activeDate]);
 
@@ -82,7 +84,9 @@ export default function RoutinePage() {
 
   const save = useCallback(async (data) => {
     await patch(`/api/day/${activeDate}/routine`, data);
-  }, [activeDate, patch]);
+    fetchDayLog(activeDate);
+    invalidateDayLog(activeDate);
+  }, [activeDate, patch, fetchDayLog, invalidateDayLog]);
 
   const toggleM = (id) => {
     const v = !morning[id];
@@ -102,8 +106,8 @@ export default function RoutinePage() {
     else { setScreenOff(v); save({ nightChecklist: { screenOffBy: v } }); }
   };
 
-  const mDone = Object.values(morning).filter(Boolean).length;
-  const nDone = Object.values(night).filter(Boolean).length;
+  const mDone = Object.values(morning).filter(v => v === true).length;
+  const nDone = Object.values(night).filter(v => v === true).length;
   const total = mDone + nDone;
   const pct = Math.round((total / 9) * 100);
 

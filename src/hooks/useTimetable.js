@@ -9,6 +9,13 @@ export function useDayLog(date) {
   })
 }
 
+export function useInvalidateDayLog() {
+  const qc = useQueryClient()
+  return (date) => {
+    qc.invalidateQueries({ queryKey: ["daylog", date] })
+  }
+}
+
 export function useTimetable(date) {
   return useQuery({
     queryKey: ["timetable", date],

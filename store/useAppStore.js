@@ -1,10 +1,11 @@
 import { create } from 'zustand';
+import { format, subMinutes } from 'date-fns';
 
 export const useAppStore = create((set, get) => ({
   sidebarOpen: false,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   
-  activeDate: new Date().toISOString().split('T')[0], // "YYYY-MM-DD"
+  activeDate: format(subMinutes(new Date(), 30), "yyyy-MM-dd"), // 12:30 AM boundary
   setActiveDate: (date) => {
     set({ activeDate: date });
     get().fetchDayLog(date);
@@ -46,11 +47,14 @@ export const useAppStore = create((set, get) => ({
   fetchDayLog: async (date) => {
     set({ isLoadingLog: true });
     try {
-      const res = await fetch(`/api/day/${date}`);
+      const res = await fetch(`/api/day?date=${date}`);
       if (res.ok) {
         const data = await res.json();
         if (data.success) {
           set({ dayLog: data.data });
+        } else if (data._id) {
+           // Fallback if the other endpoint was used directly
+          set({ dayLog: data });
         }
       }
     } catch (e) {
