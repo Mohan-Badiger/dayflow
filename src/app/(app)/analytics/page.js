@@ -247,8 +247,8 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <Activity className="w-5 h-5 text-brand" /> Day Score Trend
           </h2>
-          <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
+          <div className="flex-1 min-h-[260px] min-w-0">
+            <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <AreaChart data={scoreTrend} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
@@ -272,8 +272,8 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <Brain className="w-5 h-5 text-study" /> Daily Study Hours
           </h2>
-          <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
+          <div className="flex-1 min-h-[260px] min-w-0">
+            <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <BarChart data={studyChartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />
@@ -294,8 +294,8 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <CalendarDays className="w-5 h-5 text-routine" /> Timetable Completion
           </h2>
-          <div className="flex-1 min-h-[260px]">
-            <ResponsiveContainer width="100%" height="100%" aspect={1.6}>
+          <div className="flex-1 min-h-[260px] min-w-0">
+            <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <BarChart data={ttData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "var(--color-text-3)" }} />

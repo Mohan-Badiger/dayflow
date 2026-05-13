@@ -24,15 +24,15 @@ export function Modal({ isOpen, onClose, title, children }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4"
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
           >
             <motion.div
-              initial={{ opacity: 0, y: "100%", scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: "100%", scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full md:w-[500px] bg-surface border border-border md:rounded-xl rounded-t-xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col"
+              className="w-full max-w-[500px] bg-surface border border-border rounded-xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col"
             >
               <div className="flex items-center justify-between p-3 border-b border-border">
                 <h2 className="text-base font-bold">{title}</h2>

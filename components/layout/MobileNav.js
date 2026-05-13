@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, CalendarDays, BarChart2, MoreHorizontal,
-  CheckSquare, Clock, Apple, Dumbbell, Settings 
+  CheckSquare, Clock, Apple, Dumbbell, Settings, Flame
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/ui/Modal";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { useSession } from "next-auth/react";
 
 const tabs = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
@@ -28,7 +29,22 @@ const moreMenuLinks = [
 
 export function MobileNav() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch("/api/user/streak")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data?.streak !== undefined) {
+            setStreak(data.data.streak);
+          }
+        })
+        .catch(err => console.error("Failed to fetch streak:", err));
+    }
+  }, [session, isMoreOpen]);
 
   return (
     <>
@@ -66,8 +82,30 @@ export function MobileNav() {
         })}
       </nav>
 
-      <Modal isOpen={isMoreOpen} onClose={() => setIsMoreOpen(false)} title="More">
-        <div className="flex flex-col space-y-2 pb-6">
+      <Modal isOpen={isMoreOpen} onClose={() => setIsMoreOpen(false)} title="Menu">
+        <div className="flex flex-col space-y-5 pb-6">
+          {/* Profile Section */}
+          {session?.user && (
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-surface-2 border border-border">
+              <img 
+                src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
+                alt="Avatar" 
+                className="w-12 h-12 rounded-full border-2 border-brand/20 shadow-sm"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-lg font-bold text-text-1 truncate">{session.user.name}</p>
+                {streak > 0 ? (
+                  <div className="flex items-center gap-1.5 text-sm font-bold text-warning mt-0.5">
+                    <Flame size={16} fill="currentColor" className="animate-pulse" />
+                    {streak} Day Streak
+                  </div>
+                ) : (
+                  <p className="text-xs text-text-3 font-medium">Start your streak today!</p>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-3">
             {moreMenuLinks.map((link) => {
               const LinkIcon = link.icon;
