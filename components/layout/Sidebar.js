@@ -84,7 +84,15 @@ export function Sidebar() {
         
         {session?.user && (
           <div className="flex items-center gap-3 px-3 py-2 mt-4">
-            <img src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} alt="Avatar" className="w-8 h-8 rounded-full border border-border mx-auto lg:mx-0" />
+            <img 
+              src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
+              alt="Avatar" 
+              className="w-8 h-8 rounded-full border border-border mx-auto lg:mx-0"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`;
+              }}
+            />
             <div className="hidden lg:block flex-1 min-w-0">
               <p className="text-sm font-semibold text-text-1 truncate">{session.user.name}</p>
               {streak > 0 && (
