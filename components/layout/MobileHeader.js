@@ -33,6 +33,7 @@ export function MobileHeader() {
             src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
             alt="Avatar" 
             className="w-10 h-10 rounded-full border border-border shadow-sm group-hover:border-brand/50 transition-colors"
+            referrerPolicy="no-referrer"
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`;

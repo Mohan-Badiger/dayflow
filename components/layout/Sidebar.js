@@ -88,6 +88,7 @@ export function Sidebar() {
               src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
               alt="Avatar" 
               className="w-8 h-8 rounded-full border border-border mx-auto lg:mx-0"
+              referrerPolicy="no-referrer"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`;

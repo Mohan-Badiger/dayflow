@@ -29,6 +29,7 @@ export default function LandingPage() {
                 src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
                 alt="Profile" 
                 className="w-9 h-9 rounded-full border border-border group-hover:border-brand/50 transition-colors"
+                referrerPolicy="no-referrer"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`;
