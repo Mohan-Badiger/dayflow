@@ -4,8 +4,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { ArrowRight, LayoutDashboard, Target, Activity, Zap } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function LandingPage() {
+  const { data: session } = useSession();
+
   return (
     <main className="min-h-screen bg-surface-2 selection:bg-brand/30 selection:text-white overflow-x-hidden">
       {/* Decorative Background Elements */}
@@ -15,14 +18,24 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-50 flex items-center justify-between container-app py-6 md:py-8">
+      <nav className="relative z-50 flex items-center justify-between container-app py-6 md:py-8 px-4">
         <div className="flex items-center gap-2">
           <span className="text-lg md:text-xl font-bold tracking-tight text-text-1">DayFlow</span>
         </div>
         <div>
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="rounded-full px-5">Login</Button>
-          </Link>
+          {session?.user ? (
+            <Link href="/analytics" className="relative group active:scale-95 transition-transform block">
+              <img 
+                src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
+                alt="Profile" 
+                className="w-9 h-9 rounded-full border border-border group-hover:border-brand/50 transition-colors"
+              />
+            </Link>
+          ) : (
+            <Link href="/login">
+              <Button variant="ghost" size="sm" className="rounded-full px-5">Login</Button>
+            </Link>
+          )}
         </div>
       </nav>
 
