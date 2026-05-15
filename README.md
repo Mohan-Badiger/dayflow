@@ -10,7 +10,7 @@
 
 **DayFlow** is a premium, minimal, and highly focused daily routine and productivity tracking application. Designed to eliminate the noise of traditional trackers, it provides a seamless interface for logging habits, tracking deep work sessions, managing diet, and reviewing daily patterns through rich analytics.
 
-## ✨ Key Features
+##✨ Key Features
 
 - **Personalized Daily Hub**: A central dashboard combining habit tracking, study hours, and hydration goals with a calculated "Day Score".
 - **Deep Work & Career Tracking**: Specifically tailored for continuous learners, allowing precise tracking of study sessions aligned with career goals (e.g., "React Developer").
@@ -19,7 +19,7 @@
 - **Premium UX/UI**: Built with Tailwind CSS v4 and Framer Motion, featuring glassmorphism, dynamic micro-interactions, and a responsive design tailored for cross-device usage.
 - **Secure Authentication**: Frictionless login via Google OAuth powered by NextAuth.js (Auth.js v5).
 
-## 🛠 Tech Stack
+##🛠 Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router)
 - **Styling**: Tailwind CSS v4 + Global CSS Variables
