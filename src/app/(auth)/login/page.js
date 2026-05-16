@@ -4,7 +4,14 @@ import { Card } from "@/components/ui/Card";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 
+import { useEffect } from "react";
+
 export default function LoginPage() {
+  useEffect(() => {
+    // Clear old session/activity data to prevent immediate auto-logout bug
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
