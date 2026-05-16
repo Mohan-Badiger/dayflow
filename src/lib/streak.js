@@ -1,5 +1,5 @@
 import User from "@/models/User"
-import { format, subDays, parseISO } from "date-fns"
+import { format, subDays, parseISO, isBefore } from "date-fns"
 
 export async function updateStreak(userId, activityDate) {
   const user = await User.findById(userId)
@@ -9,26 +9,40 @@ export async function updateStreak(userId, activityDate) {
   const yesterday = format(subDays(parseISO(activityDate), 1), "yyyy-MM-dd")
   const last      = user.lastActiveDate
 
-  let streak = user.streak
+  let streak = user.streak || 0
+  let isNewDay = false;
 
   if (last === today) {
     // same day, no change
-  } else if (last === yesterday) {
-    streak += 1
   } else if (!last) {
     streak = 1
+    isNewDay = true;
   } else {
-    streak = 1
+    const actDate = parseISO(activityDate);
+    const lstDate = parseISO(last);
+    if (isBefore(actDate, lstDate)) {
+      // Historical date update. Don't touch streak.
+      return { streak: user.streak, longestStreak: user.longestStreak }
+    }
+    
+    if (last === yesterday) {
+      streak += 1
+    } else {
+      streak = 1
+    }
+    isNewDay = true;
   }
 
   const longest = Math.max(streak, user.longestStreak || 0)
 
-  await User.findByIdAndUpdate(userId, {
-    streak,
-    longestStreak:  longest,
-    lastActiveDate: today,
-    $inc: { totalDaysLogged: last === today ? 0 : 1 },
-  })
+  if (isNewDay || !last) {
+    await User.findByIdAndUpdate(userId, {
+      streak,
+      longestStreak:  longest,
+      lastActiveDate: today,
+      $inc: { totalDaysLogged: 1 },
+    })
+  }
 
   return { streak, longestStreak: longest }
 }
