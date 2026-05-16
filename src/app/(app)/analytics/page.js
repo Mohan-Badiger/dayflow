@@ -329,7 +329,7 @@ export default function AnalyticsPage() {
             color="var(--color-water)" delay={0.25} />
           <ProgressBar label="Timetable Adherence" sublabel={`${ttAvgPct}%`} value={ttAvgPct} max={100}
             color="var(--color-routine)" delay={0.3} />
-          <ProgressBar label="Logging Streak" sublabel={`${s.daysLogged}/${period} days`} value={s.daysLogged} max={period}
+          <ProgressBar label="Current Streak" sublabel={`${data.user?.streak || 0} days`} value={data.user?.streak || 0} max={Math.max(period, data.user?.streak || 0)}
             color="var(--color-warning)" delay={0.35} />
         </div>
       </motion.div>
