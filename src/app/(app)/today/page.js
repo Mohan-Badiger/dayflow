@@ -81,7 +81,7 @@ export default function TodayPage() {
 
   const fetchExtras = useCallback(async () => {
     const s = await get("/api/user/streak");
-    if (s?.currentStreak !== undefined) setStreak(s.currentStreak);
+    if (s?.streak !== undefined) setStreak(s.streak);
   }, [activeDate]);
 
   useEffect(() => { fetchExtras(); }, [fetchExtras]);
