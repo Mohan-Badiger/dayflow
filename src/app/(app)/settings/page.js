@@ -75,8 +75,17 @@ export default function SettingsPage() {
         </h2>
         
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          <div className="w-20 h-20 rounded-full bg-linear-to-tr from-brand to-brand-light flex items-center justify-center text-2xl font-bold text-white shrink-0 shadow-lg shadow-brand/20 border-4 border-surface">
-            {session?.user?.name?.[0]?.toUpperCase() || "U"}
+          <div className="w-20 h-20 rounded-full flex items-center justify-center shrink-0 shadow-lg shadow-brand/20 border-4 border-surface overflow-hidden bg-surface-2">
+            <img 
+              src={session?.user?.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session?.user?.name || "U"}`} 
+              alt="Avatar" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${session?.user?.name || "U"}`;
+              }}
+            />
           </div>
           
           <div className="flex-1 w-full space-y-3">
