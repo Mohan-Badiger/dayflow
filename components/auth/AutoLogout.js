@@ -13,7 +13,9 @@ export default function AutoLogout() {
 
   const handleLogout = useCallback(() => {
     if (status === "authenticated") {
-      signOut({ callbackUrl: "/" });
+      localStorage.clear();
+      sessionStorage.clear();
+      signOut({ callbackUrl: "/login" });
     }
   }, [status]);
 
