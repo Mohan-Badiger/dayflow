@@ -13,6 +13,14 @@ export function useApi() {
       const data = await res.json()
       if (!data.success) {
         toast(data.error || "Something went wrong", "error")
+        
+        // If user is unauthorized or their account was deleted, force them to the home page
+        if (res.status === 401 || data.error === "Unauthorized" || data.error === "User not found") {
+          localStorage.clear()
+          sessionStorage.clear()
+          window.location.href = "/"
+        }
+        
         return null
       }
       return data.data

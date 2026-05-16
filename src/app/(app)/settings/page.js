@@ -8,18 +8,21 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion } from "framer-motion";
 import {
   User, Bell, Download, LogOut, Edit2, Check,
-  X, Shield, Moon, Sun, Settings as SettingsIcon,
+  X, Shield, Moon, Sun, Settings as SettingsIcon, AlertTriangle,
 } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: session, update } = useSession();
   const { fetchUser } = useAppStore();
-  const { patch } = useApi();
+  const { patch, del } = useApi();
   const { add: toast } = useToast();
 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
 
   useEffect(() => {
     if (session?.user?.name) {
@@ -48,6 +51,18 @@ export default function SettingsPage() {
     localStorage.clear();
     sessionStorage.clear();
     await signOut({ callbackUrl: "/login" });
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteInput !== "delete my account") return;
+    setLoading(true);
+    const res = await del("/api/user");
+    if (res) {
+      toast("Account deleted successfully.", "success");
+      await handleLogout();
+    } else {
+      setLoading(false);
+    }
   };
 
   return (
@@ -181,6 +196,54 @@ export default function SettingsPage() {
             className="w-full flex items-center justify-center gap-2 h-12 rounded-xl font-bold text-sm transition-all bg-danger/10 text-danger hover:bg-danger/20 border border-danger/20">
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
+        </div>
+      </motion.div>
+
+      {/* ── Critical Account Actions ── */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+        className="card p-6 border-danger/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-danger/5" />
+        <div className="relative">
+          <h2 className="text-lg font-bold text-danger flex items-center gap-2 mb-2">
+            <AlertTriangle className="w-5 h-5" /> Critical Account Actions
+          </h2>
+          <p className="text-sm text-text-3 mb-5">
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </p>
+          
+          {!showDeleteConfirm ? (
+            <button onClick={() => setShowDeleteConfirm(true)}
+              className="px-4 py-2 rounded-xl font-bold text-sm transition-all bg-danger text-white hover:bg-danger/90 border border-danger/20">
+              Delete Account
+            </button>
+          ) : (
+            <div className="p-4 rounded-xl border border-danger/30 bg-surface">
+              <p className="text-sm font-bold text-text-1 mb-2">Are you absolutely sure?</p>
+              <p className="text-xs text-text-3 mb-4">
+                Please type <span className="font-mono font-bold text-danger">delete my account</span> to confirm.
+              </p>
+              <input 
+                type="text" 
+                value={deleteInput}
+                onChange={(e) => setDeleteInput(e.target.value)}
+                placeholder="delete my account"
+                className="input-field mb-3 w-full"
+              />
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => { setShowDeleteConfirm(false); setDeleteInput(""); }}
+                  className="flex-1 py-2 rounded-xl font-bold text-sm bg-surface-3 text-text-1 hover:bg-surface-3/70 transition-colors">
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteAccount}
+                  disabled={loading || deleteInput !== "delete my account"}
+                  className="flex-1 py-2 rounded-xl font-bold text-sm bg-danger text-white hover:bg-danger/90 transition-colors disabled:opacity-50">
+                  {loading ? "Deleting..." : "Delete Permanently"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </motion.div>
 
