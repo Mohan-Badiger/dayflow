@@ -5,22 +5,24 @@ import { useSession } from "next-auth/react";
 import { Flame } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useApi } from "@/hooks/useApi";
 
 export function MobileHeader() {
   const { data: session } = useSession();
   const [streak, setStreak] = useState(0);
 
+  const { get } = useApi();
+
   useEffect(() => {
+    let mounted = true;
     if (session?.user?.id) {
-      fetch("/api/user/streak")
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data?.streak !== undefined) {
-            setStreak(data.data.streak);
-          }
-        })
-        .catch(err => console.error("Failed to fetch streak:", err));
+      get("/api/user/streak").then(data => {
+        if (mounted && data?.streak !== undefined) {
+          setStreak(data.streak);
+        }
+      });
     }
+    return () => { mounted = false; };
   }, [session]);
 
   if (!session?.user) return null;

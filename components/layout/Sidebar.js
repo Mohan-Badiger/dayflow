@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, CalendarDays, CheckSquare, Clock, Apple, Dumbbell, BarChart2, Settings, Flame } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { useApi } from "@/hooks/useApi";
 
 const navItems = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
@@ -24,17 +25,18 @@ export function Sidebar() {
   const { data: session } = useSession();
   const [streak, setStreak] = useState(0);
 
+  const { get } = useApi();
+
   useEffect(() => {
+    let mounted = true;
     if (session?.user?.id) {
-      fetch("/api/user/streak")
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data?.streak !== undefined) {
-            setStreak(data.data.streak);
-          }
-        })
-        .catch(err => console.error("Failed to fetch streak:", err));
+      get("/api/user/streak").then(data => {
+        if (mounted && data?.streak !== undefined) {
+          setStreak(data.streak);
+        }
+      });
     }
+    return () => { mounted = false; };
   }, [session]);
 
   return (
