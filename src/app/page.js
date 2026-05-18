@@ -11,7 +11,7 @@ export default function LandingPage() {
   const { data: session } = useSession();
 
   return (
-    <main className="h-screen w-full overflow-y-auto md:overflow-hidden bg-[#050505] text-white relative font-sans flex flex-col selection:bg-white/20">
+    <main className="h-screen w-full overflow-hidden bg-[#050505] text-white relative font-sans flex flex-col selection:bg-white/20">
 
       {/* Premium Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
@@ -47,7 +47,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Main Content - Perfect Fit Split View */}
-      <div className="flex-1 relative z-10 flex flex-col lg:flex-row items-center justify-center lg:justify-between max-w-[1400px] w-full mx-auto px-6 sm:px-8 lg:px-12 gap-8 lg:gap-12 py-12 lg:py-0">
+      <div className="flex-1 relative z-10 flex flex-col lg:flex-row items-center justify-center lg:justify-between max-w-[1400px] w-full mx-auto px-6 sm:px-8 lg:px-12 gap-4 lg:gap-12 py-4 sm:py-12 lg:py-0">
 
         {/* Left Side: Copywriting */}
         <motion.div
@@ -56,28 +56,28 @@ export default function LandingPage() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[11px] sm:text-xs font-medium text-white/80 mb-6 sm:mb-8 backdrop-blur-sm shadow-sm">
-            <span className="flex h-2 w-2 rounded-full bg-green-500 animate-[pulse_2s_ease-in-out_infinite]"></span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] sm:text-xs font-medium text-white/80 mb-4 sm:mb-8 backdrop-blur-sm shadow-sm">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-green-500 animate-[pulse_2s_ease-in-out_infinite]"></span>
             DayFlow 2.0 is Live
           </div>
 
-          <h1 className="text-[2.6rem] sm:text-[3.8rem] lg:text-[5rem] font-black tracking-tighter leading-[1.05] mb-5 sm:mb-6 text-transparent bg-clip-text bg-linear-to-br from-white via-white/90 to-white/30 drop-shadow-sm">
+          <h1 className="text-[2.6rem] sm:text-[3.8rem] lg:text-[5rem] font-black tracking-tighter leading-[1.05] mb-4 sm:mb-6 text-transparent bg-clip-text bg-linear-to-br from-white via-white/90 to-white/30 drop-shadow-sm">
             Command <br className="hidden sm:inline" /> Your Day.
           </h1>
 
-          <p className="text-sm sm:text-base lg:text-xl text-white/50 max-w-[480px] mb-8 sm:mb-10 font-light leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-xl text-white/50 max-w-[480px] mb-6 sm:mb-10 font-light leading-relaxed">
             The elite productivity suite for high-achievers. Sync your habits, deep work, and lifestyle in one gorgeous, frictionless workspace.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
             <Link href={session?.user ? "/today" : "/login"} className="w-full sm:w-auto">
-              <button className="group h-13 sm:h-14 w-full sm:w-auto px-8 rounded-full text-sm sm:text-base font-bold bg-white text-black hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.15)] flex items-center justify-center">
+              <button className="group h-12 sm:h-14 w-full sm:w-auto px-8 rounded-full text-sm sm:text-base font-bold bg-white text-black hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.15)] flex items-center justify-center">
                 {session?.user ? "Enter Dashboard" : "Start For Free"}
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
 
-            <div className="flex items-center gap-4 border-t sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6 w-full sm:w-auto justify-center">
+            <div className="flex items-center gap-4 border-t sm:border-t-0 sm:border-l border-white/10 pt-3 sm:pt-0 sm:pl-6 w-full sm:w-auto justify-center">
               <div className="flex -space-x-3">
                 <img src="https://i.pravatar.cc/100?img=33" alt="User" className="w-9 h-9 rounded-full border-2 border-[#050505]" />
                 <img src="https://i.pravatar.cc/100?img=47" alt="User" className="w-9 h-9 rounded-full border-2 border-[#050505]" />
