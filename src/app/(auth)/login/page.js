@@ -24,29 +24,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#f8f9fa] flex items-center justify-center font-sans p-4 sm:p-8 overflow-hidden">
+    <div className="h-screen w-full bg-[#f8f9fa] flex items-center justify-center font-sans p-4 sm:p-8 overflow-y-auto md:overflow-hidden">
 
-      {/* Main Container - Perfect fit, no scroll */}
-      <div className="w-full max-w-[900px] h-full max-h-[600px] bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+      {/* Main Container - Perfect fit, no scroll on desktop, scrollable auto-height on mobile */}
+      <div className="w-full max-w-[450px] md:max-w-[900px] h-auto md:h-full md:max-h-[600px] bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
 
         {/* Left Side (White) */}
-        <div className="flex-1 flex flex-col pt-12 px-10 md:px-14 relative bg-white z-10">
+        <div className="flex-1 flex flex-col pt-8 md:pt-12 px-8 md:px-14 relative bg-white z-10">
           
-          <Link href="/" className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-700 transition-colors mb-6 group w-fit">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-700 transition-colors mb-4 md:mb-6 group w-fit">
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             Back
           </Link>
 
-          <div className="mb-6">
-            <h2 className="text-[2.5rem] font-serif font-medium text-gray-900 tracking-tight leading-tight">
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-[2rem] md:text-[2.5rem] font-serif font-medium text-gray-900 tracking-tight leading-tight">
               Welcome back.
             </h2>
           </div>
-          <p className="text-gray-500 text-[15px] font-light leading-relaxed max-w-[380px]">
+          <p className="text-gray-500 text-[14px] md:text-[15px] font-light leading-relaxed max-w-[380px] mb-6 md:mb-0">
             Sign in to access your personalized daily tracker, follow routines you love, and build habits that matter to you.
           </p>
 
-          <div className="flex-1 flex justify-center items-end pb-8 mt-4">
+          <div className="hidden md:flex flex-1 justify-center items-end pb-8 mt-4">
             <Image
               src="/login-illustration.png"
               alt="Daily Routine Tracker"
@@ -60,7 +60,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side (Soft Mint/Gray) */}
-        <div className="w-full md:w-[42%] bg-[#f4f7f6] flex flex-col items-center py-12 px-8 relative border-l border-gray-100">
+        <div className="w-full md:w-[42%] bg-[#f4f7f6] flex flex-col items-center py-10 md:py-12 px-8 relative border-t md:border-t-0 md:border-l border-gray-100">
 
 
           <div className="w-full max-w-[260px] flex flex-col items-center justify-center flex-1">
