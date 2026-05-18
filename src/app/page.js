@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { ArrowRight, LayoutDashboard, Target, Activity, Zap, CheckCircle2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function LandingPage() {
   const { data: session } = useSession();
@@ -22,9 +23,7 @@ export default function LandingPage() {
       {/* Glassmorphism Navigation */}
       <nav className="relative z-50 w-full flex items-center justify-between px-8 py-5 border-b border-white/5 bg-[#050505]/50 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-linear-to-tr from-brand to-blue-500 flex items-center justify-center shadow-[0_0_15px_rgba(var(--color-brand-rgb),0.3)]">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
+          <Image src="/logo.png" alt="DayFlow Logo" width={42} height={42} className="rounded-lg shadow-[0_0_20px_rgba(var(--color-brand-rgb),0.35)]" unoptimized />
           <span className="text-xl font-black tracking-tight text-white">DayFlow</span>
         </div>
         <div>
