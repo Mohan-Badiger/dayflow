@@ -2,6 +2,8 @@
 import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +31,13 @@ export default function LoginPage() {
 
         {/* Left Side (White) */}
         <div className="flex-1 flex flex-col pt-12 px-10 md:px-14 relative bg-white z-10">
+          
+          <Link href="/" className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-700 transition-colors mb-6 group w-fit">
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </Link>
+
           <div className="mb-6">
-            <h1 className="text-[11px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-3">
-              DayFlow
-            </h1>
             <h2 className="text-[2.5rem] font-serif font-medium text-gray-900 tracking-tight leading-tight">
               Welcome back.
             </h2>
@@ -59,6 +64,9 @@ export default function LoginPage() {
 
 
           <div className="w-full max-w-[260px] flex flex-col items-center justify-center flex-1">
+            <h1 className="text-[11px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-6 text-center">
+              DayFlow
+            </h1>
             <button
               onClick={handleSignIn}
               disabled={isLoading}
