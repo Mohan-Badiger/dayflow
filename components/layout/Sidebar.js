@@ -8,6 +8,7 @@ import { LayoutDashboard, CalendarDays, CheckSquare, Clock, Apple, Dumbbell, Bar
 import { useSession } from "next-auth/react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { useApi } from "@/hooks/useApi";
+import Image from "next/image";
 
 const navItems = [
   { name: "Today", href: "/today", icon: LayoutDashboard },
@@ -42,9 +43,11 @@ export function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col w-[80px] lg:w-[240px] border-r border-border bg-surface h-screen sticky top-0 transition-all">
       <div className="p-6 flex flex-col items-center lg:items-start">
-        <h1 className="text-2xl font-bold text-brand lg:block hidden">DayFlow</h1>
-        <h1 className="text-2xl font-bold text-brand block lg:hidden">DF</h1>
-        <p className="text-xs text-text-3 mt-1 hidden lg:block">Master your routine</p>
+        <div className="flex items-center gap-2.5">
+          <Image src="/logo.png" alt="DayFlow Logo" width={28} height={28} className="rounded-md shadow-sm" unoptimized />
+          <h1 className="text-xl font-extrabold tracking-tight text-text-1 lg:block hidden">DayFlow</h1>
+        </div>
+        <p className="text-[10px] text-text-3 font-semibold uppercase tracking-wider mt-1.5 hidden lg:block">Master your routine</p>
       </div>
       
       <nav className="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
