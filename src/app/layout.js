@@ -51,10 +51,10 @@ export const metadata = {
     images: ["/og-image.png"],
   },
   icons: {
-    icon:    [{ url: "/favicon.ico" },
+    icon:    [{ url: "/logo.png", type: "image/png" },
               { url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
-    apple:   [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-    shortcut: "/favicon.ico",
+    apple:   [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/logo.png",
   },
   manifest: "/manifest.json",
 };
