@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
@@ -9,6 +10,31 @@ import Image from "next/image";
 
 export default function LandingPage() {
   const { data: session } = useSession();
+  const [avatars, setAvatars] = useState([
+    { name: "John", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" },
+    { name: "Sarah", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" },
+    { name: "Alex", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" }
+  ]);
+
+  useEffect(() => {
+    fetch("/api/public/avatars")
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
+          const fetchedList = resData.data;
+          const merged = [
+            { name: "John", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" },
+            { name: "Sarah", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" },
+            { name: "Alex", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" }
+          ];
+          fetchedList.slice(0, 3).forEach((u, i) => {
+            merged[i] = u;
+          });
+          setAvatars(merged);
+        }
+      })
+      .catch((err) => console.error("Error fetching avatars:", err));
+  }, []);
 
   return (
     <main className="h-screen w-full overflow-hidden bg-[#050505] text-white relative font-sans flex flex-col selection:bg-white/20">
@@ -79,9 +105,19 @@ export default function LandingPage() {
 
             <div className="flex items-center gap-4 border-t sm:border-t-0 sm:border-l border-white/10 pt-3 sm:pt-0 sm:pl-6 w-full sm:w-auto justify-center">
               <div className="flex -space-x-3">
-                <img src="https://i.pravatar.cc/100?img=33" alt="User" className="w-9 h-9 rounded-full border-2 border-[#050505]" />
-                <img src="https://i.pravatar.cc/100?img=47" alt="User" className="w-9 h-9 rounded-full border-2 border-[#050505]" />
-                <img src="https://i.pravatar.cc/100?img=12" alt="User" className="w-9 h-9 rounded-full border-2 border-[#050505]" />
+                {avatars.slice(0, 3).map((u, i) => (
+                  <img
+                    key={i}
+                    src={u.image || `https://api.dicebear.com/7.x/initials/svg?seed=${u.name}`}
+                    alt={u.name}
+                    className="w-9 h-9 rounded-full border-2 border-[#050505] object-cover bg-neutral-800"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${u.name}`;
+                    }}
+                  />
+                ))}
               </div>
               <div className="text-[11px] text-white/40 leading-tight font-medium text-left">
                 Trusted by 10k+<br />Top Performers
