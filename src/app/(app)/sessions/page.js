@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, Square, Plus, Star, Clock, Target, Brain,
   BookOpen, AlertTriangle, Flame, ChevronRight, CheckCircle2,
-  RotateCcw, Zap, TrendingUp, Coffee
+  RotateCcw, Zap, TrendingUp, Coffee, Trash2
 } from "lucide-react";
 
 const DURATIONS = [
@@ -34,6 +34,7 @@ function TimerRing({ progress, size = 220, stroke = 8 }) {
         stroke="var(--color-brand)" strokeWidth={stroke}
         strokeDasharray={circ} strokeDashoffset={offset}
         strokeLinecap="round"
+        style={{ filter: 'drop-shadow(0px 0px 8px var(--color-brand))' }}
         className="transition-all duration-1000 ease-linear" />
     </svg>
   );
@@ -54,7 +55,7 @@ function QualityStars({ value, onChange }) {
 }
 
 export default function SessionsPage() {
-  const { get, post } = useApi();
+  const { get, post, del } = useApi();
   const { add: toast } = useToast();
   const { activeDate } = useAppStore();
 
@@ -80,6 +81,7 @@ export default function SessionsPage() {
   const [postNote, setPostNote] = useState("");
   const [postAchieved, setPostAchieved] = useState(null);
   const [completedDuration, setCompletedDuration] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ─── Setup Modal State ────────────────────────────
   const [showSetup, setShowSetup] = useState(false);
@@ -168,10 +170,12 @@ export default function SessionsPage() {
     setTimerDuration(0); setTimerTopic("");
     setTimerIntention(""); setFocusLock(false);
     setShowPostSession(false); setPostQuality(3); setPostNote("");
-    setPostAchieved(null); setCompletedDuration(0);
+    setPostAchieved(null); setCompletedDuration(0); setIsSubmitting(false);
   };
 
   const submitPostSession = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const now = new Date();
     const start = startTimeRef.current || new Date(now.getTime() - completedDuration * 60000);
     const fmt = d => `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
@@ -186,6 +190,14 @@ export default function SessionsPage() {
     const res = await post(`/api/day/${activeDate}/sessions`, sessionData);
     if (res) { toast("Session logged! 🎯", "success"); fetchSessions(); }
     resetTimer();
+  };
+
+  const deleteSession = async (id) => {
+    if (window.confirm("Are you sure you want to remove this session log?")) {
+      await del(`/api/day/${activeDate}/sessions/${id}`);
+      toast("Session removed", "success");
+      fetchSessions();
+    }
   };
 
   const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
@@ -210,17 +222,17 @@ export default function SessionsPage() {
           </div>
           {timerTopic && <p className="text-xl font-semibold text-text-1 text-center max-w-md">{timerTopic}</p>}
           {timerIntention && <p className="text-sm text-text-3 text-center max-w-sm italic">"{timerIntention}"</p>}
-          <div className="flex gap-4 mt-4">
+          <div className="flex gap-4 mt-8">
             <button onClick={togglePause}
-              className="w-14 h-14 rounded-full bg-surface-3 hover:bg-border flex items-center justify-center transition-colors">
-              {timerPaused ? <Play className="w-6 h-6 text-brand" /> : <Pause className="w-6 h-6 text-text-2" />}
+              className="flex items-center gap-2 px-8 py-4 rounded-full bg-surface-3/50 backdrop-blur-md border border-white/5 hover:bg-surface-3 hover:border-white/10 hover:shadow-[0_0_20px_rgba(var(--color-brand-rgb),0.3)] transition-all">
+              {timerPaused ? <><Play className="w-5 h-5 text-brand" /><span className="font-bold text-brand uppercase tracking-wider text-sm">Resume</span></> : <><Pause className="w-5 h-5 text-text-2" /><span className="font-bold text-text-2 uppercase tracking-wider text-sm">Pause</span></>}
             </button>
             <button onClick={endTimerEarly}
-              className="w-14 h-14 rounded-full bg-danger/20 hover:bg-danger/40 flex items-center justify-center transition-colors">
-              <Square className="w-5 h-5 text-danger" />
+              className="flex items-center gap-2 px-8 py-4 rounded-full bg-danger/10 backdrop-blur-md border border-danger/20 hover:bg-danger/20 hover:border-danger/30 transition-all hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+              <Square className="w-5 h-5 text-danger" /><span className="font-bold text-danger uppercase tracking-wider text-sm">End</span>
             </button>
           </div>
-          {timerPaused && <p className="text-warning text-sm font-medium animate-pulse">Paused — break time</p>}
+          {timerPaused && <p className="text-brand text-sm font-bold uppercase tracking-widest animate-pulse mt-4">Session Paused</p>}
         </motion.div>
       </div>
     );
@@ -268,8 +280,8 @@ export default function SessionsPage() {
             </div>
           </div>
 
-          <Button className="w-full h-12 text-lg" onClick={submitPostSession}>
-            <Zap className="w-5 h-5 mr-2" /> Save & Continue
+          <Button className="w-full h-12 text-lg disabled:opacity-70 disabled:cursor-not-allowed" onClick={submitPostSession} disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : <><Zap className="w-5 h-5 mr-2" /> Save & Continue</>}
           </Button>
         </motion.div>
       </div>
@@ -362,15 +374,15 @@ export default function SessionsPage() {
         ) : (
           sessions.map((s, i) => (
             <motion.div key={s._id || i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-              <div className="card p-4 flex items-center gap-4 border-l-4 border-l-brand">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 bg-brand">
+              <div className="card p-4 flex items-center gap-4 border-l-4 border-l-brand hover:border-l-brand/80 hover:bg-surface-2 transition-all group shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 bg-brand shadow-[0_0_10px_var(--color-brand)]">
                   {(s.durationMinutes || 0)}m
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-text-1 truncate">{s.topic || "Untitled session"}</p>
                   {s.notes && <p className="text-xs text-text-3 mt-0.5 truncate">{s.notes}</p>}
                 </div>
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right hidden sm:block">
                     <p className="text-xs text-text-3 font-mono">{s.startTime} – {s.endTime}</p>
                   </div>
@@ -379,6 +391,10 @@ export default function SessionsPage() {
                       <Star key={star} className={`w-3.5 h-3.5 ${star <= (s.quality || 3) ? "fill-current" : "text-surface-3"}`} />
                     ))}
                   </div>
+                  <button onClick={() => deleteSession(s._id)} 
+                    className="p-2 text-text-3 opacity-0 group-hover:opacity-100 focus:opacity-100 hover:text-danger rounded-lg hover:bg-danger/10 transition-all">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </motion.div>
