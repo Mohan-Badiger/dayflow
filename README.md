@@ -31,58 +31,101 @@
 
 ## 🚀 Getting Started
 
-Follow these instructions to set up the project locally for development.
+Follow these simple steps to clone, configure, and run **DayFlow** on your local machine.
 
-### Prerequisites
+### 📋 Prerequisites
 
-- Node.js (v18.x or later)
-- npm or yarn
-- MongoDB Atlas cluster (or local MongoDB server)
-- Google Cloud Console account (for OAuth credentials)
+Before you start, make sure you have the following installed on your system:
+* **Node.js** (v18.x or later) — [Download Node.js](https://nodejs.org/)
+* **Git** — [Download Git](https://git-scm.com/)
+* **MongoDB** (Local instance or a free MongoDB Atlas Cloud account)
+* **Google Account** (For setting up OAuth authentication)
 
-### 1. Clone the repository
+---
+
+### 💻 Local Setup Guide
+
+#### Step 1: Clone and Open the Project
+
+1. Click the green **Code** button at the top right of this GitHub page and copy the repository URL (HTTPS or SSH).
+2. Open your terminal (Git Bash, Command Prompt, or terminal in VS Code) and run:
 
 ```bash
+# Clone the repository
 git clone https://github.com/yourusername/dayflow.git
+
+# Navigate into the project folder
 cd dayflow
 ```
 
-### 2. Install dependencies
+3. Open the folder in your favorite code editor (e.g., Visual Studio Code):
+```bash
+code .
+```
 
+#### Step 2: Install Dependencies
+
+Install the required packages using `npm`:
 ```bash
 npm install
 ```
 
-### 3. Environment Variables
+#### Step 3: Configure Environment Variables
 
-Create a `.env` file in the root of your project by copying the example provided:
+1. Duplicate the `.env.example` file and rename it to `.env` in the root directory:
+   * **On Windows (PowerShell):**
+     ```powershell
+     cp .env.example .env
+     ```
+   * **On macOS/Linux:**
+     ```bash
+     cp .env.example .env
+     ```
 
-```bash
-cp .env.example .env
-```
+2. Open the new `.env` file in your editor. It will contain:
+   ```env
+   MONGODB_URI=
+   NEXTAUTH_SECRET=
+   NEXTAUTH_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET=
+   NODE_ENV=development
+   ```
 
-Populate the `.env` file with your specific credentials:
+3. Fill in the values using the details below:
 
-```env
-# MongoDB Connection String (Include the database name at the end, e.g., /dayflow)
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/dayflow?retryWrites=true&w=majority
+   | Variable | Description & How to Get It |
+   | :--- | :--- |
+   | `MONGODB_URI` | Your MongoDB connection string. <br>• **Atlas (Cloud):** Log in to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas), create a free database cluster, click **Connect** → **Drivers**, and copy the connection string. Replace `<password>` with your database user password.<br>• **Local:** Use `mongodb://localhost:27017/dayflow` (ensure your local MongoDB service is running). |
+   | `NEXTAUTH_SECRET` | A secure random string used to encrypt session cookies. <br>• You can generate one instantly by running this command in your terminal:<br>  `npx auth secret` or `openssl rand -base64 32` |
+   | `NEXTAUTH_URL` | Set to `http://localhost:3000` for local development. |
+   | `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` | Required for Google Login. <br>1. Go to the [Google Cloud Console](https://console.cloud.google.com/).<br>2. Create a new project or select an existing one.<br>3. Search for **APIs & Services** and click on **OAuth consent screen**. Set user type to **External** and complete the basic setup.<br>4. Go to the **Credentials** tab, click **+ Create Credentials**, and select **OAuth client ID**.<br>5. Set application type to **Web application**.<br>6. Under **Authorized redirect URIs**, add:<br>   `http://localhost:3000/api/auth/callback/google`<br>7. Click **Create** and copy your **Client ID** and **Client Secret**. |
 
-# Google OAuth Credentials
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+#### Step 4: Run the Development Server
 
-# NextAuth Secrets
-AUTH_SECRET=generate_a_random_secure_string_here
-AUTH_URL=http://localhost:3000
-```
-
-### 4. Run the development server
-
+Start the Next.js local development server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+Your server will spin up, usually at [http://localhost:3000](http://localhost:3000). Open this URL in your web browser to start using DayFlow!
+
+---
+
+## 🔍 Troubleshooting & FAQs
+
+> [!TIP]
+> **MongoDB connection issues?**  
+> Make sure your MongoDB password doesn't contain special characters like `@` or `/` without being URL-encoded, or create a simple password with alphanumeric characters. If using Atlas, ensure your current IP address is whitelisted in the Atlas Network Access tab.
+
+> [!WARNING]
+> **Google Sign-In fails / Redirect URI mismatch?**  
+> Double check that the redirect URL in your Google Cloud Console exactly matches `http://localhost:3000/api/auth/callback/google` (including the protocol `http` and port `3000`).
+
+> [!NOTE]
+> **Node Version Compatibility**  
+> If you encounter build issues, check your Node version using `node -v`. We recommend Node LTS (v18 or v20).
+
 
 ## 📁 Project Architecture
 
