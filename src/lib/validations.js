@@ -143,4 +143,28 @@ export const schemas = {
       notes:          z.string().max(200).optional(),
     })).optional(),
   }),
+
+  // ─ Goal ──────────────────────────────────────────────
+  createGoal: z.object({
+    title:       z.string().min(1).max(100),
+    description: z.string().max(500).optional(),
+    category:    z.enum(["Health", "Career", "Finance", "Personal", "Other"]).optional(),
+    type:        z.enum(["Short-term", "Long-term", "Habit"]).optional(),
+    targetDate:  dateStr.optional().nullable(),
+  }),
+
+  updateGoal: z.object({
+    title:       z.string().min(1).max(100).optional(),
+    description: z.string().max(500).optional(),
+    category:    z.enum(["Health", "Career", "Finance", "Personal", "Other"]).optional(),
+    type:        z.enum(["Short-term", "Long-term", "Habit"]).optional(),
+    status:      z.enum(["Not Started", "In Progress", "Completed", "Paused"]).optional(),
+    progress:    z.number().min(0).max(100).optional(),
+    targetDate:  dateStr.optional().nullable(),
+    subTasks: z.array(z.object({
+      _id: z.string().optional(),
+      title: z.string().min(1),
+      completed: z.boolean().optional(),
+    })).optional(),
+  }),
 }
