@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
+import {
   LayoutDashboard, CalendarDays, BarChart2, MoreHorizontal,
-  CheckSquare, Clock, Apple, Dumbbell, Settings, Flame
+  CheckSquare, Clock, Apple, Dumbbell, Settings, Flame, Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/ui/Modal";
@@ -24,6 +24,7 @@ const moreMenuLinks = [
   { name: "Study", href: "/sessions", icon: Clock },
   { name: "Diet", href: "/diet", icon: Apple },
   { name: "Exercise", href: "/exercise", icon: Dumbbell },
+  { name: "Goals", href: "/goals", icon: Target },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
@@ -48,7 +49,7 @@ export function MobileNav() {
 
   return (
     <>
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] bg-surface border-t border-border pb-[env(safe-area-inset-bottom)] z-50 flex justify-around items-center px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-border pb-[env(safe-area-inset-bottom)] z-50 flex justify-around items-center px-2">
         {tabs.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -87,9 +88,9 @@ export function MobileNav() {
           {/* Profile Section */}
           {session?.user && (
             <div className="flex items-center gap-4 p-4 rounded-2xl bg-surface-2 border border-border">
-              <img 
-                src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`} 
-                alt="Avatar" 
+              <img
+                src={session.user.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session.user.name}`}
+                alt="Avatar"
                 className="w-12 h-12 rounded-full border-2 border-brand/20 shadow-sm"
               />
               <div className="flex-1 min-w-0">
@@ -126,9 +127,9 @@ export function MobileNav() {
               );
             })}
           </div>
-          
+
           <div className="pt-6 mt-4 border-t border-border">
-            <LogoutButton 
+            <LogoutButton
               className="flex w-full items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-danger border border-danger/20 bg-danger/10 active:scale-95 transition-all"
               text="Sign Out"
             />
