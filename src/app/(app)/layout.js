@@ -2,10 +2,11 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { MobileHeader } from "@/components/layout/MobileHeader";
 import { GlobalModals } from "@/components/modals/GlobalModals";
+import { outfit } from "@/app/fonts";
 
 export default function AppLayout({ children }) {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className={`flex min-h-screen bg-surface-2 mbfashion-theme ${outfit.variable}`}>
       <Sidebar />
       <main className="flex-1 w-full relative">
         <MobileHeader />
