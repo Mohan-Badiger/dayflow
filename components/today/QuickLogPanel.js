@@ -21,9 +21,9 @@ export function QuickLogPanel() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setActiveModal(log.id)}
-          className="flex flex-col items-center justify-center p-4 rounded-xl border border-border bg-surface hover:bg-surface-3 transition-colors"
+          className="flex flex-col items-center justify-center p-4 rounded border border-border bg-surface hover:bg-surface-3 transition-colors"
         >
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white mb-2 ${log.color}`}>
+          <div className={`w-12 h-12 rounded flex items-center justify-center text-white mb-2 ${log.color}`}>
             <log.icon className="w-6 h-6" />
           </div>
           <span className="text-sm font-medium">{log.name}</span>
