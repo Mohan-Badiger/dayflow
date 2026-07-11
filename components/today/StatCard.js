@@ -10,7 +10,7 @@ export function StatCard({ title, value, subtitle, icon: Icon, colorClass, delay
       transition={{ type: "spring", stiffness: 260, damping: 20, delay }}
     >
       <Card className="flex items-center p-5 gap-4">
-        <div className={`p-3 rounded-full ${colorClass} bg-opacity-10 dark:bg-opacity-20`}>
+        <div className={`p-3 rounded ${colorClass} bg-opacity-10 dark:bg-opacity-20`}>
           {Icon && <Icon className={`w-6 h-6 ${colorClass.replace('bg-', 'text-')}`} />}
         </div>
         <div>
