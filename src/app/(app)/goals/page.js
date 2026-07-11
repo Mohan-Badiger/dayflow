@@ -106,7 +106,7 @@ export default function GoalsPage() {
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl font-black text-white tracking-tight mb-2"
+            className="text-4xl font-black text-text-1 tracking-tight mb-2"
           >
             Goals & Tracking
           </motion.h1>
@@ -114,7 +114,7 @@ export default function GoalsPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-gray-400"
+            className="text-text-3"
           >
             Design your life and track your progress creatively.
           </motion.p>
@@ -125,7 +125,7 @@ export default function GoalsPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
           onClick={() => { setEditingGoal(null); setShowForm(true); }}
-          className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
+          className="bg-brand hover:opacity-90 text-surface px-6 py-3 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg"
         >
           <Plus className="w-5 h-5" /> New Goal
         </motion.button>
@@ -134,23 +134,23 @@ export default function GoalsPage() {
       {/* Stats row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: "Total Goals", value: goals.length, icon: Target, color: "text-blue-400", bg: "bg-blue-500/10" },
-          { label: "Active", value: activeCount, icon: TrendingUp, color: "text-yellow-400", bg: "bg-yellow-500/10" },
-          { label: "Completed", value: completedCount, icon: CheckCircle2, color: "text-green-400", bg: "bg-green-500/10" }
+          { label: "Total Goals", value: goals.length, icon: Target, color: "text-brand", bg: "bg-brand/10" },
+          { label: "Active", value: activeCount, icon: TrendingUp, color: "text-warning", bg: "bg-warning/10" },
+          { label: "Completed", value: completedCount, icon: CheckCircle2, color: "text-success", bg: "bg-success/10" }
         ].map((stat, i) => (
           <motion.div 
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 + 0.3 }}
-            className="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-xl flex items-center gap-4"
+            className="bg-surface border border-border p-6 rounded-3xl shadow-sm flex items-center gap-4"
           >
             <div className={`p-4 rounded-2xl ${stat.bg} ${stat.color}`}>
               <stat.icon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-gray-400 font-medium">{stat.label}</p>
-              <h4 className="text-2xl font-bold text-white">{stat.value}</h4>
+              <p className="text-text-3 font-medium">{stat.label}</p>
+              <h4 className="text-2xl font-bold text-text-1">{stat.value}</h4>
             </div>
           </motion.div>
         ))}
@@ -174,8 +174,8 @@ export default function GoalsPage() {
               onClick={() => setFilter(f)}
               className={`px-5 py-2 rounded-full font-medium transition-colors whitespace-nowrap ${
                 filter === f 
-                  ? 'bg-white text-black' 
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                  ? 'bg-text-1 text-surface' 
+                  : 'bg-surface border border-border text-text-2 hover:bg-surface-3 hover:text-text-1'
               }`}
             >
               {f}
@@ -185,20 +185,20 @@ export default function GoalsPage() {
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-6 rounded-3xl flex items-center justify-center gap-2">
+          <div className="bg-danger/10 border border-danger/20 text-danger p-6 rounded-3xl flex items-center justify-center gap-2">
             <AlertCircle className="w-5 h-5" /> {error}
           </div>
         ) : filteredGoals.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl bg-white/5">
-            <Target className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">No goals found</h3>
-            <p className="text-gray-400 mb-6">You don't have any {filter.toLowerCase()} goals yet.</p>
+          <div className="text-center py-20 border border-dashed border-border rounded-3xl bg-surface">
+            <Target className="w-12 h-12 text-text-3 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-text-1 mb-2">No goals found</h3>
+            <p className="text-text-3 mb-6">You don't have any {filter.toLowerCase()} goals yet.</p>
             <button 
               onClick={() => { setEditingGoal(null); setShowForm(true); }}
-              className="text-blue-400 font-semibold hover:text-blue-300 transition-colors"
+              className="text-brand font-semibold hover:opacity-80 transition-opacity"
             >
               Create your first goal →
             </button>
