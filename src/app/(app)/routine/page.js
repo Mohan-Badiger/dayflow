@@ -355,7 +355,7 @@ export default function RoutinePage() {
       {/* ════ REDUCE ════ */}
       <div className="rounded-sm bg-danger/5 border border-danger/10 p-4">
         <p className="text-sm font-bold text-danger flex items-center gap-1.5 mb-2">
-          <AlertTriangle className="w-4 h-4" /> Reduce These
+          Reduce These
         </p>
         <div className="flex flex-wrap gap-2">
           {REDUCE.map((r, i) => (
@@ -369,7 +369,7 @@ export default function RoutinePage() {
         <div className="absolute inset-0 bg-linear-to-br from-brand/5 via-transparent to-transparent" />
         <div className="relative">
           <h2 className="font-bold text-text-1 flex items-center gap-2 mb-4">
-            <Heart className="w-5 h-5 text-danger" /> What Actually Matters
+            What Actually Matters
           </h2>
           <div className="space-y-2.5">
             {[
@@ -387,7 +387,7 @@ export default function RoutinePage() {
                     </span>
                     <span className="text-[10px] text-text-3 font-mono">{p.pct}%</span>
                   </div>
-                  <div className="h-1.5 rounded-sm bg-surface-3 overflow-hidden">
+                  <div className="h-1.5 rounded-sm bg-gray-300 overflow-hidden">
                     <motion.div className="h-full rounded-sm bg-brand" initial={{ width: 0 }}
                       animate={{ width: `${p.pct}%` }} transition={{ duration: 1, delay: 0.3 + i * 0.1 }} />
                   </div>
