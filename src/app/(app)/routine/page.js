@@ -182,8 +182,8 @@ export default function RoutinePage() {
           { icon: Smartphone, label: "Screens Off", value: screenOff, field: "screen", color: "#ef4444" },
           { icon: Moon, label: "Sleep", value: sleepTime, field: "sleep", color: "#8b5cf6" },
         ].map(t => (
-          <div key={t.field} className="card p-3 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-sm flex items-center justify-center shrink-0" style={{ backgroundColor: t.color + "20" }}>
+          <div key={t.field} className="card p-3 flex items-center gap-2.5 rounded-sm">
+            <div className="w-8 h-8 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: t.color + "20" }}>
               <t.icon className="w-4 h-4" style={{ color: t.color }} />
             </div>
             <div className="flex-1 min-w-0">
@@ -298,10 +298,10 @@ export default function RoutinePage() {
       </AnimatePresence>
 
       {/* ════ EXERCISE SCHEDULE ════ */}
-      <div className="card overflow-hidden">
+      <div className="card overflow-hidden rounded-sm">
         <button onClick={() => setExOpen(!exOpen)}
           className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-3/30 transition-colors">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/15 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-sm bg-emerald-500/15 flex items-center justify-center shrink-0">
             <Dumbbell className="w-4.5 h-4.5 text-emerald-400" />
           </div>
           <span className="flex-1 font-bold text-sm text-text-1">Exercise Schedule</span>
@@ -313,7 +313,7 @@ export default function RoutinePage() {
               transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {EXERCISE_SCHEDULE.map((g, i) => (
-                  <div key={i} className="rounded-lg bg-surface-3/50 p-3">
+                  <div key={i} className="rounded-sm bg-surface-3/50 p-3">
                     <p className="text-xs font-bold mb-1.5" style={{ color: g.accent }}>{g.day} — {g.type}</p>
                     <ul className="space-y-1">{g.items.map((x, j) => (
                       <li key={j} className="text-sm text-text-2 flex items-center gap-2">
@@ -329,10 +329,10 @@ export default function RoutinePage() {
       </div>
 
       {/* ════ SLEEP PROTOCOL ════ */}
-      <div className="card overflow-hidden">
+      <div className="card overflow-hidden rounded-sm">
         <button onClick={() => setSlOpen(!slOpen)}
           className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-3/30 transition-colors">
-          <div className="w-9 h-9 rounded-lg bg-violet-500/15 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-sm bg-violet-500/15 flex items-center justify-center shrink-0">
             <BedDouble className="w-4.5 h-4.5 text-violet-400" />
           </div>
           <span className="flex-1 font-bold text-sm text-text-1">Sleep Protocol</span>
