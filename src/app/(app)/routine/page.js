@@ -129,7 +129,7 @@ export default function RoutinePage() {
       {/* ════ HERO ════ */}
       <motion.div
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        className="card relative overflow-hidden"
+        className="card relative overflow-hidden rounded-sm"
       >
         <div className="absolute inset-0 bg-linear-to-br from-brand/8 via-transparent to-success/5" />
         <div className="relative p-5 sm:p-7 flex flex-col sm:flex-row items-center gap-6">
