@@ -365,7 +365,7 @@ export default function RoutinePage() {
       </div>
 
       {/* ════ WHAT MATTERS ════ */}
-      <div className="card p-5 relative overflow-hidden">
+      <div className="card p-5 relative overflow-hidden rounded-sm">
         <div className="absolute inset-0 bg-linear-to-br from-brand/5 via-transparent to-transparent" />
         <div className="relative">
           <h2 className="font-bold text-text-1 flex items-center gap-2 mb-4">
