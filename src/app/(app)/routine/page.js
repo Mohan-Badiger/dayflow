@@ -158,16 +158,16 @@ export default function RoutinePage() {
               {total === 9 ? "Perfect day! Every task done 🔥" : `${total} of 9 tasks complete — ${9 - total} remaining`}
             </p>
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-surface-3 text-text-2 border border-border">
                 <Bed className="w-3 h-3" /> {sleepH}h sleep
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-surface-3 text-text-2 border border-border">
                 <Clock className="w-3 h-3" /> Wake {wakeTime}
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-surface-3 text-text-2 border border-border">
                 <Sun className="w-3 h-3 text-warning" /> {mDone}/6
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded bg-surface-3 text-text-2 border border-border">
                 <Moon className="w-3 h-3 text-brand" /> {nDone}/3
               </span>
             </div>
@@ -183,7 +183,7 @@ export default function RoutinePage() {
           { icon: Moon, label: "Sleep", value: sleepTime, field: "sleep", color: "#8b5cf6" },
         ].map(t => (
           <div key={t.field} className="card p-3 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: t.color + "20" }}>
+            <div className="w-8 h-8 rounded-sm flex items-center justify-center shrink-0" style={{ backgroundColor: t.color + "20" }}>
               <t.icon className="w-4 h-4" style={{ color: t.color }} />
             </div>
             <div className="flex-1 min-w-0">
