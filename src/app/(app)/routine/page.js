@@ -158,16 +158,16 @@ export default function RoutinePage() {
               {total === 9 ? "Perfect day! Every task done 🔥" : `${total} of 9 tasks complete — ${9 - total} remaining`}
             </p>
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
                 <Bed className="w-3 h-3" /> {sleepH}h sleep
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
                 <Clock className="w-3 h-3" /> Wake {wakeTime}
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
                 <Sun className="w-3 h-3 text-warning" /> {mDone}/6
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-3 text-text-2 border border-border">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-sm bg-surface-3 text-text-2 border border-border">
                 <Moon className="w-3 h-3 text-brand" /> {nDone}/3
               </span>
             </div>
@@ -201,13 +201,13 @@ export default function RoutinePage() {
           <h2 className="font-bold text-text-1 flex items-center gap-2 text-base">
             <Sun className="w-5 h-5 text-warning" /> Morning Power‑Up
           </h2>
-          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded-sm"
             style={{ background: mDone === 6 ? "var(--color-success)" : "var(--color-surface-3)", color: mDone === 6 ? "#fff" : "var(--color-text-2)" }}>
             {mDone}/6
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
-          <motion.div animate={{ width: `${(mDone / 6) * 100}%` }} className="h-full rounded-full bg-linear-to-r from-warning to-success" />
+        <div className="h-1.5 rounded-sm bg-surface-3 overflow-hidden">
+          <motion.div animate={{ width: `${(mDone / 6) * 100}%` }} className="h-full rounded-sm bg-linear-to-r from-warning to-success" />
         </div>
         <div className="space-y-1.5">
           {MORNING_ITEMS.map((item, i) => {
@@ -218,7 +218,7 @@ export default function RoutinePage() {
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 onClick={() => toggleM(item.id)}
-                className={`group w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all
+                className={`group w-full flex items-center gap-3 p-3 rounded-sm border text-left transition-all
                   ${checked ? "bg-surface-2 border-border-2" : "bg-surface border-border hover:border-border-2 hover:bg-surface-2/50"}`}
               >
                 <motion.div
@@ -246,13 +246,13 @@ export default function RoutinePage() {
           <h2 className="font-bold text-text-1 flex items-center gap-2 text-base">
             <Moon className="w-5 h-5 text-brand" /> Night Wind‑Down
           </h2>
-          <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+          <span className="text-xs font-bold px-2.5 py-0.5 rounded-sm"
             style={{ background: nDone === 3 ? "var(--color-success)" : "var(--color-surface-3)", color: nDone === 3 ? "#fff" : "var(--color-text-2)" }}>
             {nDone}/3
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
-          <motion.div animate={{ width: `${(nDone / 3) * 100}%` }} className="h-full rounded-full bg-linear-to-r from-brand to-brand-mid" />
+        <div className="h-1.5 rounded-sm bg-surface-3 overflow-hidden">
+          <motion.div animate={{ width: `${(nDone / 3) * 100}%` }} className="h-full rounded-sm bg-linear-to-r from-brand to-brand-mid" />
         </div>
         <div className="space-y-1.5">
           {NIGHT_ITEMS.map((item, i) => {
@@ -263,7 +263,7 @@ export default function RoutinePage() {
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 onClick={() => toggleN(item.id)}
-                className={`group w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all
+                className={`group w-full flex items-center gap-3 p-3 rounded-sm border text-left transition-all
                   ${checked ? "bg-surface-2 border-border-2" : "bg-surface border-border hover:border-border-2 hover:bg-surface-2/50"}`}
               >
                 <motion.div
@@ -353,13 +353,13 @@ export default function RoutinePage() {
       </div>
 
       {/* ════ REDUCE ════ */}
-      <div className="rounded-xl bg-danger/5 border border-danger/10 p-4">
+      <div className="rounded-sm bg-danger/5 border border-danger/10 p-4">
         <p className="text-sm font-bold text-danger flex items-center gap-1.5 mb-2">
           <AlertTriangle className="w-4 h-4" /> Reduce These
         </p>
         <div className="flex flex-wrap gap-2">
           {REDUCE.map((r, i) => (
-            <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-full bg-danger/8 text-danger/80 border border-danger/10">{r}</span>
+            <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-sm bg-danger/8 text-danger/80 border border-danger/10">{r}</span>
           ))}
         </div>
       </div>
@@ -379,7 +379,7 @@ export default function RoutinePage() {
               { n: 4, t: "Stress reduction", ic: Brain, pct: 40 },
             ].map((p, i) => (
               <div key={i} className="flex items-center gap-3">
-                <span className="w-6 h-6 rounded-md bg-brand/15 flex items-center justify-center text-[10px] font-black text-brand shrink-0">{p.n}</span>
+                <span className="w-6 h-6 rounded-sm bg-brand/15 flex items-center justify-center text-[10px] font-black text-brand shrink-0">{p.n}</span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-sm font-semibold text-text-1 flex items-center gap-1.5">
@@ -387,8 +387,8 @@ export default function RoutinePage() {
                     </span>
                     <span className="text-[10px] text-text-3 font-mono">{p.pct}%</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
-                    <motion.div className="h-full rounded-full bg-brand" initial={{ width: 0 }}
+                  <div className="h-1.5 rounded-sm bg-surface-3 overflow-hidden">
+                    <motion.div className="h-full rounded-sm bg-brand" initial={{ width: 0 }}
                       animate={{ width: `${p.pct}%` }} transition={{ duration: 1, delay: 0.3 + i * 0.1 }} />
                   </div>
                 </div>
