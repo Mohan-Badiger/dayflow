@@ -134,7 +134,7 @@ export default function RoutinePage() {
         <div className="absolute inset-0 bg-linear-to-br from-brand/8 via-transparent to-success/5" />
         <div className="relative p-5 sm:p-7 flex flex-col sm:flex-row items-center gap-6">
           {/* ring */}
-          <div className="relative w-[100px] h-[100px] shrink-0">
+          <div className="relative w-25 h-25 shrink-0">
             <svg width={100} height={100} className="-rotate-90">
               <circle cx={50} cy={50} r={42} fill="none" stroke="var(--color-surface-3)" strokeWidth={7} />
               <motion.circle cx={50} cy={50} r={42} fill="none"
