@@ -13,19 +13,19 @@ import { Button } from "@/components/ui/Button";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 
 const CAT_CONFIG = {
-  study:    { color: "#6366f1", bg: "#6366f120", icon: BookOpen,  label: "Study" },
-  exercise: { color: "#10b981", bg: "#10b98120", icon: Dumbbell,  label: "Exercise" },
-  meal:     { color: "#f59e0b", bg: "#f59e0b20", icon: Coffee,    label: "Meal" },
-  routine:  { color: "#8b5cf6", bg: "#8b5cf620", icon: Clock,     label: "Routine" },
-  break:    { color: "#94a3b8", bg: "#94a3b820", icon: Pause,     label: "Break" },
-  personal: { color: "#ec4899", bg: "#ec489920", icon: User,      label: "Personal" },
+  study: { color: "#6366f1", bg: "#6366f120", icon: BookOpen, label: "Study" },
+  exercise: { color: "#10b981", bg: "#10b98120", icon: Dumbbell, label: "Exercise" },
+  meal: { color: "#f59e0b", bg: "#f59e0b20", icon: Coffee, label: "Meal" },
+  routine: { color: "#8b5cf6", bg: "#8b5cf620", icon: Clock, label: "Routine" },
+  break: { color: "#94a3b8", bg: "#94a3b820", icon: Pause, label: "Break" },
+  personal: { color: "#ec4899", bg: "#ec489920", icon: User, label: "Personal" },
 };
 
 const STATUS_STYLES = {
-  planned:       { bg: "bg-surface-3", text: "text-text-2", label: "Planned" },
+  planned: { bg: "bg-surface-3", text: "text-text-2", label: "Planned" },
   "in-progress": { bg: "bg-warning/20", text: "text-warning", label: "In Progress" },
-  done:          { bg: "bg-success/20", text: "text-success", label: "Done" },
-  skipped:       { bg: "bg-danger/20", text: "text-danger", label: "Skipped" },
+  done: { bg: "bg-success/20", text: "text-success", label: "Done" },
+  skipped: { bg: "bg-danger/20", text: "text-danger", label: "Skipped" },
 };
 
 function ScoreRing({ value, max, size = 64 }) {
@@ -36,8 +36,8 @@ function ScoreRing({ value, max, size = 64 }) {
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="transform -rotate-90">
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--color-surface-3)" strokeWidth={5} />
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={5}
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--color-surface-3)" strokeWidth={5} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={5}
           strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)} strokeLinecap="round"
           className="transition-all duration-700" />
       </svg>
@@ -100,7 +100,7 @@ export default function TimetablePage() {
           <button onClick={goPrev} className="w-10 h-10 rounded-xl bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
             <ChevronLeft className="w-5 h-5 text-text-2" />
           </button>
-          <div className="text-center min-w-[180px]">
+          <div className="text-center min-w-45">
             <h1 className="text-xl font-bold text-text-1">{format(currentDate, "EEEE")}</h1>
             <p className="text-sm text-text-3 font-medium">{format(currentDate, "d MMMM yyyy")}</p>
           </div>
@@ -124,7 +124,7 @@ export default function TimetablePage() {
         </div>
         <div className="card p-3 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><Clock className="w-5 h-5 text-brand" /></div>
-          <div><p className="text-xs text-text-3">Total Time</p><p className="font-bold text-text-1">{Math.floor(totalMin/60)}h {totalMin%60}m</p></div>
+          <div><p className="text-xs text-text-3">Total Time</p><p className="font-bold text-text-1">{Math.floor(totalMin / 60)}h {totalMin % 60}m</p></div>
         </div>
         <div className="card p-3 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center"><Zap className="w-5 h-5 text-success" /></div>
@@ -151,7 +151,7 @@ export default function TimetablePage() {
             {/* Hour markers */}
             <div className="absolute left-0 top-0 bottom-0 w-14 border-r border-border bg-surface-2 z-10">
               {Array.from({ length: 24 }).map((_, i) => (
-                <div key={i} className="h-[60px] flex items-start justify-center text-[10px] text-text-3 font-mono font-medium pt-1">
+                <div key={i} className="h-15 flex items-start justify-center text-[10px] text-text-3 font-mono font-medium pt-1">
                   {String(i).padStart(2, "0")}:00
                 </div>
               ))}
