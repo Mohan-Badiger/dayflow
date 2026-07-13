@@ -32,9 +32,9 @@ export function Modal({ isOpen, onClose, title, children }) {
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-[500px] bg-surface border border-border rounded-xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col"
+              className="w-full max-w-125 bg-surface border border-border rounded-sm shadow-xl overflow-hidden max-h-[90vh] flex flex-col"
             >
-              <div className="flex items-center justify-between p-3 border-b border-border">
+              <div className="flex items-center justify-between p-6 border-b border-border">
                 <h2 className="text-base font-bold">{title}</h2>
                 <button
                   onClick={onClose}
