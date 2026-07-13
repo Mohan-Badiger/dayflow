@@ -297,7 +297,7 @@ export default function SessionsPage() {
           <h1 className="text-2xl md:text-3xl font-bold">Study</h1>
           <p className="text-text-3 font-medium">Deep work. Real progress. No faking it.</p>
         </div>
-        <Button onClick={() => setShowSetup(true)} className="gap-2 h-11 px-5">
+        <Button onClick={() => setShowSetup(true)} className="gap-2">
           <Play className="w-4 h-4" /> Start Session
         </Button>
       </div>
@@ -409,16 +409,16 @@ export default function SessionsPage() {
           <div>
             <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Topic</label>
             <input type="text" value={setupTopic} onChange={e => setSetupTopic(e.target.value)}
-              className="input-field text-sm" placeholder="e.g. Hooks deep dive" />
+              className="w-full bg-surface-2 border border-border rounded-sm px-4 py-2.5 text-sm text-text-1 focus:outline-none focus:ring-1 focus:ring-brand transition-all" placeholder="e.g. Hooks deep dive" />
           </div>
 
           {/* Intention */}
           <div>
-            <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2 items-center gap-1.5">
+            <label className="flex items-center gap-1.5 text-xs sm:text-sm font-bold mb-1.5 text-text-2">
               <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> What will you accomplish?
             </label>
             <input type="text" value={setupIntention} onChange={e => setSetupIntention(e.target.value)}
-              className="input-field text-sm" placeholder="I will finish understanding..." />
+              className="w-full bg-surface-2 border border-border rounded-sm px-4 py-2.5 text-sm text-text-1 focus:outline-none focus:ring-1 focus:ring-brand transition-all" placeholder="I will finish understanding..." />
           </div>
 
           {/* Duration */}
@@ -427,7 +427,7 @@ export default function SessionsPage() {
             <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
               {DURATIONS.map(d => (
                 <button key={d.value} onClick={() => setSetupDuration(d.value)}
-                  className={`p-2 sm:p-3 rounded-lg text-center transition-all border ${setupDuration === d.value ? "bg-brand text-white border-brand" : "bg-surface-3 text-text-2 border-border hover:border-brand/50"}`}>
+                  className={`p-2 sm:p-3 rounded-sm text-center transition-all border ${setupDuration === d.value ? "bg-brand text-white border-brand" : "bg-surface-3 text-text-2 border-border hover:border-brand/50"}`}>
                   <span className="block font-bold text-xs sm:text-sm">{d.label}</span>
                   <span className="text-[10px] sm:text-xs opacity-70">{d.type}</span>
                 </button>
@@ -435,8 +435,8 @@ export default function SessionsPage() {
             </div>
           </div>
 
-          <Button className="w-full h-10 sm:h-12 text-sm sm:text-base gap-2 mt-2" onClick={startTimer}>
-            <Play className="w-4 h-4 sm:w-5 sm:h-5" /> Start Timer
+          <Button className="w-full mt-4 gap-2" onClick={startTimer}>
+            <Play className="w-4 h-4" /> Start Timer
           </Button>
         </div>
       </Modal>
