@@ -32,19 +32,19 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -4 }}
-      className={`relative p-6 rounded-3xl border bg-surface backdrop-blur-xl transition-colors ${isCompleted ? 'border-success/30' : 'border-border'}`}
+      className={`relative p-6 rounded-sm border bg-surface backdrop-blur-xl transition-colors ${isCompleted ? 'border-success/30' : 'border-border'}`}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-brand-light text-brand-dark">
+            <span className="px-2.5 py-1 text-xs font-semibold rounded-sm bg-brand-light text-brand-dark">
               {goal.category}
             </span>
-            <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-surface-3 text-text-3">
+            <span className="px-2.5 py-1 text-xs font-medium rounded-sm bg-surface-3 text-text-3">
               {goal.type}
             </span>
             {isCompleted && (
-              <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-success/10 text-success flex items-center gap-1">
+              <span className="px-2.5 py-1 text-xs font-medium rounded-sm bg-success/10 text-success flex items-center gap-1">
                 <Check className="w-3 h-3" /> Done
               </span>
             )}
@@ -55,7 +55,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-2 rounded-full hover:bg-surface-3 text-text-3 transition-colors"
+            className="p-2 rounded-sm hover:bg-surface-3 text-text-3 transition-colors"
           >
             <MoreHorizontal className="w-5 h-5" />
           </button>
@@ -64,7 +64,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute right-0 top-full mt-2 w-48 py-2 bg-surface border border-border rounded-2xl shadow-xl z-10 overflow-hidden"
+              className="absolute right-0 top-full mt-2 w-48 py-2 bg-surface border border-border rounded-sm shadow-xl z-10 overflow-hidden"
             >
               <button onClick={() => { onEdit(goal); setShowMenu(false); }} className="w-full text-left px-4 py-2 text-sm text-text-2 hover:bg-surface-3 flex items-center gap-2">
                 <Edit3 className="w-4 h-4" /> Edit
@@ -99,12 +99,12 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
           <span className="font-semibold text-text-1">{progress}%</span>
         </div>
 
-        <div className="h-2 w-full bg-border rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-border rounded-sm overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className={`h-full rounded-full ${isCompleted ? 'bg-success' : 'bg-brand'}`}
+            className={`h-full rounded-sm ${isCompleted ? 'bg-success' : 'bg-brand'}`}
           />
         </div>
       </div>
