@@ -233,7 +233,7 @@ export default function TimetablePage() {
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-[10px] font-mono text-text-3">{block.startTime}–{block.endTime}</span>
                         <button onClick={() => toggleStatus(block)}
-                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${st.bg} ${st.text} transition-colors`}>
+                          className={`text-[12px] font-bold px-1.5 py-0.5 rounded ${st.text} transition-colors`}>
                           {st.label}
                         </button>
                       </div>
@@ -270,7 +270,7 @@ export default function TimetablePage() {
                 const Icon = cfg.icon;
                 return (
                   <button key={key} onClick={() => setFormData({ ...formData, category: key })}
-                    className={`p-2 rounded-lg text-[11px] sm:text-xs font-medium flex items-center gap-1.5 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand font-bold" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
+                    className={`p-2 rounded text-[11px] sm:text-xs font-medium flex items-center gap-1.5 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand font-bold" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
                     <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: cfg.color }} /><span className="truncate">{cfg.label}</span>
                   </button>
                 );
@@ -281,15 +281,15 @@ export default function TimetablePage() {
             <div>
               <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Start</label>
               <input type="time" value={formData.startTime} onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="input-field text-sm scheme-dark" />
+                className="input-field text-sm scheme-dark rounded" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">End</label>
               <input type="time" value={formData.endTime} onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="input-field text-sm scheme-dark" />
+                className="input-field text-sm scheme-dark rounded" />
             </div>
           </div>
-          <Button className="w-full h-10 sm:h-11 text-sm mt-2" onClick={handleAdd} disabled={!formData.title}>
+          <Button className="w-full h-10 sm:h-11 text-sm mt-2 rounded" onClick={handleAdd} disabled={!formData.title}>
             <Plus className="w-4 h-4 mr-2" /> Add Block
           </Button>
         </div>
