@@ -97,14 +97,14 @@ export default function TimetablePage() {
       {/* Date Navigation */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={goPrev} className="w-10 h-10 rounded-xl bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
+          <button onClick={goPrev} className="w-10 h-10 rounded-sm bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
             <ChevronLeft className="w-5 h-5 text-text-2" />
           </button>
           <div className="text-center min-w-45">
             <h1 className="text-xl font-bold text-text-1">{format(currentDate, "EEEE")}</h1>
             <p className="text-sm text-text-3 font-medium">{format(currentDate, "d MMMM yyyy")}</p>
           </div>
-          <button onClick={goNext} className="w-10 h-10 rounded-xl bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
+          <button onClick={goNext} className="w-10 h-10 rounded-sm bg-surface border border-border hover:bg-surface-3 flex items-center justify-center transition-colors">
             <ChevronRight className="w-5 h-5 text-text-2" />
           </button>
           {!isToday(currentDate) && (
@@ -118,20 +118,20 @@ export default function TimetablePage() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="card p-3 flex items-center gap-3">
+        <div className="card p-3 flex items-center gap-3 rounded-sm">
           <ScoreRing value={doneCount} max={blocks.length} />
           <div><p className="text-xs text-text-3">Completion</p><p className="font-bold text-text-1">{doneCount}/{blocks.length}</p></div>
         </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><Clock className="w-5 h-5 text-brand" /></div>
+        <div className="card p-3 flex items-center gap-3 rounded-sm">
+          <div className="w-10 h-10 rounded-sm bg-brand/10 flex items-center justify-center"><Clock className="w-5 h-5 text-brand" /></div>
           <div><p className="text-xs text-text-3">Total Time</p><p className="font-bold text-text-1">{Math.floor(totalMin / 60)}h {totalMin % 60}m</p></div>
         </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center"><Zap className="w-5 h-5 text-success" /></div>
+        <div className="card p-3 flex items-center gap-3 rounded-sm">
+          <div className="w-10 h-10 rounded-sm bg-success/10 flex items-center justify-center"><Zap className="w-5 h-5 text-success" /></div>
           <div><p className="text-xs text-text-3">Blocks</p><p className="font-bold text-text-1">{blocks.length} planned</p></div>
         </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center"><CalendarDays className="w-5 h-5 text-warning" /></div>
+        <div className="card p-3 flex items-center gap-3 rounded-sm">
+          <div className="w-10 h-10 rounded-sm bg-warning/10 flex items-center justify-center"><CalendarDays className="w-5 h-5 text-warning" /></div>
           <div><p className="text-xs text-text-3">Categories</p><p className="font-bold text-text-1">{Object.keys(catStats).length} active</p></div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function TimetablePage() {
               {/* Now line */}
               {isToday(currentDate) && (
                 <div className="absolute left-0 right-0 z-20 flex items-center" style={{ top: nowMinutes }}>
-                  <div className="w-2.5 h-2.5 rounded-full bg-danger -ml-1" />
+                  <div className="w-2.5 h-2.5 rounded-md bg-danger -ml-1" />
                   <div className="flex-1 h-px bg-danger" />
                 </div>
               )}
@@ -186,11 +186,11 @@ export default function TimetablePage() {
                     layoutId={block._id}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: isSkipped ? 0.4 : 1, scale: 1 }}
-                    className="absolute left-1 right-3 rounded-xl p-2.5 cursor-pointer border overflow-hidden group"
+                    className="absolute left-1 right-3 rounded-sm p-2.5 cursor-pointer border overflow-hidden group"
                     style={{ top, height: Math.max(height, 28), backgroundColor: cat.bg, borderColor: cat.color + "40" }}
                     onClick={() => toggleStatus(block)}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between rounded-sm">
                       <div className="min-w-0">
                         <p className={`font-bold text-xs leading-tight truncate ${isDone ? "line-through opacity-60" : ""}`} style={{ color: cat.color }}>{block.title}</p>
                         {height > 36 && <p className="text-[10px] mt-0.5 font-mono" style={{ color: cat.color + "99" }}>{block.startTime}–{block.endTime}</p>}
@@ -224,7 +224,7 @@ export default function TimetablePage() {
                 const st = STATUS_STYLES[block.status] || STATUS_STYLES.planned;
                 return (
                   <motion.div key={block._id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-                    className="card p-3 flex gap-3 items-center group">
+                    className="card p-3 flex gap-3 items-center group rounded-sm">
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: cat.bg }}>
                       <CatIcon className="w-4 h-4" style={{ color: cat.color }} />
                     </div>
@@ -249,7 +249,7 @@ export default function TimetablePage() {
           )}
 
           <button onClick={() => setIsModalOpen(true)}
-            className="w-full border-2 border-dashed border-border hover:border-brand rounded-xl p-4 flex items-center justify-center gap-2 text-text-3 hover:text-brand transition-colors cursor-pointer">
+            className="w-full border-2 border-dashed border-border hover:border-brand rounded-sm p-4 flex items-center justify-center gap-2 text-text-3 hover:text-brand transition-colors cursor-pointer">
             <Plus className="w-4 h-4" /><span className="text-sm font-medium">Add Block</span>
           </button>
         </div>
@@ -261,7 +261,7 @@ export default function TimetablePage() {
           <div>
             <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Title</label>
             <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
-              className="input-field text-sm" placeholder="e.g. Deep Work" />
+              className="input-field text-sm rounded" placeholder="e.g. Deep Work" />
           </div>
           <div>
             <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Category</label>
