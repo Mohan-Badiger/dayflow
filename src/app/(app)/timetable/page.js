@@ -51,12 +51,12 @@ function ScoreRing({ value, max, size = 64 }) {
 function TimeSelect({ value, onChange, label }) {
   const [hour24, minute] = (value || "00:00").split(":");
   const hourNum = parseInt(hour24, 10);
-  
+
   const period = hourNum >= 12 ? "PM" : "AM";
   let hour12 = hourNum % 12;
   if (hour12 === 0) hour12 = 12;
   const hour12Str = String(hour12).padStart(2, '0');
-  
+
   const minuteOptions = Array.from({ length: 12 }).map((_, i) => String(i * 5).padStart(2, '0'));
   if (!minuteOptions.includes(minute)) {
     minuteOptions.push(minute);
@@ -85,24 +85,24 @@ function TimeSelect({ value, onChange, label }) {
   return (
     <div>
       <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">{label}</label>
-      <div className="flex items-center justify-center bg-surface border border-border rounded-lg p-1.5 focus-within:border-brand focus-within:ring-1 focus-within:ring-brand transition-all shadow-sm">
+      <div className="flex items-center justify-center bg-surface border border-border rounded-sm p-1.5 focus-within:border-brand focus-within:ring-1 focus-within:ring-brand transition-all shadow-sm">
         <select
           value={hour12Str}
           onChange={(e) => handleHourChange(e.target.value)}
-          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded transition-colors"
+          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded-sm transition-colors"
         >
           {Array.from({ length: 12 }).map((_, i) => {
             const hStr = String(i + 1).padStart(2, '0');
             return <option key={hStr} value={hStr}>{hStr}</option>;
           })}
         </select>
-        
+
         <span className="text-text-3 font-bold px-0.5">:</span>
-        
+
         <select
           value={minute}
           onChange={(e) => handleMinuteChange(e.target.value)}
-          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded transition-colors"
+          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded-sm transition-colors"
         >
           {minuteOptions.map((min) => (
             <option key={min} value={min}>
@@ -110,12 +110,12 @@ function TimeSelect({ value, onChange, label }) {
             </option>
           ))}
         </select>
-        
+
         <div className="pl-2 border-l border-border/50 ml-1">
           <button
             type="button"
             onClick={handlePeriodToggle}
-            className="px-2 py-1 text-[11px] font-black rounded bg-surface-2 text-text-2 hover:text-text-1 hover:bg-surface-3 transition-colors uppercase"
+            className="px-2 py-1 text-[11px] font-black rounded-sm bg-surface-2 text-text-2 hover:text-text-1 hover:bg-surface-3 transition-colors uppercase"
           >
             {period}
           </button>
@@ -188,7 +188,7 @@ export default function TimetablePage() {
             <button onClick={goToday} className="pill bg-brand/10 text-brand border border-brand/30 hover:bg-brand/20 transition-colors cursor-pointer">Today</button>
           )}
         </div>
-        <Button onClick={() => setIsModalOpen(true)} className="gap-2 h-10">
+        <Button onClick={() => setIsModalOpen(true)} className="gap-2">
           <Plus className="w-4 h-4" /> Add Block
         </Button>
       </div>
@@ -310,7 +310,7 @@ export default function TimetablePage() {
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-[10px] font-mono text-text-3">{block.startTime}–{block.endTime}</span>
                         <button onClick={() => toggleStatus(block)}
-                          className={`text-[12px] font-bold px-1.5 py-0.5 rounded ${st.text} transition-colors`}>
+                          className={`text-[12px] font-bold px-1.5 py-0.5 rounded-sm ${st.text} transition-colors`}>
                           {st.label}
                         </button>
                       </div>
@@ -338,7 +338,7 @@ export default function TimetablePage() {
           <div>
             <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Title</label>
             <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
-              className="input-field text-sm rounded" placeholder="e.g. Deep Work" />
+              className="w-full bg-surface-2 border border-border rounded-sm px-4 py-2.5 text-sm text-text-1 focus:outline-none focus:ring-1 focus:ring-brand transition-all" placeholder="e.g. Deep Work" />
           </div>
           <div>
             <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Category</label>
@@ -347,7 +347,7 @@ export default function TimetablePage() {
                 const Icon = cfg.icon;
                 return (
                   <button key={key} onClick={() => setFormData({ ...formData, category: key })}
-                    className={`p-2 rounded text-[11px] sm:text-xs font-medium flex items-center gap-1.5 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand font-bold" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
+                    className={`p-2 rounded-sm text-[11px] sm:text-xs font-medium flex items-center gap-1.5 border transition-all ${formData.category === key ? "border-brand bg-brand/10 text-brand font-bold" : "border-border bg-surface text-text-2 hover:border-border-2"}`}>
                     <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: cfg.color }} /><span className="truncate">{cfg.label}</span>
                   </button>
                 );
@@ -355,19 +355,19 @@ export default function TimetablePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <TimeSelect 
-              label="Start" 
-              value={formData.startTime} 
-              onChange={val => setFormData({ ...formData, startTime: val })} 
+            <TimeSelect
+              label="Start"
+              value={formData.startTime}
+              onChange={val => setFormData({ ...formData, startTime: val })}
             />
-            <TimeSelect 
-              label="End" 
-              value={formData.endTime} 
-              onChange={val => setFormData({ ...formData, endTime: val })} 
+            <TimeSelect
+              label="End"
+              value={formData.endTime}
+              onChange={val => setFormData({ ...formData, endTime: val })}
             />
           </div>
-          <Button className="w-full h-10 sm:h-11 text-sm mt-2 rounded" onClick={handleAdd} disabled={!formData.title}>
-            <Plus className="w-4 h-4 mr-2" /> Add Block
+          <Button className="w-full mt-4 gap-2" onClick={handleAdd} disabled={!formData.title}>
+            <Plus className="w-4 h-4" /> Add Block
           </Button>
         </div>
       </Modal>
