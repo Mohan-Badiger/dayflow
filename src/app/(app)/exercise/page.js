@@ -15,10 +15,10 @@ function DayCard({ dayData, isToday, isActive, onClick }) {
     <motion.button
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      className={`relative min-w-[140px] md:min-w-[180px] p-4 rounded-2xl border transition-all flex flex-col items-start text-left ${isActive ? 'bg-brand border-brand shadow-lg' : 'bg-surface border-border hover:border-border-2'}`}
+      className={`relative min-w-[140px] md:min-w-[180px] p-4 rounded-sm border transition-all flex flex-col items-start text-left ${isActive ? 'bg-brand border-brand shadow-lg' : 'bg-surface border-border hover:border-border-2'}`}
     >
       {isToday && !isActive && (
-        <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">TODAY</span>
+        <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm shadow-sm">TODAY</span>
       )}
       <span className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isActive ? 'text-white/70' : 'text-text-3'}`}>{dayData.day}</span>
       <h4 className={`text-sm font-bold mb-3 ${isActive ? 'text-white' : 'text-text-1'}`}>{dayData.title}</h4>
@@ -32,8 +32,8 @@ function DayCard({ dayData, isToday, isActive, onClick }) {
 // ─── Exercise Item (List Style) ────────────────────────────────
 function ExerciseListItem({ exercise, onInfo }) {
   return (
-    <div className="flex items-center gap-4 p-4 bg-surface border border-border rounded-2xl hover:border-border-2 transition-all group">
-      <div className="w-12 h-12 rounded-xl bg-surface-3 border border-border flex items-center justify-center text-2xl">
+    <div className="flex items-center gap-4 p-4 bg-surface border border-border rounded-sm hover:border-border-2 transition-all group">
+      <div className="w-12 h-12 rounded-sm bg-surface-3 border border-border flex items-center justify-center text-2xl">
         {exercise.icon}
       </div>
       <div className="flex-1">
@@ -42,7 +42,7 @@ function ExerciseListItem({ exercise, onInfo }) {
       </div>
       <button
         onClick={onInfo}
-        className="w-10 h-10 rounded-xl bg-surface-3 flex items-center justify-center text-text-3 hover:text-text-1 transition-colors"
+        className="w-10 h-10 rounded-sm bg-surface-3 flex items-center justify-center text-text-3 hover:text-text-1 transition-colors"
       >
         <RotateCcw size={16} />
       </button>
@@ -100,7 +100,7 @@ function ActiveWorkout({ workout, exercises, onClose, onComplete }) {
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-100 bg-surface-2/95 backdrop-blur-xl overflow-y-auto flex flex-col items-center p-4 md:p-8"
     >
-      <div className="w-full max-w-2xl bg-surface border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col min-h-[90vh]">
+      <div className="w-full max-w-2xl bg-surface border border-border rounded-sm shadow-2xl overflow-hidden flex flex-col min-h-[90vh]">
         <div className="p-6 md:p-8 border-b border-border bg-surface sticky top-0 z-20 flex justify-between items-center">
           <div>
             <h2 className="text-xl font-bold text-text-1">{workout?.title || workout?.name}</h2>
@@ -109,10 +109,10 @@ function ActiveWorkout({ workout, exercises, onClose, onComplete }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="w-10 h-10 bg-surface-3 rounded-xl flex items-center justify-center text-text-2 hover:text-text-1" onClick={() => setIsRunning(!isRunning)}>
+            <button className="w-10 h-10 bg-surface-3 rounded-sm flex items-center justify-center text-text-2 hover:text-text-1" onClick={() => setIsRunning(!isRunning)}>
               {isRunning ? "⏸" : "▶"}
             </button>
-            <button className="w-10 h-10 bg-surface-3 rounded-xl flex items-center justify-center text-rose-500" onClick={onClose}>
+            <button className="w-10 h-10 bg-surface-3 rounded-sm flex items-center justify-center text-rose-500" onClick={onClose}>
               <X size={18} />
             </button>
           </div>
@@ -134,7 +134,7 @@ function ActiveWorkout({ workout, exercises, onClose, onComplete }) {
                   <button
                     key={i}
                     onClick={() => toggleSet(exIdx, i)}
-                    className={`h-10 rounded-lg border-2 transition-all flex items-center justify-center text-xs font-bold ${completedSets[`${exIdx}-${i}`] ? "bg-brand border-brand text-white" : "bg-surface-3 border-transparent text-text-2"}`}
+                    className={`h-10 rounded-sm border-2 transition-all flex items-center justify-center text-xs font-bold ${completedSets[`${exIdx}-${i}`] ? "bg-brand border-brand text-white" : "bg-surface-3 border-transparent text-text-2"}`}
                   >
                     {i + 1}
                   </button>
@@ -146,7 +146,7 @@ function ActiveWorkout({ workout, exercises, onClose, onComplete }) {
 
         <div className="p-6 md:p-8 bg-surface border-t border-border sticky bottom-0">
           <button
-            className="w-full py-4 bg-brand text-white rounded-2xl font-bold text-base hover:opacity-90 shadow-lg shadow-brand/20 transition-all"
+            className="w-full py-4 bg-brand text-white rounded-sm font-bold text-base hover:opacity-90 shadow-lg shadow-brand/20 transition-all"
             onClick={handleComplete}
           >
             Complete Workout
@@ -212,10 +212,10 @@ export default function ExercisePage() {
         )}
         {infoExercise && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-110 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setInfoExercise(null)}>
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-surface w-full max-w-md rounded-3xl p-6 border border-border shadow-2xl" onClick={e => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-surface w-full max-w-md rounded-sm p-6 border border-border shadow-2xl" onClick={e => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl bg-surface-3 p-3 rounded-xl">{infoExercise.icon}</span>
+                  <span className="text-3xl bg-surface-3 p-3 rounded-sm">{infoExercise.icon}</span>
                   <div>
                     <h3 className="text-lg font-bold text-text-1">{infoExercise.name}</h3>
                     <span className="text-xs text-brand font-bold uppercase">{infoExercise.difficulty}</span>
@@ -225,16 +225,16 @@ export default function ExercisePage() {
               </div>
               <p className="text-sm text-text-2 leading-relaxed mb-6">{infoExercise.instructions}</p>
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-surface-3 p-3 rounded-xl border border-border">
+                <div className="bg-surface-3 p-3 rounded-sm border border-border">
                   <span className="block text-[10px] text-text-3 uppercase font-bold mb-1">Target Muscles</span>
                   <span className="text-xs font-semibold text-text-1">{infoExercise.muscleGroups.join(", ")}</span>
                 </div>
-                <div className="bg-surface-3 p-3 rounded-xl border border-border">
+                <div className="bg-surface-3 p-3 rounded-sm border border-border">
                   <span className="block text-[10px] text-text-3 uppercase font-bold mb-1">Equipment</span>
                   <span className="text-xs font-semibold text-text-1 capitalize">{infoExercise.equipment}</span>
                 </div>
               </div>
-              <button onClick={() => setInfoExercise(null)} className="w-full py-3 bg-text-1 text-surface rounded-xl font-bold text-sm">Close</button>
+              <button onClick={() => setInfoExercise(null)} className="w-full py-3 bg-text-1 text-surface rounded-sm font-bold text-sm">Close</button>
             </motion.div>
           </motion.div>
         )}
@@ -254,25 +254,25 @@ export default function ExercisePage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-3 gap-3 mb-10">
-        <div className="bg-surface border border-border rounded-2xl p-4 text-center">
+        <div className="bg-surface border border-border rounded-sm p-4 text-center">
           <span className="block text-2xl font-bold text-text-1">{stats.streak || 0}</span>
           <span className="text-[10px] font-bold text-text-3 uppercase tracking-wider">Streak</span>
         </div>
-        <div className="bg-surface border border-border rounded-2xl p-4 text-center">
+        <div className="bg-surface border border-border rounded-sm p-4 text-center">
           <span className="block text-2xl font-bold text-text-1">{stats.weeklyMinutes || 0}</span>
           <span className="text-[10px] font-bold text-text-3 uppercase tracking-wider">Minutes</span>
         </div>
-        <div className="bg-surface border border-border rounded-2xl p-4 text-center">
+        <div className="bg-surface border border-border rounded-sm p-4 text-center">
           <span className="block text-2xl font-bold text-text-1">{stats.weeklyWorkouts || 0}</span>
           <span className="text-[10px] font-bold text-text-3 uppercase tracking-wider">Session</span>
         </div>
       </div>
 
       {/* View Tabs */}
-      <div className="flex gap-1.5 p-1 bg-surface-3 border border-border rounded-xl mb-8 w-full md:w-max">
-        <button onClick={() => setView("plan")} className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${view === "plan" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>Daily Plan</button>
-        <button onClick={() => setView("library")} className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${view === "library" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>All Exercises</button>
-        <button onClick={() => setView("history")} className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${view === "history" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>History</button>
+      <div className="flex gap-1.5 p-1 bg-surface-3 border border-border rounded-sm mb-8 w-full md:w-max">
+        <button onClick={() => setView("plan")} className={`flex-1 md:flex-none px-6 py-2 rounded-sm text-sm font-bold transition-all ${view === "plan" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>Daily Plan</button>
+        <button onClick={() => setView("library")} className={`flex-1 md:flex-none px-6 py-2 rounded-sm text-sm font-bold transition-all ${view === "library" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>All Exercises</button>
+        <button onClick={() => setView("history")} className={`flex-1 md:flex-none px-6 py-2 rounded-sm text-sm font-bold transition-all ${view === "history" ? "bg-surface text-text-1 shadow-sm border border-border" : "text-text-3 hover:text-text-1"}`}>History</button>
       </div>
 
       {view === "plan" && (
@@ -294,7 +294,7 @@ export default function ExercisePage() {
           </div>
 
           {/* Exercises for selected day */}
-          <div className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="bg-surface border border-border rounded-sm p-6 md:p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-xl font-bold text-text-1">{selectedDay?.title}</h2>
@@ -302,7 +302,7 @@ export default function ExercisePage() {
               </div>
               <button
                 onClick={startWorkout}
-                className="flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-xl font-bold text-sm shadow-lg shadow-brand/20 hover:opacity-90 transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-sm font-bold text-sm shadow-lg shadow-brand/20 hover:opacity-90 transition-all"
               >
                 <Play size={16} fill="currentColor" /> Start Workout
               </button>
@@ -321,7 +321,7 @@ export default function ExercisePage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {EXERCISE_LIBRARY.map(ex => (
-              <div key={ex.slug} className="p-4 bg-surface border border-border rounded-2xl flex items-center gap-4">
+              <div key={ex.slug} className="p-4 bg-surface border border-border rounded-sm flex items-center gap-4">
                 <span className="text-2xl">{ex.icon}</span>
                 <div className="flex-1">
                   <h4 className="text-sm font-bold text-text-1">{ex.name}</h4>
@@ -337,14 +337,14 @@ export default function ExercisePage() {
       {view === "history" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
           {workoutHistory.length === 0 ? (
-            <div className="text-center py-20 bg-surface border border-border rounded-2xl">
+            <div className="text-center py-20 bg-surface border border-border rounded-sm">
               <Dumbbell size={48} className="mx-auto mb-4 text-border-2" />
               <h3 className="text-base font-bold text-text-2 mb-1">No history yet</h3>
             </div>
           ) : (
             workoutHistory.map((w, i) => (
-              <div key={w._id || i} className="flex items-center gap-5 p-5 bg-surface border border-border rounded-2xl">
-                <div className="flex flex-col items-center justify-center w-14 h-14 bg-surface-3 rounded-xl border border-border shrink-0">
+              <div key={w._id || i} className="flex items-center gap-5 p-5 bg-surface border border-border rounded-sm">
+                <div className="flex flex-col items-center justify-center w-14 h-14 bg-surface-3 rounded-sm border border-border shrink-0">
                   <span className="text-[10px] font-bold text-text-3 uppercase">{new Date(w.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short" })}</span>
                   <span className="text-sm font-bold text-text-1">{new Date(w.date + "T00:00:00").toLocaleDateString("en-US", { day: "numeric" })}</span>
                 </div>
