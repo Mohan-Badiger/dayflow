@@ -48,6 +48,83 @@ function ScoreRing({ value, max, size = 64 }) {
   );
 }
 
+function TimeSelect({ value, onChange, label }) {
+  const [hour24, minute] = (value || "00:00").split(":");
+  const hourNum = parseInt(hour24, 10);
+  
+  const period = hourNum >= 12 ? "PM" : "AM";
+  let hour12 = hourNum % 12;
+  if (hour12 === 0) hour12 = 12;
+  const hour12Str = String(hour12).padStart(2, '0');
+  
+  const minuteOptions = Array.from({ length: 12 }).map((_, i) => String(i * 5).padStart(2, '0'));
+  if (!minuteOptions.includes(minute)) {
+    minuteOptions.push(minute);
+    minuteOptions.sort();
+  }
+
+  const handleHourChange = (newHour12) => {
+    let newHour24 = parseInt(newHour12, 10);
+    if (period === "PM" && newHour24 !== 12) newHour24 += 12;
+    if (period === "AM" && newHour24 === 12) newHour24 = 0;
+    onChange(`${String(newHour24).padStart(2, '0')}:${minute}`);
+  };
+
+  const handleMinuteChange = (newMinute) => {
+    onChange(`${hour24}:${newMinute}`);
+  };
+
+  const handlePeriodToggle = () => {
+    const newPeriod = period === "AM" ? "PM" : "AM";
+    let newHour24 = parseInt(hour12Str, 10);
+    if (newPeriod === "PM" && newHour24 !== 12) newHour24 += 12;
+    if (newPeriod === "AM" && newHour24 === 12) newHour24 = 0;
+    onChange(`${String(newHour24).padStart(2, '0')}:${minute}`);
+  };
+
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">{label}</label>
+      <div className="flex items-center justify-center bg-surface border border-border rounded-lg p-1.5 focus-within:border-brand focus-within:ring-1 focus-within:ring-brand transition-all shadow-sm">
+        <select
+          value={hour12Str}
+          onChange={(e) => handleHourChange(e.target.value)}
+          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded transition-colors"
+        >
+          {Array.from({ length: 12 }).map((_, i) => {
+            const hStr = String(i + 1).padStart(2, '0');
+            return <option key={hStr} value={hStr}>{hStr}</option>;
+          })}
+        </select>
+        
+        <span className="text-text-3 font-bold px-0.5">:</span>
+        
+        <select
+          value={minute}
+          onChange={(e) => handleMinuteChange(e.target.value)}
+          className="w-12 bg-transparent py-1 text-sm font-bold text-text-1 text-center focus:outline-none appearance-none cursor-pointer hover:bg-surface-2 rounded transition-colors"
+        >
+          {minuteOptions.map((min) => (
+            <option key={min} value={min}>
+              {min}
+            </option>
+          ))}
+        </select>
+        
+        <div className="pl-2 border-l border-border/50 ml-1">
+          <button
+            type="button"
+            onClick={handlePeriodToggle}
+            className="px-2 py-1 text-[11px] font-black rounded bg-surface-2 text-text-2 hover:text-text-1 hover:bg-surface-3 transition-colors uppercase"
+          >
+            {period}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TimetablePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const dateStr = format(currentDate, "yyyy-MM-dd");
@@ -278,16 +355,16 @@ export default function TimetablePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div>
-              <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">Start</label>
-              <input type="time" value={formData.startTime} onChange={e => setFormData({ ...formData, startTime: e.target.value })}
-                className="input-field text-sm scheme-dark rounded" />
-            </div>
-            <div>
-              <label className="block text-xs sm:text-sm font-bold mb-1.5 text-text-2">End</label>
-              <input type="time" value={formData.endTime} onChange={e => setFormData({ ...formData, endTime: e.target.value })}
-                className="input-field text-sm scheme-dark rounded" />
-            </div>
+            <TimeSelect 
+              label="Start" 
+              value={formData.startTime} 
+              onChange={val => setFormData({ ...formData, startTime: val })} 
+            />
+            <TimeSelect 
+              label="End" 
+              value={formData.endTime} 
+              onChange={val => setFormData({ ...formData, endTime: val })} 
+            />
           </div>
           <Button className="w-full h-10 sm:h-11 text-sm mt-2 rounded" onClick={handleAdd} disabled={!formData.title}>
             <Plus className="w-4 h-4 mr-2" /> Add Block
