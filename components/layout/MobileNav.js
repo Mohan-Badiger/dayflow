@@ -23,7 +23,6 @@ const moreMenuLinks = [
   { name: "Routine", href: "/routine", icon: CheckSquare },
   { name: "Study", href: "/sessions", icon: Clock },
   { name: "Diet", href: "/diet", icon: Apple },
-  { name: "Exercise", href: "/exercise", icon: Dumbbell },
   { name: "Goals", href: "/goals", icon: Target },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
