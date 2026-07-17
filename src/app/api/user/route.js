@@ -4,7 +4,6 @@ import User            from "@/models/User"
 import { ok, err, unauthorized, notFound, serverError } from "@/lib/apiResponse"
 import mongoose from "mongoose"
 import DayLog from "@/models/DayLog"
-import WorkoutLog from "@/models/WorkoutLog"
 import DayTemplate from "@/models/DayTemplate"
 import WeeklyGoal from "@/models/WeeklyGoal"
 
@@ -48,7 +47,6 @@ export async function DELETE(req) {
     await Promise.all([
       User.findByIdAndDelete(userId),
       DayLog.deleteMany({ userId }),
-      WorkoutLog.deleteMany({ userId }),
       DayTemplate.deleteMany({ userId }),
       WeeklyGoal.deleteMany({ userId })
     ])
