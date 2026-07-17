@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import {
   TrendingUp, TrendingDown, Activity, CalendarDays, Clock,
-  Droplets, Dumbbell, BookOpen, Brain, Flame, Sparkles,
+  Droplets, Apple, BookOpen, Brain, Flame, Sparkles,
   Target, Zap, ChevronDown, Award, Sun,
 } from "lucide-react";
 
@@ -97,7 +97,7 @@ const PERIOD_OPTIONS = [
 ];
 
 const insightIcons = {
-  exercise: Dumbbell, wake: Sun, water: Droplets,
+  diet: Apple, wake: Sun, water: Droplets,
   calendar: CalendarDays, review: BookOpen, fire: Flame,
   default: Sparkles,
 };
@@ -186,7 +186,7 @@ export default function AnalyticsPage() {
 
   const s = data.summary;
   const health = data.health;
-  const exercisePct = s.daysLogged > 0 ? Math.round((health.totalExerciseDays / s.daysLogged) * 100) : 0;
+  const junkFoodAvoidancePct = s.daysLogged > 0 ? Math.round((health.noJunkDays / s.daysLogged) * 100) : 0;
   const waterPct = waterGoal > 0 ? Math.round((health.avgWater / waterGoal) * 100) : 0;
   const avgStudyH = s.daysLogged > 0 ? +(s.totalStudyHours / s.daysLogged).toFixed(1) : 0;
   const studyGoalPct = studyGoal > 0 ? Math.round((avgStudyH / studyGoal) * 100) : 0;
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
         </div>
         <div className="relative">
           <select value={period} onChange={(e) => setPeriod(+e.target.value)}
-            className="appearance-none input-field pr-10 text-sm font-medium cursor-pointer min-w-[130px]">
+            className="appearance-none input-field pr-10 text-sm font-medium cursor-pointer min-w-32.5">
             {PERIOD_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-3 pointer-events-none" />
@@ -225,7 +225,7 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <ProgressBar label="Study Goal" sublabel={`${avgStudyH}/${studyGoal}h avg`} value={avgStudyH} max={studyGoal} color="var(--color-study)" delay={0.2} />
               <ProgressBar label="Timetable Adherence" sublabel={`${ttAvgPct}% avg`} value={ttAvgPct} max={100} color="var(--color-routine)" delay={0.3} />
-              <ProgressBar label="Exercise Consistency" sublabel={`${health.totalExerciseDays}/${s.daysLogged} days`} value={exercisePct} max={100} color="var(--color-exercise)" delay={0.4} />
+              <ProgressBar label="Junk Food Avoidance" sublabel={`${health.noJunkDays}/${s.daysLogged} days`} value={junkFoodAvoidancePct} max={100} color="var(--color-warning)" delay={0.4} />
               <ProgressBar label="Hydration" sublabel={`${health.avgWater}/${waterGoal} avg`} value={health.avgWater} max={waterGoal} color="var(--color-water)" delay={0.5} />
             </div>
           </div>
@@ -236,7 +236,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard icon={Flame} label="Days Logged" value={s.daysLogged} sub={`of ${period} days`} color="#f59e0b" delay={0.1} />
         <StatCard icon={BookOpen} label="Total Study" value={`${s.totalStudyHours}h`} sub={`${avgStudyH}h/day avg`} color="#6366f1" delay={0.15} />
-        <StatCard icon={Dumbbell} label="Exercise Days" value={health.totalExerciseDays} sub={`${exercisePct}% consistency`} color="#10b981" trend={exercisePct >= 60 ? 1 : -1} delay={0.2} />
+        <StatCard icon={Apple} label="No Junk Food" value={`${health.noJunkDays} days`} sub={`${junkFoodAvoidancePct}% avoidance`} color="#eab308" trend={junkFoodAvoidancePct >= 60 ? 1 : -1} delay={0.2} />
         <StatCard icon={Droplets} label="Avg Water" value={`${health.avgWater}`} sub={`${waterPct}% of ${waterGoal} goal`} color="#0ea5e9" trend={waterPct >= 80 ? 1 : -1} delay={0.25} />
       </div>
 
@@ -247,7 +247,7 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <Activity className="w-5 h-5 text-brand" /> Day Score Trend
           </h2>
-          <div className="flex-1 min-h-[260px] min-w-0">
+          <div className="flex-1 min-h-65 min-w-0">
             <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <AreaChart data={scoreTrend} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <defs>
@@ -272,7 +272,7 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <Brain className="w-5 h-5 text-study" /> Daily Study Hours
           </h2>
-          <div className="flex-1 min-h-[260px] min-w-0">
+          <div className="flex-1 min-h-65w-0">
             <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <BarChart data={studyChartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
@@ -294,7 +294,7 @@ export default function AnalyticsPage() {
           <h2 className="text-base font-bold text-text-1 flex items-center gap-2 mb-4">
             <CalendarDays className="w-5 h-5 text-routine" /> Timetable Completion
           </h2>
-          <div className="flex-1 min-h-[260px] min-w-0">
+          <div className="flex-1 min-h-65 min-w-0">
             <ResponsiveContainer width="100%" aspect={1.6} minHeight={0}>
               <BarChart data={ttData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
@@ -323,8 +323,8 @@ export default function AnalyticsPage() {
             color={s.avgScore >= 70 ? "var(--color-success)" : s.avgScore >= 40 ? "var(--color-warning)" : "var(--color-danger)"} delay={0.1} />
           <ProgressBar label="Study Goal Achievement" sublabel={`${studyGoalPct}%`} value={studyGoalPct} max={100}
             color="var(--color-study)" delay={0.15} />
-          <ProgressBar label="Exercise Consistency" sublabel={`${exercisePct}%`} value={exercisePct} max={100}
-            color="var(--color-exercise)" delay={0.2} />
+          <ProgressBar label="Junk Food Avoidance" sublabel={`${junkFoodAvoidancePct}%`} value={junkFoodAvoidancePct} max={100}
+            color="var(--color-warning)" delay={0.2} />
           <ProgressBar label="Hydration Goal" sublabel={`${waterPct}%`} value={waterPct} max={100}
             color="var(--color-water)" delay={0.25} />
           <ProgressBar label="Timetable Adherence" sublabel={`${ttAvgPct}%`} value={ttAvgPct} max={100}
