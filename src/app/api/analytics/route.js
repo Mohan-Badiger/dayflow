@@ -33,7 +33,6 @@ export async function GET(req) {
       if (l.workSessions?.length > 0) return true;
       if (l.diet?.waterGlasses > 0) return true;
       if (l.diet?.meals?.length > 0) return true;
-      if (l.exercise?.done) return true;
       return false;
     });
 
@@ -68,8 +67,8 @@ export async function GET(req) {
                pct: total > 0 ? Math.round((done/total)*100) : null }
     })
 
-    // ── Water & exercise ─────────────────────────────
-    const totalExerciseDays = activeLogs.filter(l => l.exercise?.done).length
+    // ── Water & diet quality ─────────────────────────
+    const noJunkDays = activeLogs.filter(l => !l.diet?.junkFood).length
     const avgWater = activeLogs.length
       ? +(activeLogs.reduce((s, l) =>
           s + (l.diet?.waterGlasses || 0), 0) / activeLogs.length
@@ -99,7 +98,7 @@ export async function GET(req) {
       studyByDay,
 
       timetableStats,
-      health: { totalExerciseDays, avgWater },
+      health: { noJunkDays, avgWater },
       summary: {
         avgScore, bestDay, worstDay,
         totalStudyHours: +(totalStudyMins / 60).toFixed(1),
