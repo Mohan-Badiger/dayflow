@@ -40,8 +40,6 @@ export async function PATCH(req, { params }) {
       updateQuery = { $push: { workSessions: payload } };
     } else if (action === "ADD_MEAL") {
       updateQuery = { $push: { "diet.meals": payload } };
-    } else if (action === "ADD_EXERCISE") {
-      updateQuery = { $set: { exercise: payload } };
     } else if (action === "UPDATE_WATER") {
       updateQuery = { $set: { "diet.waterGlasses": payload } };
     } else if (action === "UPDATE_TIMETABLE") {
