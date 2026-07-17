@@ -58,16 +58,17 @@ export function calculateDayScore(dayLog, userSettings) {
   let healthScore = 0
 
   const water = dayLog.diet?.waterGlasses || 0
-  if (water >= waterGoal) healthScore += 10
-  else if (water >= waterGoal * 0.5) healthScore += 5
-
-  if (dayLog.exercise?.done) healthScore += 10
+  if (water >= waterGoal) healthScore += 15
+  else if (water >= waterGoal * 0.5) healthScore += 7
 
   const meals = dayLog.diet?.meals || []
   if (meals.length >= 3) healthScore += 5
   else if (meals.length >= 1) healthScore += 2
 
-  if (!dayLog.diet?.junkFood) healthScore += 5
+  const allMealsHealthy = meals.length === 0 || meals.every(m => m.isHealthy)
+  const noJunk = !dayLog.diet?.junkFood
+  if (noJunk && allMealsHealthy) healthScore += 10
+  else if (noJunk || allMealsHealthy) healthScore += 5
 
   // ── Total ───────────────────────────────────────────
   const total = routineScore + timetableScore + healthScore
