@@ -2,19 +2,6 @@ export function generateInsights(logs) {
   const insights = []
   if (!logs || logs.length < 3) return insights
 
-  // Exercise vs study correlation
-  const exDays  = logs.filter(l => l.exercise?.done)
-  const noExDays = logs.filter(l => !l.exercise?.done)
-  const exStudy  = avg(exDays,   l => totalStudyMins(l))
-  const noExStudy= avg(noExDays, l => totalStudyMins(l))
-  if (exStudy > noExStudy * 1.2 && exDays.length >= 3) {
-    const pct = Math.round(((exStudy - noExStudy) / noExStudy) * 100)
-    insights.push({
-      type: "correlation",
-      icon: "exercise",
-      text: `You study ${pct}% more on days you exercise.`,
-    })
-  }
 
   // Wake time vs score
   const earlyDays = logs.filter(l => {

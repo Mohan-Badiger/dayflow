@@ -80,13 +80,6 @@ const DayLogSchema = new mongoose.Schema({
     notes:        { type: String, maxlength: 500 },
   },
 
-  exercise: {
-    done:            { type: Boolean, default: false },
-    type:            { type: String, default: "" },
-    durationMinutes: { type: Number, default: 0, min: 0 },
-    notes:           { type: String, maxlength: 500 },
-  },
-
   eveningReview: {
     wins:              { type: String, maxlength: 1000 },
     blockers:          { type: String, maxlength: 1000 },

@@ -73,12 +73,6 @@ export const schemas = {
     isHealthy:   z.boolean().optional(),
   }),
 
-  updateExercise: z.object({
-    done:            z.boolean().optional(),
-    type:            z.string().max(100).optional(),
-    durationMinutes: z.number().min(0).optional(),
-    notes:           z.string().max(500).optional(),
-  }),
 
   updateReview: z.object({
     wins:             z.string().max(1000).optional(),

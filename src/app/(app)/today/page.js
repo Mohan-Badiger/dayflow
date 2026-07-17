@@ -97,7 +97,6 @@ export default function TodayPage() {
   const morningDone = Object.values(morning).filter(v => v === true).length;
   const nightDone = Object.values(night).filter(v => v === true).length;
   const routineTotal = morningDone + nightDone;
-  const exerciseDone = dayLog?.exercise?.done || false;
 
   const scoreColor = score >= 75 ? "var(--color-success)" : score >= 40 ? "var(--color-warning)" : "var(--color-danger)";
   const scoreLabel = score >= 75 ? "Great day!" : score >= 40 ? "Keep pushing" : "Let's go!";

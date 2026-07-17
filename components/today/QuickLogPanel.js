@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Clock, Apple, Dumbbell, SmilePlus } from "lucide-react";
+import { Clock, Apple, SmilePlus } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 
 export function QuickLogPanel() {
@@ -9,12 +9,11 @@ export function QuickLogPanel() {
   const logs = [
     { id: "session", name: "Log Session", icon: Clock, color: "bg-study" },
     { id: "meal", name: "Log Meal", icon: Apple, color: "bg-warning" },
-    { id: "exercise", name: "Log Exercise", icon: Dumbbell, color: "bg-success" },
     { id: "mood", name: "Log Mood", icon: SmilePlus, color: "bg-personal" },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-3 gap-3">
       {logs.map((log) => (
         <motion.button
           key={log.id}
