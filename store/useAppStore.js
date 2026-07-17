@@ -12,7 +12,7 @@ export const useAppStore = create((set, get) => ({
   },
   
   // Quick Log Modals state
-  activeModal: null, // "session", "meal", "exercise", "mood", null
+  activeModal: null, // "session", "meal", "mood", null
   setActiveModal: (modal) => set({ activeModal: modal }),
 
   // Data State
@@ -75,8 +75,6 @@ export const useAppStore = create((set, get) => ({
       optimisticLog.workSessions = [...(optimisticLog.workSessions || []), payload];
     } else if (action === "ADD_MEAL") {
       optimisticLog.diet.meals = [...(optimisticLog.diet.meals || []), payload];
-    } else if (action === "ADD_EXERCISE") {
-      optimisticLog.exercise = payload;
     } else if (action === "UPDATE_WATER") {
       optimisticLog.diet.waterGlasses = payload;
     }
@@ -95,9 +93,6 @@ export const useAppStore = create((set, get) => ({
       } else if (action === "ADD_MEAL") {
         endpoint = `/api/day/${activeDate}/diet/meals`;
         method = "POST";
-      } else if (action === "ADD_EXERCISE") {
-        endpoint = `/api/day/${activeDate}/exercise`;
-        method = "PATCH";
       } else if (action === "UPDATE_WATER") {
         endpoint = `/api/day/${activeDate}/diet`;
         method = "PATCH";
