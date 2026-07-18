@@ -43,7 +43,7 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
   }
 
   const handleSubTaskTitleChange = (index, value) => {
-    const updatedSubTasks = formData.subTasks.map((sub, i) => 
+    const updatedSubTasks = formData.subTasks.map((sub, i) =>
       i === index ? { ...sub, title: value } : sub
     )
     setFormData({
@@ -53,7 +53,7 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
   }
 
   const handleSubTaskCheckboxChange = (index, checked) => {
-    const updatedSubTasks = formData.subTasks.map((sub, i) => 
+    const updatedSubTasks = formData.subTasks.map((sub, i) =>
       i === index ? { ...sub, completed: checked } : sub
     )
     setFormData({
@@ -74,9 +74,9 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
   const hasSubTasks = formData.subTasks && formData.subTasks.length > 0
 
   return (
-    <Modal 
-      isOpen={true} 
-      onClose={onClose} 
+    <Modal
+      isOpen={true}
+      onClose={onClose}
       title={initialData ? "Edit Goal" : "Create New Goal"}
     >
       <div className="space-y-4 sm:space-y-5 p-1">
@@ -144,7 +144,7 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
                 <Plus className="w-3.5 h-3.5" /> Add Subtask
               </button>
             </div>
-            
+
             {formData.subTasks.length === 0 ? (
               <p className="text-xs text-text-3 italic bg-surface-3 p-3 rounded-sm border border-border/50 text-center">
                 No subtasks added yet. Add subtasks to track progress automatically.
@@ -156,13 +156,12 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
                     <button
                       type="button"
                       onClick={() => handleSubTaskCheckboxChange(index, !sub.completed)}
-                      className={`flex-shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all cursor-pointer ${
-                        sub.completed 
-                          ? 'bg-brand border-brand text-text-1' 
+                      className={`shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all cursor-pointer ${sub.completed
+                          ? 'bg-brand border-brand text-text-1'
                           : 'border-border-2 hover:border-brand bg-surface-2'
-                      }`}
+                        }`}
                     >
-                      {sub.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                      {sub.completed && <Check className="w-3 h-3 stroke-3" />}
                     </button>
                     <input
                       type="text"
