@@ -62,8 +62,8 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
       className={`relative p-6 rounded-sm border bg-surface backdrop-blur-xl transition-colors ${isCompleted ? 'border-success/30' : 'border-border'}`}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="flex-1 pr-8">
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
             <span className="px-2.5 py-1 text-xs font-semibold rounded-sm bg-brand-light text-brand-dark">
               {goal.category}
             </span>
@@ -76,7 +76,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
               </span>
             )}
           </div>
-          <h3 className="text-xl font-bold text-text-1 tracking-tight">{goal.title}</h3>
+          <h3 className="text-xl font-bold text-text-1 tracking-tight leading-snug">{goal.title}</h3>
         </div>
 
         <div className="relative">
@@ -120,24 +120,33 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
 
       {/* Subtasks checklist inside card */}
       {goal.subTasks && goal.subTasks.length > 0 && (
-        <div className="mt-4 mb-6 space-y-2 border-t border-border/50 pt-4">
-          <h4 className="text-xs font-bold text-text-3 uppercase tracking-wider mb-2">Subtasks</h4>
-          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+        <div className="mt-4 mb-6 space-y-2.5 border-t border-border/50 pt-4">
+          <h4 className="text-xs font-bold text-text-3 uppercase tracking-wider mb-1.5">Subtasks</h4>
+          <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
             {goal.subTasks.map((sub) => (
-              <label
+              <div
                 key={sub._id || sub.title}
-                className="flex items-start gap-2.5 text-xs text-text-2 hover:text-text-1 cursor-pointer transition-colors"
+                onClick={() => handleToggleSubTask(sub)}
+                className="flex items-start gap-3 py-0.5 text-xs text-text-2 hover:text-text-1 cursor-pointer transition-colors group"
               >
-                <input
-                  type="checkbox"
-                  checked={sub.completed}
-                  onChange={() => handleToggleSubTask(sub)}
-                  className="mt-0.5 w-3.5 h-3.5 rounded border-border text-brand focus:ring-brand bg-surface-2 cursor-pointer"
-                />
-                <span className={`leading-relaxed ${sub.completed ? 'line-through text-text-3' : ''}`}>
+                <button
+                  type="button"
+                  className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all ${
+                    sub.completed 
+                      ? 'bg-brand border-brand text-text-1' 
+                      : 'border-border-2 hover:border-brand bg-surface-2'
+                  }`}
+                >
+                  {sub.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                </button>
+                <span className={`leading-relaxed select-none transition-all ${
+                  sub.completed 
+                    ? 'line-through text-text-3' 
+                    : 'text-text-2 group-hover:text-text-1'
+                }`}>
                   {sub.title}
                 </span>
-              </label>
+              </div>
             ))}
           </div>
         </div>
