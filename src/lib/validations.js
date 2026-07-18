@@ -144,7 +144,12 @@ export const schemas = {
     description: z.string().max(500).optional(),
     category:    z.enum(["Health", "Career", "Finance", "Personal", "Other"]).optional(),
     type:        z.enum(["Short-term", "Long-term", "Habit"]).optional(),
+    progress:    z.number().min(0).max(100).optional(),
     targetDate:  dateStr.optional().nullable(),
+    subTasks: z.array(z.object({
+      title: z.string().min(1),
+      completed: z.boolean().optional(),
+    })).optional(),
   }),
 
   updateGoal: z.object({
