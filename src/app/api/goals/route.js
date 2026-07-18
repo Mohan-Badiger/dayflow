@@ -29,9 +29,29 @@ export async function POST(req) {
       return err("Validation failed", 400, parsed.error.flatten())
     }
 
+    const goalData = { ...parsed.data }
+    if (goalData.subTasks && goalData.subTasks.length > 0) {
+      const completedCount = goalData.subTasks.filter(st => st.completed).length
+      goalData.progress = Math.round((completedCount / goalData.subTasks.length) * 100)
+      if (goalData.progress === 100) {
+        goalData.status = "Completed"
+      } else if (goalData.progress > 0) {
+        goalData.status = "In Progress"
+      } else {
+        goalData.status = "Not Started"
+      }
+    } else {
+      goalData.progress = goalData.progress || 0
+      if (goalData.progress === 100) {
+        goalData.status = "Completed"
+      } else if (goalData.progress > 0) {
+        goalData.status = "In Progress"
+      }
+    }
+
     await connectDB()
     const newGoal = await Goal.create({
-      ...parsed.data,
+      ...goalData,
       userId: session.user.id
     })
 
