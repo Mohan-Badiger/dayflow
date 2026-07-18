@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar as CalendarIcon, Plus, Trash2 } from "lucide-react"
+import { Calendar as CalendarIcon, Plus, Trash2, Check } from "lucide-react"
 import { Modal } from "@/components/ui/Modal"
 import { Button } from "@/components/ui/Button"
 
@@ -153,12 +153,17 @@ export default function GoalForm({ initialData = null, onClose, onSubmit }) {
               <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                 {formData.subTasks.map((sub, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={sub.completed}
-                      onChange={(e) => handleSubTaskCheckboxChange(index, e.target.checked)}
-                      className="w-4 h-4 rounded border-border text-brand focus:ring-brand bg-surface-2 cursor-pointer"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSubTaskCheckboxChange(index, !sub.completed)}
+                      className={`flex-shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all cursor-pointer ${
+                        sub.completed 
+                          ? 'bg-brand border-brand text-text-1' 
+                          : 'border-border-2 hover:border-brand bg-surface-2'
+                      }`}
+                    >
+                      {sub.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                    </button>
                     <input
                       type="text"
                       required
