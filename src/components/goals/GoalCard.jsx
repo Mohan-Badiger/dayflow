@@ -27,7 +27,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
   }
 
   const handleToggleSubTask = async (subTaskToToggle) => {
-    const updatedSubTasks = goal.subTasks.map(sub => 
+    const updatedSubTasks = goal.subTasks.map(sub =>
       (sub._id === subTaskToToggle._id || (sub.title === subTaskToToggle.title && !sub._id))
         ? { ...sub, completed: !sub.completed }
         : sub
@@ -36,7 +36,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
     const total = updatedSubTasks.length
     const completedCount = updatedSubTasks.filter(st => st.completed).length
     const newProgress = Math.round((completedCount / total) * 100)
-    
+
     let newStatus = goal.status
     if (newProgress === 100) {
       newStatus = "Completed"
@@ -46,10 +46,10 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
       newStatus = "In Progress"
     }
 
-    await onUpdate(goal._id, { 
-      subTasks: updatedSubTasks, 
-      progress: newProgress, 
-      status: newStatus 
+    await onUpdate(goal._id, {
+      subTasks: updatedSubTasks,
+      progress: newProgress,
+      status: newStatus
     })
   }
 
@@ -88,7 +88,7 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
           </button>
 
           {showMenu && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="absolute right-0 top-full mt-2 w-48 py-2 bg-surface border border-border rounded-sm shadow-xl z-10 overflow-hidden"
@@ -131,19 +131,17 @@ export default function GoalCard({ goal, onUpdate, onDelete, onEdit }) {
               >
                 <button
                   type="button"
-                  className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all ${
-                    sub.completed 
-                      ? 'bg-brand border-brand text-text-1' 
+                  className={`mt-0.5 shrink-0 w-4 h-4 rounded-sm border flex items-center justify-center transition-all ${sub.completed
+                      ? 'bg-brand border-brand text-text-1'
                       : 'border-border-2 hover:border-brand bg-surface-2'
-                  }`}
+                    }`}
                 >
-                  {sub.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                  {sub.completed && <Check className="w-3 h-3 stroke-3" />}
                 </button>
-                <span className={`leading-relaxed select-none transition-all ${
-                  sub.completed 
-                    ? 'line-through text-text-3' 
+                <span className={`leading-relaxed select-none transition-all ${sub.completed
+                    ? 'line-through text-text-3'
                     : 'text-text-2 group-hover:text-text-1'
-                }`}>
+                  }`}>
                   {sub.title}
                 </span>
               </div>
