@@ -20,15 +20,9 @@ export default function SettingsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
-
-  useEffect(() => {
-    if (session?.user?.name) {
-      setName(session.user.name);
-    }
-  }, [session]);
 
   const handleSaveProfile = async () => {
     if (!name.trim()) return;
@@ -88,12 +82,12 @@ export default function SettingsPage() {
         <h2 className="text-lg font-bold text-text-1 flex items-center gap-2 mb-5">
           <User className="w-5 h-5 text-brand" /> Profile details
         </h2>
-        
+
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <div className="w-20 h-20 rounded-full flex items-center justify-center shrink-0 shadow-lg shadow-brand/20 border-4 border-surface overflow-hidden bg-surface-2">
-            <img 
-              src={session?.user?.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session?.user?.name || "U"}`} 
-              alt="Avatar" 
+            <img
+              src={session?.user?.image || `https://api.dicebear.com/7.x/initials/svg?seed=${session?.user?.name || "U"}`}
+              alt="Avatar"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
               onError={(e) => {
@@ -102,7 +96,7 @@ export default function SettingsPage() {
               }}
             />
           </div>
-          
+
           <div className="flex-1 w-full space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1 w-full">
@@ -113,7 +107,7 @@ export default function SettingsPage() {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="input-field py-1.5 px-3 max-w-[200px]"
+                      className="input-field py-1.5 px-3 max-w-200px"
                       placeholder="Your name"
                       autoFocus
                     />
@@ -129,7 +123,7 @@ export default function SettingsPage() {
                 ) : (
                   <div className="flex items-center gap-3">
                     <p className="font-bold text-lg text-text-1">{session?.user?.name || "User"}</p>
-                    <button onClick={() => setIsEditing(true)}
+                    <button onClick={() => { setName(session?.user?.name || ""); setIsEditing(true); }}
                       className="text-text-3 hover:text-brand transition-colors p-1">
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
@@ -210,7 +204,7 @@ export default function SettingsPage() {
           <p className="text-sm text-text-3 mb-5">
             Permanently delete your account and all associated data. This action cannot be undone.
           </p>
-          
+
           {!showDeleteConfirm ? (
             <button onClick={() => setShowDeleteConfirm(true)}
               className="px-4 py-2 rounded-xl font-bold text-sm transition-all bg-danger text-white hover:bg-danger/90 border border-danger/20">
@@ -222,20 +216,20 @@ export default function SettingsPage() {
               <p className="text-xs text-text-3 mb-4">
                 Please type <span className="font-mono font-bold text-danger">delete my account</span> to confirm.
               </p>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={deleteInput}
                 onChange={(e) => setDeleteInput(e.target.value)}
                 placeholder="delete my account"
                 className="input-field mb-3 w-full"
               />
               <div className="flex gap-2">
-                <button 
+                <button
                   onClick={() => { setShowDeleteConfirm(false); setDeleteInput(""); }}
                   className="flex-1 py-2 rounded-xl font-bold text-sm bg-surface-3 text-text-1 hover:bg-surface-3/70 transition-colors">
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={handleDeleteAccount}
                   disabled={loading || deleteInput !== "delete my account"}
                   className="flex-1 py-2 rounded-xl font-bold text-sm bg-danger text-white hover:bg-danger/90 transition-colors disabled:opacity-50">
