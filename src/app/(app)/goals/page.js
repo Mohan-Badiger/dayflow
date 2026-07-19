@@ -19,7 +19,6 @@ export default function GoalsPage() {
 
   const fetchGoals = async () => {
     try {
-      setLoading(true)
       const res = await fetch("/api/goals")
       const data = await res.json()
       if (res.ok) {
@@ -35,7 +34,12 @@ export default function GoalsPage() {
   }
 
   useEffect(() => {
-    fetchGoals()
+    let active = true;
+    Promise.resolve().then(() => {
+      if (active) setLoading(true);
+    });
+    fetchGoals();
+    return () => { active = false; };
   }, [])
 
   const handleCreateOrUpdate = async (goalData) => {
