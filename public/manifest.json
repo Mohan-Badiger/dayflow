@@ -4,8 +4,8 @@
   "description": "Your personal daily routine tracker",
   "start_url": "/today",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#6366f1",
+  "background_color": "#050505",
+  "theme_color": "#050505",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
