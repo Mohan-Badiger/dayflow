@@ -33,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "pdfkit": "^0.18.0",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^5.9.3"
   }
 }
