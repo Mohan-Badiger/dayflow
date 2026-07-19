@@ -199,7 +199,7 @@ export default function GoalsPage() {
           <div className="text-center py-20 border border-dashed border-border rounded-sm bg-surface">
             <Target className="w-12 h-12 text-text-3 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-text-1 mb-2">No goals found</h3>
-            <p className="text-text-3 mb-6">You don't have any {filter.toLowerCase()} goals yet.</p>
+            <p className="text-text-3 mb-6">You don&apos;t have any {filter.toLowerCase()} goals yet.</p>
             <button
               onClick={() => { setEditingGoal(null); setShowForm(true); }}
               className="text-brand font-semibold hover:opacity-80 transition-opacity"
