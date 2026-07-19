@@ -3,6 +3,19 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts"
 import { motion } from "framer-motion"
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-surface border border-border p-4 rounded-xl shadow-xl">
+        <p className="text-text-1 font-semibold mb-1">{label}</p>
+        <p className="text-brand text-sm">Avg Progress: {payload[0].value}%</p>
+        <p className="text-text-3 text-sm mt-1">Total Goals: {payload[0].payload.total}</p>
+      </div>
+    )
+  }
+  return null
+}
+
 export default function GoalProgressChart({ goals }) {
   // We'll calculate average progress based on categories for the chart data
   const data = []
@@ -28,19 +41,6 @@ export default function GoalProgressChart({ goals }) {
         <p className="text-text-3">Add some goals to see your progress chart.</p>
       </div>
     )
-  }
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-surface border border-border p-4 rounded-xl shadow-xl">
-          <p className="text-text-1 font-semibold mb-1">{label}</p>
-          <p className="text-brand text-sm">Avg Progress: {payload[0].value}%</p>
-          <p className="text-text-3 text-sm mt-1">Total Goals: {payload[0].payload.total}</p>
-        </div>
-      )
-    }
-    return null
   }
 
   return (

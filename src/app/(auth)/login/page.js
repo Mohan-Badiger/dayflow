@@ -27,11 +27,11 @@ export default function LoginPage() {
     <div className="h-screen w-full bg-[#f8f9fa] flex items-center justify-center font-sans p-4 sm:p-8 overflow-y-auto md:overflow-hidden">
 
       {/* Main Container - Perfect fit, no scroll on desktop, scrollable auto-height on mobile */}
-      <div className="w-full max-w-[450px] md:max-w-[900px] h-auto md:h-full md:max-h-[600px] bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+      <div className="w-full max-w-112.5 md:max-w-225 h-auto md:h-full md:max-h-150 bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
 
         {/* Left Side (White) */}
         <div className="flex-1 flex flex-col pt-8 md:pt-12 px-8 md:px-14 relative bg-white z-10">
-          
+
           <Link href="/" className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-gray-700 transition-colors mb-4 md:mb-6 group w-fit">
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             Back
@@ -42,7 +42,7 @@ export default function LoginPage() {
               Welcome back.
             </h2>
           </div>
-          <p className="text-gray-500 text-[14px] md:text-[15px] font-light leading-relaxed max-w-[380px] mb-6 md:mb-0">
+          <p className="text-gray-500 text-[14px] md:text-[15px] font-light leading-relaxed max-w-95 md:mb-0">
             Sign in to access your personalized daily tracker, follow routines you love, and build habits that matter to you.
           </p>
 
@@ -52,9 +52,8 @@ export default function LoginPage() {
               alt="Daily Routine Tracker"
               width={380}
               height={380}
-              className="w-full max-w-[280px] object-contain object-bottom mix-blend-multiply pointer-events-none"
+              className="w-full max-w-70 object-contain object-bottom mix-blend-multiply pointer-events-none"
               priority
-              unoptimized
             />
           </div>
         </div>
@@ -63,18 +62,17 @@ export default function LoginPage() {
         <div className="w-full md:w-[42%] bg-[#f4f7f6] flex flex-col items-center py-10 md:py-12 px-8 relative border-t md:border-t-0 md:border-l border-gray-100">
 
 
-          <div className="w-full max-w-[260px] flex flex-col items-center justify-center flex-1">
+          <div className="w-full max-w-65 flex flex-col items-center justify-center flex-1">
             <h1 className="text-[11px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-6 text-center">
               DayFlow
             </h1>
             <button
               onClick={handleSignIn}
               disabled={isLoading}
-              className={`w-full bg-white text-gray-800 border border-gray-200 rounded-full h-[52px] px-5 flex items-center transition-all duration-300 group shadow-sm ${
-                isLoading 
-                  ? "opacity-80 cursor-not-allowed" 
+              className={`w-full bg-white text-gray-800 border border-gray-200 rounded-full h-13 px-5 flex items-center transition-all duration-300 group shadow-sm ${isLoading
+                  ? "opacity-80 cursor-not-allowed"
                   : "hover:bg-gray-50 hover:border-gray-300 hover:shadow-lg active:scale-[0.98]"
-              }`}
+                }`}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-full gap-3">
@@ -86,7 +84,7 @@ export default function LoginPage() {
                 </div>
               ) : (
                 <>
-                  <svg className="w-[18px] h-[18px] group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-4.5 h-4.5 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                       <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
                       <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />

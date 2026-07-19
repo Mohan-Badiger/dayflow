@@ -68,18 +68,26 @@ export default function RoutinePage() {
   useEffect(() => { fetchDayLog(activeDate); }, [activeDate]);
 
   useEffect(() => {
+    let active = true;
     if (dayLog?.routine) {
-      if (dayLog.routine.morningChecklist) setMorning(p => ({ ...p, ...dayLog.routine.morningChecklist }));
-      if (dayLog.routine.nightChecklist) setNight(p => ({ ...p, ...dayLog.routine.nightChecklist }));
-      if (dayLog.routine.wakeTime) setWakeTime(dayLog.routine.wakeTime);
-      else if (userSettings?.wakeTarget) setWakeTime(userSettings.wakeTarget);
-      if (dayLog.routine.sleepTime) setSleepTime(dayLog.routine.sleepTime);
-      else if (userSettings?.sleepTarget) setSleepTime(userSettings.sleepTarget);
-      if (dayLog.routine.nightChecklist?.screenOffBy) setScreenOff(dayLog.routine.nightChecklist.screenOffBy);
+      Promise.resolve().then(() => {
+        if (!active) return;
+        if (dayLog.routine.morningChecklist) setMorning(p => ({ ...p, ...dayLog.routine.morningChecklist }));
+        if (dayLog.routine.nightChecklist) setNight(p => ({ ...p, ...dayLog.routine.nightChecklist }));
+        if (dayLog.routine.wakeTime) setWakeTime(dayLog.routine.wakeTime);
+        else if (userSettings?.wakeTarget) setWakeTime(userSettings.wakeTarget);
+        if (dayLog.routine.sleepTime) setSleepTime(dayLog.routine.sleepTime);
+        else if (userSettings?.sleepTarget) setSleepTime(userSettings.sleepTarget);
+        if (dayLog.routine.nightChecklist?.screenOffBy) setScreenOff(dayLog.routine.nightChecklist.screenOffBy);
+      });
     } else if (userSettings) {
-      if (userSettings.wakeTarget) setWakeTime(userSettings.wakeTarget);
-      if (userSettings.sleepTarget) setSleepTime(userSettings.sleepTarget);
+      Promise.resolve().then(() => {
+        if (!active) return;
+        if (userSettings.wakeTarget) setWakeTime(userSettings.wakeTarget);
+        if (userSettings.sleepTarget) setSleepTime(userSettings.sleepTarget);
+      });
     }
+    return () => { active = false; };
   }, [dayLog, userSettings]);
 
   const save = useCallback(async (data) => {

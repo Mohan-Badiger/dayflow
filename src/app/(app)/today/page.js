@@ -79,12 +79,17 @@ export default function TodayPage() {
 
   useEffect(() => { fetchDayLog(activeDate); }, [activeDate]);
 
-  const fetchExtras = useCallback(async () => {
-    const s = await get("/api/user/streak");
-    if (s?.streak !== undefined) setStreak(s.streak);
-  }, [activeDate]);
-
-  useEffect(() => { fetchExtras(); }, [fetchExtras]);
+  useEffect(() => {
+    let active = true;
+    async function loadStreak() {
+      const s = await get("/api/user/streak");
+      if (active && s?.streak !== undefined) {
+        setStreak(s.streak);
+      }
+    }
+    loadStreak();
+    return () => { active = false; };
+  }, [get]);
 
   // Derived
   const score = dayLog?.dayScore || 0;
@@ -162,7 +167,7 @@ export default function TodayPage() {
       {timetable.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
-            <h3 className="font-bold text-text-1 text-lg">Today's Schedule</h3>
+            <h3 className="font-bold text-text-1 text-lg">Today&apos;s Schedule</h3>
             <Link href="/timetable" className="text-xs text-brand font-semibold hover:underline flex items-center gap-1">
               Full view <ChevronRight className="w-3 h-3" />
             </Link>

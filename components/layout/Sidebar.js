@@ -58,7 +58,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 h-10 rounded-md text-sm font-medium transition-(--transition-fast) relative group",
+                "flex items-center gap-3 px-3 h-10 rounded-md text-sm font-medium transition-fast relative group",
                 isActive
                   ? "bg-brand-light text-brand"
                   : "text-text-2 hover:bg-surface-3 hover:text-text-1"
