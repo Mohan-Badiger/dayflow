@@ -91,15 +91,23 @@ export default function SessionsPage() {
 
   // ─── Fetch Data ───────────────────────────────────
   const fetchSessions = useCallback(async () => {
-    setLoading(true);
     const data = await get(`/api/day/${activeDate}/sessions`);
     if (data) setSessions(data);
     const user = await get("/api/user");
     if (user?.settings) setUserSettings(user.settings);
     setLoading(false);
-  }, [activeDate]);
+  }, [activeDate, get]);
 
-  useEffect(() => { fetchSessions(); }, [fetchSessions]);
+  useEffect(() => {
+    let active = true;
+    Promise.resolve().then(() => {
+      if (active) {
+        setLoading(true);
+        fetchSessions();
+      }
+    });
+    return () => { active = false; };
+  }, [activeDate, fetchSessions]);
 
   // ─── Computed Values ──────────────────────────────
   const totalMinutes = sessions.reduce((sum, s) => sum + (s.durationMinutes || 0), 0);
@@ -221,7 +229,7 @@ export default function SessionsPage() {
             </div>
           </div>
           {timerTopic && <p className="text-xl font-semibold text-text-1 text-center max-w-md">{timerTopic}</p>}
-          {timerIntention && <p className="text-sm text-text-3 text-center max-w-sm italic">"{timerIntention}"</p>}
+          {timerIntention && <p className="text-sm text-text-3 text-center max-w-sm italic">&ldquo;{timerIntention}&rdquo;</p>}
           <div className="flex gap-4 mt-8">
             <button onClick={togglePause}
               className="flex items-center gap-2 px-8 py-4 rounded-full bg-surface-3/50 backdrop-blur-md border border-white/5 hover:bg-surface-3 hover:border-white/10 hover:shadow-[0_0_20px_rgba(var(--color-brand-rgb),0.3)] transition-all">
@@ -311,7 +319,7 @@ export default function SessionsPage() {
               <AlertTriangle className="w-5 h-5 text-danger shrink-0" />
               <div>
                 <p className="font-bold text-danger text-sm">Behind Pace</p>
-                <p className="text-text-3 text-sm">You need {(goalHours - parseFloat(totalHours)).toFixed(1)}h more today. It's already {currentHour > 12 ? currentHour - 12 + "pm" : currentHour + "am"}.</p>
+                <p className="text-text-3 text-sm">You need {(goalHours - parseFloat(totalHours)).toFixed(1)}h more today. It&apos;s already {currentHour > 12 ? currentHour - 12 + "pm" : currentHour + "am"}.</p>
               </div>
             </div>
           </motion.div>
@@ -331,7 +339,7 @@ export default function SessionsPage() {
           </div>
           <div className="flex-1 text-center md:text-left space-y-3">
             <div>
-              <p className="text-text-3 text-sm font-medium uppercase tracking-wider">Today's Focus</p>
+              <p className="text-text-3 text-sm font-medium uppercase tracking-wider">Today&apos;s Focus</p>
               <p className="text-2xl font-bold text-text-1">{sessions.length} session{sessions.length !== 1 ? "s" : ""} · {totalMinutes} minutes</p>
             </div>
           </div>
@@ -361,7 +369,7 @@ export default function SessionsPage() {
 
       {/* Today's Sessions */}
       <div className="space-y-3">
-        <h3 className="text-lg font-bold text-text-1">Today's Sessions</h3>
+        <h3 className="text-lg font-bold text-text-1">Today&apos;s Sessions</h3>
         {sessions.length === 0 && !loading ? (
           <div className="card p-12 text-center">
             <Brain className="w-12 h-12 text-text-3 mx-auto mb-3 opacity-40" />
