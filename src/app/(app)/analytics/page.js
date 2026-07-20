@@ -117,13 +117,15 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    Promise.resolve().then(() => {
+      if (!cancelled) setLoading(true);
+    });
     get(`/api/analytics?days=${period}`).then((d) => {
       if (!cancelled && d) setData(d);
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [period]);
+  }, [period, get]);
 
   const waterGoal = userSettings?.waterGoalGlasses || 8;
   const studyGoal = userSettings?.dailyStudyGoalHours || 4;
