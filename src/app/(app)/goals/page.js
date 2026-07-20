@@ -36,9 +36,11 @@ export default function GoalsPage() {
   useEffect(() => {
     let active = true;
     Promise.resolve().then(() => {
-      if (active) setLoading(true);
+      if (active) {
+        setLoading(true);
+        fetchGoals();
+      }
     });
-    fetchGoals();
     return () => { active = false; };
   }, [])
 
