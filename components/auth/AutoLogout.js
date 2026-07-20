@@ -9,7 +9,11 @@ const CHECK_INTERVAL = 10 * 1000; // Check every 10 seconds
 export default function AutoLogout() {
   const { data: session, status } = useSession();
   const timerRef = useRef(null);
-  const lastActivityRef = useRef(Date.now());
+  const lastActivityRef = useRef(0);
+
+  useEffect(() => {
+    lastActivityRef.current = Date.now();
+  }, []);
 
   const handleLogout = useCallback(() => {
     if (status === "authenticated") {
